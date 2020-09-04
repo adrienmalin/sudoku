@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>Sudoku</title>
+        <link rel="stylesheet" type="text/css" href="style.css" />
+        <script type="text/javascript" src="sudoku.js"></script>
+    </head>
+    <body>
+        <header>
+            <h1>Sudoku</h1>
+        </header>
+        <form id="sudokuForm">
+            <div>
+                <table id="gridTable" class="grid"></table>
+                <script>createGrid()</script>
+            </div>
+        </form>
+        <div>
+            Surligner les cases pouvant contenir
+        </div>
+        <div id="highlightRadiosDiv">
+            <input type="radio" id="highlightRadio1" name="highlightRadio" onclick="highlight('1')"><label id="highlightLabel1" for="highlightRadio1">1</label>
+            <input type="radio" id="highlightRadio2" name="highlightRadio" onclick="highlight('2')"><label id="highlightLabel2" for="highlightRadio2">2</label>
+            <input type="radio" id="highlightRadio3" name="highlightRadio" onclick="highlight('3')"><label id="highlightLabel3" for="highlightRadio3">3</label>
+            <input type="radio" id="highlightRadio4" name="highlightRadio" onclick="highlight('4')"><label id="highlightLabel4" for="highlightRadio4">4</label>
+            <input type="radio" id="highlightRadio5" name="highlightRadio" onclick="highlight('5')"><label id="highlightLabel5" for="highlightRadio5">5</label>
+            <input type="radio" id="highlightRadio6" name="highlightRadio" onclick="highlight('6')"><label id="highlightLabel6" for="highlightRadio6">6</label>
+            <input type="radio" id="highlightRadio7" name="highlightRadio" onclick="highlight('7')"><label id="highlightLabel7" for="highlightRadio7">7</label>
+            <input type="radio" id="highlightRadio8" name="highlightRadio" onclick="highlight('8')"><label id="highlightLabel8" for="highlightRadio8">8</label>
+            <input type="radio" id="highlightRadio9" name="highlightRadio" onclick="highlight('9')"><label id="highlightLabel9" for="highlightRadio9">9</label>
+            <input type="radio" id="highlightRadioNone" name="highlightRadio" onclick="highlight(null)"><label for="highlightRadioNone">Effacer</label>
+        </div>
+        <div>
+            <button id="clearButton" type="button" onclick="erase()">Effacer tout</button>
+            <button id="solveButton" type="button" onclick="solve()">Montrer la solution</button>
+        </div>
+        <div>
+            <button type="button" onclick="generateGrid()">Nouvelle partie</button>
+            <button id="customGridButton" type="button" onclick="customGrid()">Grille personnalisée</button>
+        </div>
+        Pour partager cette grille, copiez le lien suivant :<br/>
+        <div id="shareDiv">
+            <a id="shareA" href="">malingrey.fr<br/>/sudoku/#<br/></a>
+        </div>
+        <script>loadGrid()</script>
+    </body>
+</html>
