@@ -57,6 +57,7 @@ label.disabled {
 
 .grid input:disabled {
     color: black;
+    background: rgba(0, 0, 0, 0.1);
     font-weight: bold;
 }
 
@@ -69,7 +70,7 @@ label.disabled {
 }
 
 .highlighted {
-    background: yellow;
+    background: lightYellow;
 }
 
 #shareDiv {
