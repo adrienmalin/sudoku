@@ -1,3 +1,0 @@
-# Sudoku
-
-Web sudoku assistant

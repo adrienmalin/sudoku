@@ -1,18 +1,9 @@
-body {
-    /* Background pattern from Toptal Subtle Patterns */
-    background: url("handmadepaper.png");
-    text-align: center;
+* {
+    font-family: sans;
 }
 
 h1 {
     text-align: center;
-    text-shadow: 1px 1px grey;
-    text-decoration: underline;
-}
-
-table {
-    border-spacing: 0;
-    border-collapse: collapse;
 }
 
 div {
@@ -21,69 +12,128 @@ div {
     row-gap: 0.5em;
     margin: 1em auto;
     justify-content: center;
+    text-align: center;
 }
 
-input[type="radio"] {
-    margin-top: -1px;
-    vertical-align: middle;
+#grid {
+    border-spacing: 0;
+    border-radius: 6px;
 }
 
-label.disabled {
-    color: #aaa;
-}
-
-.grid td {
-    border: 2px solid black;
+td {
     padding: 0;
 }
 
-.region td {
-    border: 1px solid grey;
+#grid tr:first-child td:first-child 
+{
+    border-top-left-radius: 6px;
 }
 
-.grid input {
+#grid tr:first-child td
+{
+    border-top: 2px solid black;
+}
+
+#grid tr:first-child td:last-child 
+{
+    border-top-right-radius: 6px;
+}
+
+#grid tr td:first-child 
+{
+    border-left: 2px solid black;
+}
+
+#grid tr td:last-child 
+{
+    border-right: 2px solid black;
+}
+
+#grid tr:last-child td:first-child 
+{
+    border-bottom-left-radius: 6px;
+}
+
+#grid tr:last-child td
+{
+    border-bottom: 2px solid black;
+}
+
+#grid tr:last-child td:last-child 
+{
+    border-bottom-right-radius: 6px;
+}
+
+.regionTop {
+    border-top: 1px solid black;
+}
+
+.regionMiddle {
+    border-top: 1px solid grey;
+    border-bottom: 1px solid grey;
+}
+
+.regionBottom {
+    border-bottom: 1px solid black;
+}
+
+.regionLeft {
+    border-left: 1px solid black;
+}
+
+.regionCenter {
+    border-left: 1px solid grey;
+    border-right: 1px solid grey;
+}
+
+.regionRight {
+    border-right: 1px solid black;
+}
+
+input {
     width: 1.6em;
     height: 1.6em;
     font-size: 1.5em;
     border: 0;
     padding: 0;
     text-align: center;
+    transition: 0.3s;
 }
 
-.grid input:enabled {
-    font-family: cursive;
+input:read-write {
     color: darkblue;
+    background: white;
 }
 
-.grid input:disabled {
+input:read-only {
     color: black;
-    background: rgba(0, 0, 0, 0.1);
+    background: #6666ff;
     font-weight: bold;
 }
 
-.grid input::placeholder {
+input.same-value:read-write {
+    color: #009973;
+    background: #66ffd9;
+}
+
+input.forbidden-value:read-write {
+    background: #ccffe6;
+}
+
+input.same-value:read-only {
+    color: #00664d;
+    background: #00e6ac;
+}
+
+input::placeholder {
     color: #888;
 }
 
-.unhighlighted:enabled {
-    background: transparent;
+#buttons {
+    column-gap: 0.2em;
+    margin: 0;
 }
 
-.highlighted {
-    background: lightYellow;
-}
-
-#shareDiv {
-    display: block;
-    line-height: 80%;
-}
-
-#shareA {
+a {
     text-decoration: none;
-    font-size: 0.8em;
-    letter-spacing: 0.5em;
-}
-
-#highlightRadiosDiv {
-    column-gap: 0;
 }
