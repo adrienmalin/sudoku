@@ -13,7 +13,7 @@ window.onload = function() {
         let columnId = 0
         for (box of row.getElementsByTagName('input')) {
             let regionId = rowId - rowId%3 + Math.floor(columnId/3)
-            if (!box.readOnly) box.select
+            if (!box.readOnly) box.onfocus = box.select
             box.oninput = oninput
             box.oninvalid = oninvalid
             box.onkeydown = keyboardBrowse
@@ -63,12 +63,14 @@ function showAllowedValuesOn(box) {
 }
 
 function oninput() {
+    this.style.color = colorPicker.value
+
     this.neighbourhood.concat([this]).forEach(box => {
         box.setCustomValidity("")
         searchAllowedValuesOf(box)
         box.pattern = `[${Array.from(box.allowedValues).join("")}]?`
     })
-    
+
     enableButtons()
     refreshShowValue()
     this.neighbourhood.concat([this]).forEach(neighbour => showAllowedValuesOn(neighbour))
@@ -148,11 +150,11 @@ function moveOn(area, position, direction) {
     area[position].focus()
 }
 
-function showValue(button) {
-    if (button.textContent == highlightedValue) {
+function showValue(value) {
+    if (value == highlightedValue) {
         highlightedValue = ""
     } else {
-        highlightedValue = button.textContent
+        highlightedValue = value
     }
     refreshShowValue()
 }

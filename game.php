@@ -4,13 +4,13 @@
     if (preg_match("#^[1-9?]{81}$#", $gridStr)) {
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
         <title>Sudoku</title>
         <link rel="stylesheet" type="text/css" href="style.css" />
-        <script type="text/javascript" src="sudoku.js"></script>
+        <script src="sudoku.js"></script>
     </head>
     <body>
         <header>
@@ -19,10 +19,11 @@
         <form id="sudokuForm">
             <div>
                 <table id="grid">
+                    <tbody>
 <?php
         for ($row = 0; $row < 9; $row++) {
 ?>
-                    <tr>
+                        <tr>
 <?php
             for ($column = 0; $column < 9; $column++) {
                 switch($row%3) {
@@ -38,25 +39,27 @@
                 $value = $gridStr[9*$row+$column];
                 if ($value == "?") {
                     $value = "";
-                    $readonly = "";
+                    $disabled = "";
                 } else {
-                    $readonly = "readonly='true'";
+                    $disabled = " disabled";
                 }
-                echo "                        <td class='$classRegionRow $classRegionColumn'><input type='text' inputmode='numeric' minlength=0 maxlength=1 value='$value' $readonly /></td>";
+                echo "                            <td class='$classRegionRow $classRegionColumn'><input type='text' inputmode='numeric' minlength=0 maxlength=1 value='$value'$disabled/></td>\n";
             }
 ?>
-                    </tr>
+                        </tr>
 <?php
         }
 ?>
+                    </tbody>
                 </table>
             </div>
-            <div id="buttons">
+            <div id="buttons" class="buttons">
 <?php
         for($value=1; $value<=9; $value++) {
-            echo "<button type='button' onclick='showValue(this)'>$value</button>";
+            echo "                <button type='button' onclick='showValue(this.textContent)'>$value</button>\n";
         }
 ?>
+                <input id='colorPicker' type="color" value='#00008b'/>
             </div>
             <div>
                 <button type="reset">Tout effacer</button>

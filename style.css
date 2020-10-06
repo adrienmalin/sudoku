@@ -1,5 +1,5 @@
-* {
-    font-family: sans;
+body {
+    font-family: sans-serif;
 }
 
 h1 {
@@ -9,59 +9,65 @@ h1 {
 div {
     display: flex;
     column-gap: 0.5em;
-    row-gap: 0.5em;
     margin: 1em auto;
     justify-content: center;
     text-align: center;
 }
 
-#grid {
+table {
     border-spacing: 0;
-    border-radius: 6px;
 }
 
-td {
+td, tr {
     padding: 0;
 }
 
-#grid tr:first-child td:first-child 
-{
+table tr:first-child td:first-child {
     border-top-left-radius: 6px;
 }
 
-#grid tr:first-child td
-{
+table tr:first-child td:first-child > input {
+    border-top-left-radius: 4px;
+}
+
+table tr:first-child td {
     border-top: 2px solid black;
 }
 
-#grid tr:first-child td:last-child 
-{
+table tr:first-child td:last-child {
     border-top-right-radius: 6px;
 }
 
-#grid tr td:first-child 
-{
+table tr:first-child td:last-child > input {
+    border-top-right-radius: 4px;
+}
+
+table tr td:first-child {
     border-left: 2px solid black;
 }
 
-#grid tr td:last-child 
-{
+table tr td:last-child {
     border-right: 2px solid black;
 }
 
-#grid tr:last-child td:first-child 
-{
+table tr:last-child td:first-child {
     border-bottom-left-radius: 6px;
 }
 
-#grid tr:last-child td
-{
+table tr:last-child td:first-child > input {
+    border-bottom-left-radius: 4px;
+}
+
+table tr:last-child td {
     border-bottom: 2px solid black;
 }
 
-#grid tr:last-child td:last-child 
-{
+table tr:last-child td:last-child {
     border-bottom-right-radius: 6px;
+}
+
+table tr:last-child td:last-child > input {
+    border-bottom-right-radius: 4px;
 }
 
 .regionTop {
@@ -100,36 +106,39 @@ input {
     transition: 0.3s;
 }
 
-input:read-write {
+input:enabled {
     color: darkblue;
     background: white;
 }
 
-input:read-only {
-    color: black;
+input:disabled {
+    color: white;
     background: #6666ff;
-    font-weight: bold;
 }
 
-input.same-value:read-write {
+.same-value:enabled {
     color: #009973;
     background: #66ffd9;
 }
 
-input.forbidden-value:read-write {
-    background: #ccffe6;
+.forbidden-value:enabled {
+    background: #b3ffda;
 }
 
-input.same-value:read-only {
-    color: #00664d;
+.same-value:disabled {
+    color: white;
     background: #00e6ac;
+}
+
+.forbidden-value:disabled {
+    background: #6288ea;
 }
 
 input::placeholder {
     color: #888;
 }
 
-#buttons {
+.buttons {
     column-gap: 0.2em;
     margin: 0;
 }

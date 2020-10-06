@@ -98,9 +98,7 @@
                     forEach($testBox->neighbourhood as $neighbour)
                         $neighbour->searchAllowedValues();
                 }
-                $solutions = array();
-                forEach($this->findSolutions(false, 2, 4) as $solution) $solutions[$solution] = true;
-                if (count($solutions) == 1) {
+                if (count(iterator_to_array($this->findSolutions(false, 2, 4), true)) == 1) {
                     $nbClues -= count($testBoxes);
                     forEach($testBoxes as $testBox) array_unset_value($testBox, $untestedBoxes);
                 } else {
