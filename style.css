@@ -143,6 +143,10 @@ input::placeholder {
     margin: 0;
 }
 
+input[type="color"] {
+    font-size: 1em;
+}
+
 a {
     text-decoration: none;
 }

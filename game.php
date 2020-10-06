@@ -54,11 +54,13 @@
                 </table>
             </div>
             <div id="buttons" class="buttons">
+            	🔎
 <?php
         for($value=1; $value<=9; $value++) {
             echo "                <button type='button' onclick='showValue(this.textContent)'>$value</button>\n";
         }
 ?>
+            	<label for="colorPicjer">✏️</label>
                 <input id='colorPicker' type="color" value='#00008b'/>
             </div>
             <div>
