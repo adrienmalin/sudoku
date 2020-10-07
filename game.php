@@ -26,16 +26,6 @@
                         <tr>
 <?php
             for ($column = 0; $column < 9; $column++) {
-                switch($row%3) {
-                    case 0: $classRegionRow = "regionTop"; break;
-                    case 1: $classRegionRow = "regionMiddle"; break;
-                    case 2: $classRegionRow = "regionBottom"; break;
-                }
-                switch($column%3) {
-                    case 0: $classRegionColumn = "regionLeft"; break;
-                    case 1: $classRegionColumn = "regionCenter"; break;
-                    case 2: $classRegionColumn = "regionRight"; break;
-                }
                 $value = $gridStr[9*$row+$column];
                 if ($value == "?") {
                     $value = "";
@@ -43,7 +33,7 @@
                 } else {
                     $disabled = " disabled";
                 }
-                echo "                            <td class='$classRegionRow $classRegionColumn'><input type='text' inputmode='numeric' minlength=0 maxlength=1 value='$value'$disabled/></td>\n";
+                echo "                            <td><input type='text' inputmode='numeric' minlength=0 maxlength=1 value='$value'$disabled/></td>\n";
             }
 ?>
                         </tr>
