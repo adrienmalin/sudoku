@@ -66,7 +66,9 @@
                     if ($box != $neighbour && !in_array($neighbour, $box->neighbourhood))
                         $box->neighbourhood[] = $neighbour;
             }
+        }
             
+        function generate() {
             // Init with a shuffle row
             $values = array("1", "2", "3", "4", "5", "6", "7", "8", "9");
             shuffle($values);
@@ -80,16 +82,15 @@
             $this->findSolutions(true, 1, 4)->current();
             
             // Remove clues while there is still a unique solution
-            $untestedBoxes = $this->boxes;
-            shuffle($untestedBoxes);
-            $nbClues = count($untestedBoxes);
-            while(count($untestedBoxes)) {
-                $testBoxes = array(array_pop($untestedBoxes));
+            shuffle($this->boxes);
+            $nbClues = count($this->boxes);
+            foreach($this->boxes as $testBox) {
+                $testBoxes = array($testBox);
                 if ($nbClues >=30)
-                    $testBoxes[] = $this->rows[8-$testBoxes[0]->rowId][8-$testBoxes[0]->columnId];
+                    $testBoxes[] = $this->rows[8-$testBox->rowId][8-$testBox->columnId];
                 if ($nbClues >=61) {
-                    $testBoxes[] = $this->rows[8-$testBoxes[0]->rowId][$testBoxes[0]->columnId];
-                    $testBoxes[] = $this->rows[$testBoxes[0]->rowId][8-$testBoxes[0]->columnId];
+                    $testBoxes[] = $this->rows[8-$testBox->rowId][$testBox->columnId];
+                    $testBoxes[] = $this->rows[$testBox->rowId][8-$testBox->columnId];
                 }
                 $erasedValues = array();
                 forEach($testBoxes as $testBox) {
@@ -98,9 +99,8 @@
                     forEach($testBox->neighbourhood as $neighbour)
                         $neighbour->searchAllowedValues();
                 }
-                if (count(iterator_to_array($this->findSolutions(false, 2, 4), true)) == 1) {
+                if ($this->isValid()) {
                     $nbClues -= count($testBoxes);
-                    forEach($testBoxes as $testBox) array_unset_value($testBox, $untestedBoxes);
                 } else {
                     forEach($testBoxes as $i => $box) {
                         $box->value = $erasedValues[$i];
@@ -110,15 +110,28 @@
             }
         }
         
-        function findSolutions($randomized=false, $maxSolutions=1, $maxTries=4) {
+        function isValid() {
+            $solutionsFinder = $this->findSolutions(false);
+            $solutionsFound = array();
+            foreach($solutionsFinder as $solution) {
+                $solutionsFound[$solution] = true;
+                if (count($solutionsFound) > 1) {
+                    $solutionsFinder->send(true);
+                    break;
+                }
+            }
+            return count($solutionsFound) == 1;
+        }
+        
+        function findSolutions($randomized=false) {
             $emptyBoxes = array_filter($this->boxes, "isUnknown");
             if (count($emptyBoxes)) {
                 if ($randomized) shuffle($emptyBoxes);
                 usort($emptyBoxes, "easyFirst");
                 $testBox = $emptyBoxes[0];
-                $nbSolutionsFound = 0;
                 $nbTries = 0;
                 if ($randomized) shuffle($testBox->allowedValues);
+                $stop = null;
                 foreach($testBox->allowedValues as $testBox->value) {
                     foreach($testBox->neighbourhood as $neighbour)
                         $neighbour->testValueWasAllowed[] = array_unset_value($testBox->value, $neighbour->allowedValues);
@@ -127,16 +140,20 @@
                         if (count($neighbour->allowedValues) == 0) $correctGrid = false;
                     }
                     if ($correctGrid) {
-                        foreach($this->findSolutions($randomized, $maxSolutions-$nbSolutionsFound, $maxTries) as $solution) {
-                            yield $solution;
-                            $nbSolutionsFound++;
+                        $solutionsFinder = $this->findSolutions($randomized);
+                        foreach($solutionsFinder as $solution) {
+                            $stop = (yield $solution);
+                            if ($stop) {
+                                $solutionsFinder->send($stop);
+                                break;
+                            }
                         }
                         
                     }
                     forEach($testBox->neighbourhood as $neighbour)
                         if (array_pop($neighbour->testValueWasAllowed))
                             $neighbour->allowedValues[] = $testBox->value;
-                    if (($maxSolutions && $nbSolutionsFound >= $maxSolutions) || ++$nbTries >= $maxTries) break;
+                    if ($stop) break;
                 }
                 $testBox->value = "?";
             } else {
@@ -156,6 +173,7 @@
     }
     
     $grid = new Grid();
+    $grid->generate();
     header("Location: " . $_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["HTTP_HOST"] . dirname($_SERVER["DOCUMENT_URI"]) . "/" . $grid->toString());
     exit();
 ?>

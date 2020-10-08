@@ -12,6 +12,7 @@ div {
     margin: 1em auto;
     justify-content: center;
     text-align: center;
+    align-items: center;
 }
 
 table {
@@ -125,6 +126,7 @@ input::placeholder {
 }
 
 .buttons {
+    flex-wrap: wrap;
     column-gap: 0.2em;
     margin: 0;
 }

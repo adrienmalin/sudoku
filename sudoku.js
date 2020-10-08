@@ -186,9 +186,9 @@ function shuffle(iterable) {
 easyFirst = (box1, box2) => box1.allowedValues.size - box2.allowedValues.size
 
 function showSuggestion() {
-    const emptyBoxes = boxes.filter(box => box.value == "")
+    const emptyBoxes = boxes.filter(box => box.value == "" && box.allowedValues.size == 1)
     if (emptyBoxes.length) {
-        shuffle(emptyBoxes).sort(easyFirst)[0].placeholder = "!"
+        shuffle(emptyBoxes).placeholder = "!"
     } else {
         clearTimeout(suggestionTimer)
         suggestionTimer = null
