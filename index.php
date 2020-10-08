@@ -1,4 +1,9 @@
 <?php
+    function isKnown($box) {
+        return $box->value != "?";
+    }
+
+
     function isUnknown($box) {
         return $box->value == "?";
     }
@@ -92,6 +97,7 @@
                     $testBoxes[] = $this->rows[8-$testBox->rowId][$testBox->columnId];
                     $testBoxes[] = $this->rows[$testBox->rowId][8-$testBox->columnId];
                 }
+                $testBoxes = array_filter($testBoxes, "isKnown");
                 $erasedValues = array();
                 forEach($testBoxes as $testBox) {
                     $erasedValues[] = $testBox->value;
@@ -117,7 +123,6 @@
                 $solutionsFound[$solution] = true;
                 if (count($solutionsFound) > 1) {
                     $solutionsFinder->send(true);
-                    break;
                 }
             }
             return count($solutionsFound) == 1;
