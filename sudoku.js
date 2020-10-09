@@ -49,7 +49,7 @@ window.onload = function() {
 }
 
 document.onkeydown = function(event) {
-	if (event.ctrlKey == true && event.key == "z") {
+	if (event.ctrlKey == true && event.key.toLowerCase() == "z") {
     	event.preventDefault()
     	undo()
     }
@@ -93,7 +93,7 @@ function refresh(input) {
     })
 
     enableButtons()
-    refreshShowValue()
+    highlightAndTab()
     input.neighbourhood.concat([input]).forEach(neighbour => showAllowedValuesOn(neighbour))
 
     if (input.form.checkValidity()) { // Correct grid
@@ -176,26 +176,41 @@ function keyboardBrowse(event) {
 }
 
 function moveOn(area, position, direction) {
-    position = (position + direction) % 9
-    area[position].focus()
+    if (area.filter(box => box.disabled).length < 9) {
+        do {
+            position = (position + direction) % 9
+        } while (area[position].disabled)
+        area[position].focus()
+    }
 }
 
-function showValue(value) {
+function highlight(value) {
     if (value == highlightedValue) {
         highlightedValue = ""
     } else {
         highlightedValue = value
     }
-    refreshShowValue()
+    highlightAndTab()
+    boxes.filter(box => box.value == "" && box.tabIndex == 0)[0].focus()
 }
 
-function refreshShowValue() {
-    boxes.forEach(box => box.className = "")
+function highlightAndTab() {
     if (highlightedValue) {
         boxes.forEach(box => {
-            if (box.value == highlightedValue) box.className = "same-value"
-            if (!box.allowedValues.has(highlightedValue)) box.className = "forbidden-value"
+            if (box.value == highlightedValue) {
+                box.className = "same-value"
+                box.tabIndex = -1
+            }
+            else if (box.allowedValues.has(highlightedValue)) {
+                box.className = ""
+                box.tabIndex = 0
+            } else {
+                box.className = "forbidden-value"
+                box.tabIndex = -1
+            }
         })
+    } else {
+        boxes.forEach(box => box.className = "")
     }
 }
 

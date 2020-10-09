@@ -6,21 +6,21 @@
     if (preg_match("#^[1-9.]{81}$#", $gridStr)) {
 ?>
 <!DOCTYPE html>
-<html lang="fr">
+<html lang='fr'>
     <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width" />
+        <meta charset='utf-8' />
+        <meta name='viewport' content='width=device-width' />
         <title>Sudoku</title>
-        <link rel="stylesheet" type="text/css" href="style.css" />
-        <script src="sudoku.js"></script>
+        <link rel='stylesheet' type='text/css' href='style.css' />
+        <script src='sudoku.js'></script>
     </head>
     <body>
         <header>
             <h1>Sudoku</h1>
         </header>
-        <form id="sudokuForm">
+        <form id='sudokuForm'>
             <div>
-                <table id="grid">
+                <table id='grid'>
                     <tbody>
 <?php
         for ($row = 0; $row < 9; $row++) {
@@ -45,27 +45,27 @@
                     </tbody>
                 </table>
             </div>
-            <div id="buttons" class="buttons">
+            <div id='buttons' class='buttons'>
             	🔎
 <?php
         for($value=1; $value<=9; $value++) {
-            echo "                <button type='button' onclick='showValue(\"$value\")'>$value</button>\n";
+            echo "                <button type='button' onclick='highlight(\"$value\")' accesskey='$value'>$value</button>\n";
         }
 ?>
             </div>
             <div>
-                <button type="reset">Tout effacer</button>
-            	<button id="undoButton" type="button" onclick="undo()" disabled>Annuler Ctrl+Z</button>
-            	<label for="colorPicker">🎨</label>
-                <input id="colorPicker" type="color" value="#00008b"/>
+                <button type='reset'>Tout effacer</button>
+            	<button id='undoButton' type='button' onclick='undo()' disabled accesskey='z'>Annuler Ctrl+Z</button>
+            	<label for='colorPicker'>🎨</label>
+                <input id='colorPicker' type='color' value='#00008b'/>
             </div>
         </form>
         <div>
             Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.
         </div>
         <div>
-            <a href="">Lien vers cette grille</a><br/>
-            <a href=".">Nouvelle grille</a>
+            <a href=''>Lien vers cette grille</a><br/>
+            <a href='.'>Nouvelle grille</a>
         </div>
     </body>
 </html>
@@ -82,10 +82,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width" />
+        <meta charset='utf-8' />
+        <meta name='viewport' content='width=device-width' />
         <title>Grille incorrecte</title>
-        <link rel="stylesheet" type="text/css" href="style.css" />
+        <link rel='stylesheet' type='text/css' href='style.css' />
     </head>
     <body>
         <header>
@@ -97,7 +97,7 @@
             <li>un chiffre entre 1 et 9 pour les cases connues</li>
             <li>un point pour les case vides</li>
         </ul>
-    	Exemple : <a href="<?=$urlExample?>"><?=$urlExample?></a><br/>
+    	Exemple : <a href='<?=$urlExample?>'><?=$urlExample?></a><br/>
     </body>
 </html>
 <?php
