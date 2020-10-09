@@ -8,6 +8,7 @@ h1 {
 
 div {
     display: flex;
+    row-gap: 0.5em;
     column-gap: 0.5em;
     margin: 1em auto;
     justify-content: center;

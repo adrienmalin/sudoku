@@ -1,5 +1,5 @@
 <?php
-    const UNKOWN = ".";
+    require("classes.php");
 
     $gridStr = basename(strip_tags($_SERVER["REQUEST_URI"]));
     // URL contains grid
@@ -70,7 +70,13 @@
 </html>
 <?php
     } else {
+    	$grid = new Grid();
+    	$grid->generate();
+    
         header("HTTP/1.0 400 Bad Request", true, 400);
+    
+    	$urlDir = $_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["HTTP_HOST"] . dirname($_SERVER["DOCUMENT_URI"]);
+        $urlExample = $urlDir . "/" . $grid->toString();
 ?>
 <!DOCTYPE html>
 <html>
@@ -84,13 +90,13 @@
         <header>
             <h1>Grille incorrecte</h1>
         </header>
-        L'adresse URL doit être de la forme : <?=$_SERVER["REQUEST_SCHEME"]?>://<?=$_SERVER["HTTP_HOST"] . dirname($_SERVER["DOCUMENT_URI"])?>/<em>grille</em>,<br/>
+        L'adresse URL doit être de la forme : <?=$urlDir?>/<em>grille</em>,<br/>
         <em>grille</em> étant une suite de 81 caractères représentant la grille de gauche à droite puis de haut en bas, soit :
         <ul>
             <li>un chiffre entre 1 et 9 pour les cases connues</li>
-            <li>. pour les case vides</li>
+            <li>un point pour les case vides</li>
         </ul>
-        <a href=".">Cliquez ici pour générer une nouvelle grille</a>
+    	Exemple : <a href="<?=$urlExample?>"><?=$urlExample?></a><br/>
     </body>
 </html>
 <?php
