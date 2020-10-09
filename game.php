@@ -47,11 +47,11 @@
             	🔎
 <?php
         for($value=1; $value<=9; $value++) {
-            echo "                <button type='button' onclick='showValue(this.textContent)'>$value</button>\n";
+            echo "                <button type='button' onclick='showValue(\"$value\")'>$value</button>\n";
         }
 ?>
-            	<label for="colorPicjer">🎨</label>
-                <input id='colorPicker' type="color" value='#00008b'/>
+            	<label for="colorPicker">🎨</label>
+                <input id="colorPicker" type="color" value="#00008b"/>
             </div>
             <div>
                 <button type="reset">Tout effacer</button>
