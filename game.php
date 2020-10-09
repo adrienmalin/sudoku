@@ -52,17 +52,18 @@
             echo "                <button type='button' onclick='showValue(\"$value\")'>$value</button>\n";
         }
 ?>
-            	<label for="colorPicker">🎨</label>
-                <input id="colorPicker" type="color" value="#00008b"/>
             </div>
             <div>
                 <button type="reset">Tout effacer</button>
+            	<button id="undoButton" type="button" onclick="undo()" disabled>Annuler Ctrl+Z</button>
+            	<label for="colorPicker">🎨</label>
+                <input id="colorPicker" type="color" value="#00008b"/>
             </div>
         </form>
-        <div id=help>
+        <div>
             Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.
         </div>
-        <div id=links>
+        <div>
             <a href="">Lien vers cette grille</a><br/>
             <a href=".">Nouvelle grille</a>
         </div>

@@ -6,6 +6,7 @@ let columns = Array.from(Array(9), x => [])
 let regions = Array.from(Array(9), x => [])
 let suggestionTimer= null
 let highlightedValue = ""
+let history = []
 
 window.onload = function() {
     let rowId = 0
@@ -13,9 +14,11 @@ window.onload = function() {
         let columnId = 0
         for (box of row.getElementsByTagName('input')) {
             let regionId = rowId - rowId%3 + Math.floor(columnId/3)
-            if (!box.readOnly) box.onfocus = box.select
-            box.oninput = oninput
-            box.oninvalid = oninvalid
+            if (!box.readOnly) {
+            	box.onfocus = onfocus
+            	box.oninput = oninput
+            	box.oninvalid = oninvalid
+            }
             box.onkeydown = keyboardBrowse
             box.rowId = rowId
             box.columnId = columnId
@@ -45,6 +48,13 @@ window.onload = function() {
     suggestionTimer = setTimeout(showSuggestion, 30000)
 }
 
+document.onkeydown = function(event) {
+	if (event.ctrlKey == true && event.key == "z") {
+    	event.preventDefault()
+    	undo()
+    }
+}
+
 function searchAllowedValuesOf(box) {
     box.allowedValues = new Set(VALUES)
     box.neighbourhood.forEach(neighbour => box.allowedValues.delete(neighbour.value))
@@ -62,10 +72,21 @@ function showAllowedValuesOn(box) {
     }
 }
 
-function oninput() {
-    this.style.color = colorPicker.value
+function onfocus() {
+	this.oldValue = this.value
+	this.select()
+}
 
-    this.neighbourhood.concat([this]).forEach(box => {
+function oninput() {
+	history.push({input: this, value: this.oldValue})
+	undoButton.disabled = false
+	refresh(this)
+}
+
+function refresh(input) {
+    input.style.color = colorPicker.value
+
+    input.neighbourhood.concat([input]).forEach(box => {
         box.setCustomValidity("")
         searchAllowedValuesOf(box)
         box.pattern = `[${Array.from(box.allowedValues).join("")}]?`
@@ -73,9 +94,9 @@ function oninput() {
 
     enableButtons()
     refreshShowValue()
-    this.neighbourhood.concat([this]).forEach(neighbour => showAllowedValuesOn(neighbour))
+    input.neighbourhood.concat([input]).forEach(neighbour => showAllowedValuesOn(neighbour))
 
-    if (this.form.checkValidity()) { // Correct grid
+    if (input.form.checkValidity()) { // Correct grid
         if (boxes.filter(box => box.value == "").length == 0) {
             alert(`Bravo ! Vous avez résolu la grille.`)
         } else {
@@ -83,8 +104,17 @@ function oninput() {
             suggestionTimer = setTimeout(showSuggestion, 30000)
         }
     } else { // Errors on grid
-        this.select()
-        this.reportValidity()
+        input.select()
+        input.reportValidity()
+    }
+}
+
+function undo() {
+	if (history.length) {
+		previousState = history.pop()
+		previousState.input.value = previousState.value
+    	refresh(previousState.input)
+    	if (history.length < 1) undoButton.disabled = true
     }
 }
 
