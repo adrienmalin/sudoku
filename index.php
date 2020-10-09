@@ -1,11 +1,13 @@
 <?php
+    const UNKOWN = ".";
+
     function isKnown($box) {
-        return $box->value != "?";
+        return $box->value != UNKOWN;
     }
 
 
     function isUnknown($box) {
-        return $box->value == "?";
+        return $box->value == UNKOWN;
     }
     
     function easyFirst($box1, $box2) {
@@ -26,7 +28,7 @@
         public $values = array("1", "2", "3", "4", "5", "6", "7", "8", "9");
     
         function __construct($rowId, $columnId, $regionId) {
-            $this->value = "?";
+            $this->value = UNKOWN;
             $this->rowId = $rowId;
             $this->columnId = $columnId;
             $this->regionId = $regionId;
@@ -38,7 +40,7 @@
         function searchAllowedValues() {
             $this->allowedValues = $this->values;
             forEach($this->neighbourhood as $neighbour) {
-                if ($neighbour->value != "?")
+                if ($neighbour->value != UNKOWN)
                     array_unset_value($neighbour->value, $this->allowedValues);
             }
         }
@@ -101,7 +103,7 @@
                 $erasedValues = array();
                 forEach($testBoxes as $testBox) {
                     $erasedValues[] = $testBox->value;
-                    $testBox->value = "?";
+                    $testBox->value = UNKOWN;
                     forEach($testBox->neighbourhood as $neighbour)
                         $neighbour->searchAllowedValues();
                 }
@@ -160,7 +162,7 @@
                             $neighbour->allowedValues[] = $testBox->value;
                     if ($stop) break;
                 }
-                $testBox->value = "?";
+                $testBox->value = UNKOWN;
             } else {
                 yield $this->toString();
             }
@@ -170,7 +172,7 @@
             $str = "";
             foreach($this->rows as $row) {
                 forEach($row as $box) {
-                    $str .= ($box->value? $box->value : "?");
+                    $str .= ($box->value? $box->value : UNKOWN);
                 }
             }
             return $str;

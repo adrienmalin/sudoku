@@ -1,7 +1,9 @@
 <?php
+    const UNKOWN = ".";
+
     $gridStr = basename(strip_tags($_SERVER["REQUEST_URI"]));
     // URL contains grid
-    if (preg_match("#^[1-9?]{81}$#", $gridStr)) {
+    if (preg_match("#^[1-9.]{81}$#", $gridStr)) {
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -27,7 +29,7 @@
 <?php
             for ($column = 0; $column < 9; $column++) {
                 $value = $gridStr[9*$row+$column];
-                if ($value == "?") {
+                if ($value == UNKOWN) {
                     $value = "";
                     $disabled = "";
                 } else {
