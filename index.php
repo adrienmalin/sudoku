@@ -86,7 +86,7 @@
                     array_unset_value($box->value, $neighbour->allowedValues);
             }
             // Fill grid
-            $this->findSolutions(true, 1, 4)->current();
+            $this->findSolutions(true)->current();
             
             // Remove clues while there is still a unique solution
             shuffle($this->boxes);
@@ -110,9 +110,9 @@
                 if ($this->isValid()) {
                     $nbClues -= count($testBoxes);
                 } else {
-                    forEach($testBoxes as $i => $box) {
-                        $box->value = $erasedValues[$i];
-                        forEach($box->neighbourhood as $neighbour) array_unset_value($box->value, $neighbour->allowedValues);
+                    forEach($testBoxes as $i => $testBox) {
+                        $testBox->value = $erasedValues[$i];
+                        forEach($testBox->neighbourhood as $neighbour) array_unset_value($testBox->value, $neighbour->allowedValues);
                     }
                 }
             }
