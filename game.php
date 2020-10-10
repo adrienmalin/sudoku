@@ -4,6 +4,8 @@
     $gridStr = basename(strip_tags($_SERVER["REQUEST_URI"]));
     // URL contains grid
     if (preg_match("#^[1-9.]{81}$#", $gridStr)) {
+        require("get_browser.php");
+        header("Vary: User-Agent");
 ?>
 <!DOCTYPE html>
 <html lang='fr'>
@@ -20,7 +22,7 @@
         </header>
         <form id='sudokuForm'>
             <div>
-                <table id='grid'>
+                <table id='grid' class='grid'>
                     <tbody>
 <?php
         for ($row = 0; $row < 9; $row++) {
@@ -46,27 +48,57 @@
                 </table>
             </div>
             <div id='buttons' class='buttons'>
-            	🔎
 <?php
         for($value=1; $value<=9; $value++) {
             echo "                <button type='button' onclick='highlight(\"$value\")' accesskey='$value'>$value</button>\n";
         }
 ?>
             </div>
-            <div>
+            <div class='buttons'>
                 <button type='reset'>Tout effacer</button>
-            	<button id='undoButton' type='button' onclick='undo()' disabled accesskey='z'>Annuler Ctrl+Z</button>
+            	<button id='undoButton' type='button' onclick='undo()' disabled accesskey='z'>Annuler</button>
             	<label for='colorPicker'>🎨</label>
                 <input id='colorPicker' type='color' value='#00008b'/>
             </div>
         </form>
-        <div>
+        <section>
             Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.
-        </div>
-        <div>
+        </section>
+<?php
+    $userAgent=getBrowser();
+    if($userAgent["platform"] == "mac" || $userAgent["platform"] == "linux" || $userAgent["platform"] == "windows") {
+        if($userAgent["platform"] == "mac") $keyboardShortcurt = "<kbd>Control</kbd> + <kbd>Alt</kbd>";
+        elseif($userAgent["platform"] == "linux" || $userAgent["platform"] == "windows") {
+            if($userAgent["name"] == "Mozilla Firefox") $keyboardShortcurt = "<kbd>Alt</kbd> + <kbd>Maj</kbd>";
+            else $keyboardShortcurt = "<kbd>Alt</kbd>";
+        }
+?>
+        <section>
+            <table class='shortcuts'>
+                <caption>Raccourcis clavier</caption>
+                <tbody>
+                    <tr>
+                        <td><kbd>Tab</kbd> <kbd>⬅</kbd> <kbd>⬆</kbd> <kbd>⬇</kbd> <kbd>➡</kbd></td>
+                        <td>Déplacement</td>
+                    </tr>
+                    <tr>
+                        <td><?=$keyboardShortcurt?> + <kbd>1</kbd>~<kbd>9</kbd></td>
+                        <td>Surligner</td>
+                    </tr>
+                    <tr>
+                        <td><?=$keyboardShortcurt?> + <kbd>Z</kbd></td>
+                        <td>Annuler</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+<?php
+    }
+?>
+        <section>
             <a href=''>Lien vers cette grille</a><br/>
             <a href='.'>Nouvelle grille</a>
-        </div>
+        </section>
     </body>
 </html>
 <?php

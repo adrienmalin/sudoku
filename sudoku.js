@@ -48,13 +48,6 @@ window.onload = function() {
     suggestionTimer = setTimeout(showSuggestion, 30000)
 }
 
-document.onkeydown = function(event) {
-	if (event.ctrlKey == true && event.key.toLowerCase() == "z") {
-    	event.preventDefault()
-    	undo()
-    }
-}
-
 function searchAllowedValuesOf(box) {
     box.allowedValues = new Set(VALUES)
     box.neighbourhood.forEach(neighbour => box.allowedValues.delete(neighbour.value))
