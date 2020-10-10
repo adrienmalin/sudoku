@@ -91,7 +91,7 @@ input {
     border: 0;
     padding: 0;
     text-align: center;
-    transition: 0.5s;
+    transition: background 0.5s;
 }
 
 input:enabled {
