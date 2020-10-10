@@ -15,11 +15,9 @@ window.onload = function() {
         for (box of row.getElementsByTagName('input')) {
             let regionId = rowId - rowId%3 + Math.floor(columnId/3)
             if (!box.readOnly) {
-            	box.onfocus = onfocus
-            	box.oninput = oninput
-            	box.oninvalid = oninvalid
+                box.onfocus = onfocus
+                box.oninput = oninput
             }
-            box.onkeydown = keyboardBrowse
             box.rowId = rowId
             box.columnId = columnId
             box.regionId = regionId
@@ -36,9 +34,9 @@ window.onload = function() {
         box.neighbourhood.delete(box)
         box.neighbourhood = Array.from(box.neighbourhood)
     })
-    boxes.forEach(searchAllowedValuesOf)
+    boxes.forEach(searchCandidatesOf)
     enableButtons()
-    boxes.forEach(showAllowedValuesOn)
+    boxes.forEach(showCandidatesOn)
     for(box of boxes) {
         if (!box.readOnly) {
             box.focus()
@@ -48,48 +46,64 @@ window.onload = function() {
     suggestionTimer = setTimeout(showSuggestion, 30000)
 }
 
-function searchAllowedValuesOf(box) {
-    box.allowedValues = new Set(VALUES)
-    box.neighbourhood.forEach(neighbour => box.allowedValues.delete(neighbour.value))
+function searchCandidatesOf(box) {
+    box.candidates = new Set(VALUES)
+    box.neighbourhood.forEach(neighbour => box.candidates.delete(neighbour.value))
 }
 
-function showAllowedValuesOn(box) {
-    box.required = box.allowedValues.size == 0
+function showCandidatesOn(box) {
+    box.required = box.candidates.size == 0
     if (box.value.length) {
         box.title = ""
-    } else if (box.allowedValues.size) {
-        const allowedValuesArray = Array.from(box.allowedValues).sort()
-        box.title = allowedValuesArray.length ==1 ? allowedValuesArray[0] : allowedValuesArray.slice(0, allowedValuesArray.length-1).join(", ") + " ou " + allowedValuesArray[allowedValuesArray.length-1]
+    } else if (box.candidates.size) {
+        const candidatesArray = Array.from(box.candidates).sort()
+        box.title = candidatesArray.length ==1 ? candidatesArray[0] : candidatesArray.slice(0, candidatesArray.length-1).join(", ") + " ou " + candidatesArray[candidatesArray.length-1]
     } else {
         box.title = "Aucune valeur possible !"
     }
 }
 
 function onfocus() {
-	this.oldValue = this.value
+	this.previousValue = this.value
 	this.select()
 }
 
 function oninput() {
-	history.push({input: this, value: this.oldValue})
+	history.push({input: this, value: this.previousValue})
 	undoButton.disabled = false
 	refresh(this)
 }
 
-function refresh(input) {
-    input.style.color = colorPicker.value
+function refresh(box) {
+    box.style.color = colorPicker.value
 
-    input.neighbourhood.concat([input]).forEach(box => {
-        box.setCustomValidity("")
-        searchAllowedValuesOf(box)
-        box.pattern = `[${Array.from(box.allowedValues).join("")}]?`
+    box.neighbourhood.concat([box]).forEach(neighbour => {
+        searchCandidatesOf(neighbour)
+        showCandidatesOn(neighbour)
+        neighbour.setCustomValidity("")
     })
-
+    
+    for (neighbour1 of box.neighbourhood) {
+        neighbour1.setCustomValidity("")
+        if (neighbour1.value.length) {
+            for (area of [
+                {name: "région", neighbours: regions[neighbour1.regionId]},
+                {name: "ligne", neighbours: rows[neighbour1.rowId]},
+                {name: "colonne", neighbours: columns[neighbour1.columnId]},
+            ])
+                for (neighbour2 of area.neighbours)
+                    if (neighbour2 != neighbour1 && neighbour2.value == neighbour1.value) {
+                        neighbour1.setCustomValidity(`Il y a un autre ${neighbour1.value} dans cette ${area.name}.`)
+                        neighbour2.setCustomValidity(`Il y a un autre ${neighbour1.value} dans cette ${area.name}.`)
+                    }
+        }
+    }
+    
     enableButtons()
     highlightAndTab()
-    input.neighbourhood.concat([input]).forEach(neighbour => showAllowedValuesOn(neighbour))
 
-    if (input.form.checkValidity()) { // Correct grid
+            
+    if (box.form.checkValidity()) { // Correct grid
         if (boxes.filter(box => box.value == "").length == 0) {
             alert(`Bravo ! Vous avez résolu la grille.`)
         } else {
@@ -97,8 +111,8 @@ function refresh(input) {
             suggestionTimer = setTimeout(showSuggestion, 30000)
         }
     } else { // Errors on grid
-        input.select()
-        input.reportValidity()
+        box.select()
+        box.reportValidity()
     }
 }
 
@@ -113,58 +127,12 @@ function undo() {
 
 function enableButtons() {
     for (button of buttons.getElementsByTagName("button")) {
-        if (boxes.filter(box => box.value == "").some(box => box.allowedValues.has(button.textContent))) {
+        if (boxes.filter(box => box.value == "").some(box => box.candidates.has(button.textContent))) {
             button.disabled = false
         } else {
             button.disabled = true
             if (highlightedValue == button.textContent) highlightedValue = ""
         }
-    }
-}
-
-function oninvalid() {
-    if (this.value.length && !this.value.match(/[1-9]/))
-        this.setCustomValidity("Entrez un chiffre entre 1 et 9.")
-    else if (sameValueIn(regions[this.regionId]))
-        this.setCustomValidity(`Il y a un autre ${this.value} dans cette région.`)
-    else if (sameValueIn(rows[this.rowId]))
-        this.setCustomValidity(`Il y a un autre ${this.value} dans cette ligne.`)
-    else if (sameValueIn(columns[this.columnId]))
-        this.setCustomValidity(`Il y a un autre ${this.value} dans cette colonne.`)
-    else if (this.allowedValues.size == 0)
-        this.setCustomValidity("La grille est incorrecte.")
-}
-
-function sameValueIn(area) {
-    for (const box1 of area) {
-        for (const box2 of area) {
-            if (box1 != box2 && box1.value.length && box1.value == box2.value) {
-                return true
-            }
-        }
-    }
-    return false
-}
-
-
-function keyboardBrowse(event) {
-    switch(event.key) {
-        case "ArrowLeft":
-            event.preventDefault()
-            moveOn(rows[this.rowId], this.columnId, 8)
-        break
-        case "ArrowRight":
-            event.preventDefault()
-            moveOn(rows[this.rowId], this.columnId, 1)
-        break
-        case "ArrowUp":
-            event.preventDefault()
-            moveOn(columns[this.columnId], this.rowId, 8)
-        break
-        case "ArrowDown":
-            event.preventDefault()
-            moveOn(columns[this.columnId], this.rowId, 1)
-        break
     }
 }
 
@@ -194,7 +162,7 @@ function highlightAndTab() {
                 box.className = "same-value"
                 box.tabIndex = -1
             }
-            else if (box.allowedValues.has(highlightedValue)) {
+            else if (box.candidates.has(highlightedValue)) {
                 box.className = ""
                 box.tabIndex = 0
             } else {
@@ -221,10 +189,10 @@ function shuffle(iterable) {
     return array
 }
 
-easyFirst = (box1, box2) => box1.allowedValues.size - box2.allowedValues.size
+easyFirst = (box1, box2) => box1.candidates.size - box2.candidates.size
 
 function showSuggestion() {
-    const emptyBoxes = boxes.filter(box => box.value == "" && box.allowedValues.size == 1)
+    const emptyBoxes = boxes.filter(box => box.value == "" && box.candidates.size == 1)
     if (emptyBoxes.length) {
         shuffle(emptyBoxes).placeholder = "!"
     } else {

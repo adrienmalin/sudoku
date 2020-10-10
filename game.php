@@ -37,7 +37,7 @@
                 } else {
                     $disabled = " disabled";
                 }
-                echo "                            <td><input type='text' inputmode='numeric' minlength=0 maxlength=1 value='$value'$disabled/></td>\n";
+                echo "                            <td><input type='number' min='1' max='9' step='1' value='$value'$disabled/></td>\n";
             }
 ?>
                         </tr>
@@ -58,7 +58,7 @@
                 <button type='reset'>Tout effacer</button>
             	<button id='undoButton' type='button' onclick='undo()' disabled accesskey='z'>Annuler</button>
             	<label for='colorPicker'>🎨</label>
-                <input id='colorPicker' type='color' value='#00008b'/>
+                <input id='colorPicker' type='color' title='Changer de stylo' value='#00008b'/>
             </div>
         </form>
         <section>
@@ -78,7 +78,7 @@
                 <caption>Raccourcis clavier</caption>
                 <tbody>
                     <tr>
-                        <td><kbd>Tab</kbd> <kbd>⬅</kbd> <kbd>⬆</kbd> <kbd>⬇</kbd> <kbd>➡</kbd></td>
+                        <td><kbd>Tab</kbd></td>
                         <td>Déplacement</td>
                     </tr>
                     <tr>

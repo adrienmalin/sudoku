@@ -84,7 +84,7 @@ section, div {
     border-right: 1px solid black;
 }
 
-input {
+input[type=number] {
     width: 1.6em;
     height: 1.6em;
     font-size: 1.5em;
@@ -92,6 +92,13 @@ input {
     padding: 0;
     text-align: center;
     transition: background 0.5s;
+    -moz-appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 input:enabled {

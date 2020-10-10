@@ -11,7 +11,7 @@
     }
     
     function easyFirst($box1, $box2) {
-        return count($box1->allowedValues) - count($box2->allowedValues);
+        return count($box1->candidates) - count($box2->candidates);
     }
     
     function array_unset_value($value, &$array) {
@@ -32,16 +32,16 @@
             $this->rowId = $rowId;
             $this->columnId = $columnId;
             $this->regionId = $regionId;
-            $this->allowedValues = $this->values;
+            $this->candidates = $this->values;
             $this->testValueWasAllowed = array();
             $this->neighbourhood = array();
         }
         
-        function searchAllowedValues() {
-            $this->allowedValues = $this->values;
+        function searchCandidates() {
+            $this->candidates = $this->values;
             forEach($this->neighbourhood as $neighbour) {
                 if ($neighbour->value != UNKOWN)
-                    array_unset_value($neighbour->value, $this->allowedValues);
+                    array_unset_value($neighbour->value, $this->candidates);
             }
         }
     }
@@ -83,10 +83,10 @@
                 $box = $this->rows[0][$columnId];
                 $box->value = $value;
                 forEach($box->neighbourhood as $neighbour)
-                    array_unset_value($box->value, $neighbour->allowedValues);
+                    array_unset_value($box->value, $neighbour->candidates);
             }
             // Fill grid
-            $this->findSolutions(true)->current();
+            $this->solutionsGenerator(true)->current();
             
             // Remove clues while there is still a unique solution
             shuffle($this->boxes);
@@ -105,53 +105,59 @@
                     $erasedValues[] = $testBox->value;
                     $testBox->value = UNKOWN;
                     forEach($testBox->neighbourhood as $neighbour)
-                        $neighbour->searchAllowedValues();
+                        $neighbour->searchCandidates();
                 }
                 if ($this->isValid()) {
                     $nbClues -= count($testBoxes);
                 } else {
                     forEach($testBoxes as $i => $testBox) {
                         $testBox->value = $erasedValues[$i];
-                        forEach($testBox->neighbourhood as $neighbour) array_unset_value($testBox->value, $neighbour->allowedValues);
+                        forEach($testBox->neighbourhood as $neighbour) array_unset_value($testBox->value, $neighbour->candidates);
                     }
                 }
             }
         }
         
-        function isValid() {
-            $solutionsFinder = $this->findSolutions(false);
-            $solutionsFound = array();
-            foreach($solutionsFinder as $solution) {
-                $solutionsFound[$solution] = true;
-                if (count($solutionsFound) > 1) {
-                    $solutionsFinder->send(true);
+        function countSolutions($max=2) {
+            $solutions = $this->solutionsGenerator(false);
+            $solutionsWithoutDuplicates = array();
+            $nbSolutions = 0;
+            foreach($solutions as $solution) {
+                $solutionsWithoutDuplicates[$solution] = true;
+                $nbSolutions = count($solutionsWithoutDuplicates);
+                if ($nbSolutions >= $max) {
+                    $solutions->send(true);
                 }
             }
-            return count($solutionsFound) == 1;
+            return $nbSolutions;
         }
         
-        function findSolutions($randomized=false) {
+        function isValid() {
+            return $this->countSolutions(2) == 1;
+        }
+        
+        function solutionsGenerator($randomized=false) {
             $emptyBoxes = array_filter($this->boxes, "isUnknown");
             if (count($emptyBoxes)) {
                 if ($randomized) shuffle($emptyBoxes);
                 usort($emptyBoxes, "easyFirst");
                 $testBox = $emptyBoxes[0];
                 $nbTries = 0;
-                if ($randomized) shuffle($testBox->allowedValues);
+                if ($randomized) shuffle($testBox->candidates);
                 $stop = null;
-                foreach($testBox->allowedValues as $testBox->value) {
+                foreach($testBox->candidates as $testBox->value) {
                     foreach($testBox->neighbourhood as $neighbour)
-                        $neighbour->testValueWasAllowed[] = array_unset_value($testBox->value, $neighbour->allowedValues);
+                        $neighbour->testValueWasAllowed[] = array_unset_value($testBox->value, $neighbour->candidates);
                     $correctGrid = true;
                     foreach(array_filter($testBox->neighbourhood, "isUnknown") as $neighbour) {
-                        if (count($neighbour->allowedValues) == 0) $correctGrid = false;
+                        if (count($neighbour->candidates) == 0) $correctGrid = false;
                     }
                     if ($correctGrid) {
-                        $solutionsFinder = $this->findSolutions($randomized);
-                        foreach($solutionsFinder as $solution) {
+                        $solutions = $this->solutionsGenerator($randomized);
+                        foreach($solutions as $solution) {
                             $stop = (yield $solution);
                             if ($stop) {
-                                $solutionsFinder->send($stop);
+                                $solutions->send($stop);
                                 break;
                             }
                         }
@@ -159,7 +165,7 @@
                     }
                     forEach($testBox->neighbourhood as $neighbour)
                         if (array_pop($neighbour->testValueWasAllowed))
-                            $neighbour->allowedValues[] = $testBox->value;
+                            $neighbour->candidates[] = $testBox->value;
                     if ($stop) break;
                 }
                 $testBox->value = UNKOWN;
