@@ -56,7 +56,7 @@ function showCandidatesOn(box) {
         while (box.list.firstChild) {
             box.list.firstChild.remove()
         }
-        if (box.candidates.size) {
+        if (!box.value && box.candidates.size) {
             const candidatesArray = Array.from(box.candidates).sort()
             candidatesArray.forEach(candidate => {
                 option = document.createElement('option')
@@ -98,7 +98,7 @@ function refresh(box) {
                 ])
                     for (neighbour2 of area.neighbours)
                         if (neighbour2 != neighbour1 && neighbour2.value == neighbour1.value) {
-                            for (neighbour of [neighbour1, neughbour2]) {
+                            for (neighbour of [neighbour1, neighbour2]) {
                                 neighbour.setCustomValidity(`Il y a un autre ${neighbour.value} dans cette ${area.name}.`)
                             }
                         }
@@ -106,6 +106,7 @@ function refresh(box) {
         } else if (neighbour1.candidates.size == 0) {
             console.log("rezgzgzg")
             neighbour1.setCustomValidity("Aucun value possible !")
+            neighbour1.placeholder = "!"
         }
     }
     
@@ -208,7 +209,7 @@ easyFirst = (box1, box2) => box1.candidates.size - box2.candidates.size
 function showSuggestion() {
     const emptyBoxes = boxes.filter(box => box.value == "" && box.candidates.size == 1)
     if (emptyBoxes.length) {
-        shuffle(emptyBoxes).placeholder = "!"
+        shuffle(emptyBoxes)[0].placeholder = "?"
     } else {
         clearTimeout(suggestionTimer)
         suggestionTimer = null
