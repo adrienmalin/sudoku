@@ -8,12 +8,13 @@ h1 {
 
 section, div, footer {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     row-gap: 0.5em;
     column-gap: 0.5em;
     margin: 1em auto;
     justify-content: center;
     text-align: center;
-    align-items: baseline;
 }
 
 .grid {
@@ -113,17 +114,15 @@ input::placeholder {
     color: #888;
 }
 
-.buttons {
-    flex-wrap: wrap;
-    align-items: center;
+.highlight-buttons {
     column-gap: 0.2em;
 }
 button, input[type="color"] {
     border: 2px outset #6666ff;
     border-radius: 4px;
+}
+button {
     padding: 0 8px 2px 8px;
-    margin: 0 0 1px 0;
-    
 }
 button.same-value:enabled {
     border: 2px inset #00e6ac;
@@ -135,32 +134,8 @@ button:disabled {
     background: darkgrey;
     border: 2px outset darkgrey;
 }
-
 input[type="color"] {
-    align-self: center;
     padding: 0;
-}
-
-.shortcuts caption {
-    text-decoration: underline;
-}
-.shortcuts td {
-    text-align: left;
-}
-kbd {
-    /* from https://developer.mozilla.org */
-    background-color: #eee;
-    border-radius: 3px;
-    border: 1px solid #b4b4b4;
-    box-shadow: 0 1px 1px rgba(0,0,0,.2),0 2px 0 0 rgba(255,255,255,.7) inset;
-    color: #333;
-    display: inline-block;
-    font-family: consolas,"Liberation Mono",courier,monospace;
-    font-size: .85em;
-    font-weight: 700;
-    line-height: 1;
-    padding: 4px;
-    white-space: nowrap;
 }
 
 a {

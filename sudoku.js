@@ -7,6 +7,7 @@ let regions = Array.from(Array(9), x => [])
 let suggestionTimer= null
 let highlightedValue = ""
 let history = []
+let accessKeyModifiers = "AccessKey+"
 
 window.onload = function() {
     let rowId = 0
@@ -38,6 +39,13 @@ window.onload = function() {
     boxes.forEach(showCandidatesOn)
     enableButtons()
     highlightAndTab()
+    
+    if (/Win/.test(navigator.platform) || /Linux/.test(navigator.platform)) accessKeyModifiers = "Alt+Maj+"
+    else if (/Mac/.test(navigator.platform)) accessKeyModifiers = "⌃⌥ "
+    for(node of document.querySelectorAll("*[accesskey]")) {
+        node.title += " [" + (node.accessKeyLabel || accessKeyModifiers + "+" + node.accessKey) + "]"
+    }
+    
     suggestionTimer = setTimeout(showSuggestion, 30000)
 }
 

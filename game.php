@@ -4,8 +4,6 @@
     $gridStr = basename(strip_tags($_SERVER["REQUEST_URI"]));
     // URL contains grid
     if (preg_match("#^[1-9.]{81}$#", $gridStr)) {
-        require("get_browser.php");
-        header("Vary: User-Agent");
 ?>
 <!DOCTYPE html>
 <html lang='fr'>
@@ -52,53 +50,22 @@
                     </tbody>
                 </table>
             </div>
-            <div id='buttons' class='buttons'>
+            <div id='buttons' class='highlight-buttons'>
 <?php
         for($value=1; $value<=9; $value++) {
-            echo "                <button type='button' onclick='highlight(\"$value\")' accesskey='$value'>$value</button>\n";
+            echo "                <button type='button' onclick='highlight(\"$value\")' title='Surligner les $value'  accesskey='$value'>$value</button>\n";
         }
 ?>
             </div>
-            <div class='buttons'>
+            <div>
                 <button type='reset'>Tout effacer</button>
-            	<button id='undoButton' type='button' onclick='undo()' disabled accesskey='z'>Annuler</button>
+                <button id='undoButton' type='button' onclick='undo()' disabled title='Annuler' accesskey='z'>Annuler</button>
                 <input id='colorPicker' type='color' title='Changer de couleur de stylo' value='#00008b'/>
             </div>
         </form>
         <section>
             Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.
         </section>
-<?php
-    $userAgent=getBrowser();
-    if($userAgent["platform"] == "mac" || $userAgent["platform"] == "linux" || $userAgent["platform"] == "windows") {
-        if($userAgent["platform"] == "mac") $keyboardShortcurt = "<kbd>Control</kbd> + <kbd>Alt</kbd>";
-        elseif($userAgent["platform"] == "linux" || $userAgent["platform"] == "windows") {
-            if($userAgent["name"] == "Mozilla Firefox") $keyboardShortcurt = "<kbd>Alt</kbd> + <kbd>Maj</kbd>";
-            else $keyboardShortcurt = "<kbd>Alt</kbd>";
-        }
-?>
-        <section>
-            <table class='shortcuts'>
-                <caption>Raccourcis clavier</caption>
-                <tbody>
-                    <tr>
-                        <td><?=$keyboardShortcurt?> + <kbd>1</kbd>~<kbd>9</kbd></td>
-                        <td>Surligner</td>
-                    </tr>
-                    <tr>
-                        <td><?=$keyboardShortcurt?> + <kbd>Z</kbd></td>
-                        <td>Annuler</td>
-                    </tr>
-                    <tr>
-                        <td><kbd>Tab</kbd>, <kbd>Maj</kbd> + <kbd>Tab</kbd></td>
-                        <td>Déplacement</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-<?php
-    }
-?>
         <footer>
             <a href=''>Lien vers cette grille</a><br/>
             <a href='.'>Nouvelle grille</a>
