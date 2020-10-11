@@ -21,72 +21,57 @@ section, div, footer {
     border: 1px solid black;
     border-radius: 6px;
 }
-
 .grid td, tr {
     padding: 0;
 }
-
 .grid tr:first-child td:first-child {
     border-top-left-radius: 5px;
 }
-
 .grid tr:first-child td:first-child input {
     border-top-left-radius: 4px;
 }
-
 .grid tr:first-child td:last-child {
     border-top-right-radius: 5px;
 }
-
 .grid tr:first-child td:last-child input {
     border-top-right-radius: 4px;
 }
-
 .grid tr:last-child td:first-child {
     border-bottom-left-radius: 5px;
 }
-
 .grid tr:last-child td:first-child > input {
     border-bottom-left-radius: 4px;
 }
-
 .grid tr:last-child td:last-child {
     border-bottom-right-radius: 5px;
 }
-
 .grid tr:last-child td:last-child input {
     border-bottom-right-radius: 4px;
 }
-
 .grid tr:nth-child(3n+1) td {
     border-top: 1px solid black;
 }
-
 .grid tr:nth-child(3n+2) td {
     border-top: 1px solid grey;
     border-bottom: 1px solid grey;
 }
-
 .grid tr:nth-child(3n) td {
     border-bottom: 1px solid black;
 }
-
 .grid td:nth-child(3n+1) {
     border-left: 1px solid black;
 }
-
 .grid td:nth-child(3n+2) {
     border-left: 1px solid grey;
     border-right: 1px solid grey;
 }
-
 .grid td:nth-child(3n+3) {
     border-right: 1px solid black;
 }
 
 input[type=number] {
-    width: 1.6em;
-    height: 1.6em;
+    width: 1.5em;
+    height: 1.5em;
     font-size: 1.5em;
     border: 0;
     padding: 0;
@@ -94,58 +79,61 @@ input[type=number] {
     transition: background 0.5s;
     -moz-appearance: textfield;
 }
-
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
-
+input::-webkit-calendar-picker-indicator {
+    display: none;
+}
 input[type=number]:enabled {
     color: darkblue;
     background: white;
 }
-
 input[type=number]:disabled, button:enabled {
     color: white;
     background: #6666ff;
 }
-
 input[type=number].same-value:enabled {
     color: #009973 !important;
     background: #66ffd9 !important;
 }
-
 input[type=number].forbidden-value:enabled {
     background: #b3ffda !important;
 }
-
 input[type=number].same-value, button.same-value:enabled {
     color: white !important;
     background: #00e6ac !important;
 }
-
 input[type=number].forbidden-value:disabled {
     background: #6288ea !important;
 }
-
 input::placeholder {
     color: #888;
 }
 
 .buttons {
     flex-wrap: wrap;
+    align-items: center;
     column-gap: 0.2em;
 }
-
 button, input[type="color"] {
     border: 2px outset #6666ff;
     border-radius: 4px;
-    padding-bottom: 2px;
+    padding: 0 8px 2px 8px;
+    margin: 0 0 1px 0;
+    
 }
-
 button.same-value:enabled {
     border: 2px inset #00e6ac;
+    padding: 2px 7px 0 9px;
+    margin: 1px 0 0 0;
+}
+button:disabled {
+    color: lightgrey;
+    background: darkgrey;
+    border: 2px outset darkgrey;
 }
 
 input[type="color"] {
@@ -156,11 +144,9 @@ input[type="color"] {
 .shortcuts caption {
     text-decoration: underline;
 }
-
 .shortcuts td {
     text-align: left;
 }
-
 kbd {
     /* from https://developer.mozilla.org */
     background-color: #eee;

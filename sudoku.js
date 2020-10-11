@@ -14,7 +14,7 @@ window.onload = function() {
         let columnId = 0
         for (box of row.getElementsByTagName('input')) {
             let regionId = rowId - rowId%3 + Math.floor(columnId/3)
-            if (!box.readOnly) {
+            if (!box.disabled) {
                 box.onfocus = onfocus
                 box.oninput = oninput
             }
@@ -35,14 +35,9 @@ window.onload = function() {
         box.neighbourhood = Array.from(box.neighbourhood)
     })
     boxes.forEach(searchCandidatesOf)
-    enableButtons()
     boxes.forEach(showCandidatesOn)
-    for(box of boxes) {
-        if (!box.readOnly) {
-            box.focus()
-            break
-        }
-    }
+    enableButtons()
+    highlightAndTab()
     suggestionTimer = setTimeout(showSuggestion, 30000)
 }
 
@@ -78,6 +73,15 @@ function oninput() {
     refresh(this)
 }
 
+function undo() {
+	if (history.length) {
+		previousState = history.pop()
+		previousState.input.value = previousState.value
+    	refresh(previousState.input)
+    	if (history.length < 1) undoButton.disabled = true
+    }
+}
+
 function refresh(box) {
     box.style.color = colorPicker.value
 
@@ -86,6 +90,9 @@ function refresh(box) {
         showCandidatesOn(neighbour)
         neighbour.setCustomValidity("")
     })
+    
+    enableButtons()
+    highlightAndTab()
     
     for (neighbour1 of box.neighbourhood) {
         neighbour1.setCustomValidity("")
@@ -104,15 +111,9 @@ function refresh(box) {
                         }
             } 
         } else if (neighbour1.candidates.size == 0) {
-            console.log("rezgzgzg")
             neighbour1.setCustomValidity("Aucun value possible !")
-            neighbour1.placeholder = "!"
         }
     }
-    
-    enableButtons()
-    highlightAndTab()
-
             
     if (box.form.checkValidity()) { // Correct grid
         if (boxes.filter(box => box.value == "").length == 0) {
@@ -127,15 +128,6 @@ function refresh(box) {
     }
 }
 
-function undo() {
-	if (history.length) {
-		previousState = history.pop()
-		previousState.input.value = previousState.value
-    	refresh(previousState.input)
-    	if (history.length < 1) undoButton.disabled = true
-    }
-}
-
 function enableButtons() {
     for (button of buttons.getElementsByTagName("button")) {
         if (boxes.filter(box => box.value == "").some(box => box.candidates.has(button.textContent))) {
@@ -144,15 +136,6 @@ function enableButtons() {
             button.disabled = true
             if (highlightedValue == button.textContent) highlightedValue = ""
         }
-    }
-}
-
-function moveOn(area, position, direction) {
-    if (area.filter(box => box.disabled).length < 9) {
-        do {
-            position = (position + direction) % 9
-        } while (area[position].disabled)
-        area[position].focus()
     }
 }
 
@@ -186,7 +169,10 @@ function highlightAndTab() {
             }
         })
     } else {
-        boxes.forEach(box => box.className = "")
+        boxes.forEach(box => {
+            box.className = ""
+            box.tabIndex = 0
+        })
     }
 }
 
