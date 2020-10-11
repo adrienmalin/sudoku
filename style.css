@@ -6,7 +6,7 @@ h1 {
     text-align: center;
 }
 
-section, div {
+section, div, footer {
     display: flex;
     row-gap: 0.5em;
     column-gap: 0.5em;
@@ -101,32 +101,32 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-input:enabled {
+input[type=number]:enabled {
     color: darkblue;
     background: white;
 }
 
-input:disabled {
+input[type=number]:disabled, button:enabled {
     color: white;
     background: #6666ff;
 }
 
-.same-value:enabled {
-    color: #009973;
-    background: #66ffd9;
+input[type=number].same-value:enabled {
+    color: #009973 !important;
+    background: #66ffd9 !important;
 }
 
-.forbidden-value:enabled {
-    background: #b3ffda;
+input[type=number].forbidden-value:enabled {
+    background: #b3ffda !important;
 }
 
-.same-value:disabled {
-    color: white;
-    background: #00e6ac;
+input[type=number].same-value, button.same-value:enabled {
+    color: white !important;
+    background: #00e6ac !important;
 }
 
-.forbidden-value:disabled {
-    background: #6288ea;
+input[type=number].forbidden-value:disabled {
+    background: #6288ea !important;
 }
 
 input::placeholder {
@@ -138,9 +138,19 @@ input::placeholder {
     column-gap: 0.2em;
 }
 
+button, input[type="color"] {
+    border: 2px outset #6666ff;
+    border-radius: 4px;
+    padding-bottom: 2px;
+}
+
+button.same-value:enabled {
+    border: 2px inset #00e6ac;
+}
+
 input[type="color"] {
-    font-size: 1em;
     align-self: center;
+    padding: 0;
 }
 
 .shortcuts caption {

@@ -35,9 +35,14 @@
                     $value = "";
                     $disabled = "";
                 } else {
-                    $disabled = " disabled";
+                    $disabled = "disabled";
                 }
-                echo "                            <td><input type='number' min='1' max='9' step='1' value='$value'$disabled/></td>\n";
+?>
+                            <td>
+                                <input type='number' min='1' max='9' step='1' value='<?=$value?>' list='<?=$row.$column?>' <?=$disabled?>/>
+                                <datalist id='<?=$row.$column?>'></datalist>
+                            </td>
+<?php
             }
 ?>
                         </tr>
@@ -57,8 +62,7 @@
             <div class='buttons'>
                 <button type='reset'>Tout effacer</button>
             	<button id='undoButton' type='button' onclick='undo()' disabled accesskey='z'>Annuler</button>
-            	<label for='colorPicker'>🎨</label>
-                <input id='colorPicker' type='color' title='Changer de stylo' value='#00008b'/>
+                <input id='colorPicker' type='color' title='Changer de couleur de stylo' value='#00008b'/>
             </div>
         </form>
         <section>
@@ -78,10 +82,6 @@
                 <caption>Raccourcis clavier</caption>
                 <tbody>
                     <tr>
-                        <td><kbd>Tab</kbd></td>
-                        <td>Déplacement</td>
-                    </tr>
-                    <tr>
                         <td><?=$keyboardShortcurt?> + <kbd>1</kbd>~<kbd>9</kbd></td>
                         <td>Surligner</td>
                     </tr>
@@ -89,16 +89,20 @@
                         <td><?=$keyboardShortcurt?> + <kbd>Z</kbd></td>
                         <td>Annuler</td>
                     </tr>
+                    <tr>
+                        <td><kbd>Tab</kbd>, <kbd>Maj</kbd> + <kbd>Tab</kbd></td>
+                        <td>Déplacement</td>
+                    </tr>
                 </tbody>
             </table>
         </section>
 <?php
     }
 ?>
-        <section>
+        <footer>
             <a href=''>Lien vers cette grille</a><br/>
             <a href='.'>Nouvelle grille</a>
-        </section>
+        </footer>
     </body>
 </html>
 <?php
@@ -129,7 +133,7 @@
             <li>un chiffre entre 1 et 9 pour les cases connues</li>
             <li>un point pour les case vides</li>
         </ul>
-    	Exemple : <a href='<?=$urlExample?>'><?=$urlExample?></a><br/>
+        Exemple : <a href='<?=$urlExample?>'><?=$urlExample?></a><br/>
     </body>
 </html>
 <?php

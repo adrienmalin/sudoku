@@ -52,14 +52,18 @@ function searchCandidatesOf(box) {
 }
 
 function showCandidatesOn(box) {
-    box.required = box.candidates.size == 0
-    if (box.value.length) {
-        box.title = ""
-    } else if (box.candidates.size) {
-        const candidatesArray = Array.from(box.candidates).sort()
-        box.title = candidatesArray.length ==1 ? candidatesArray[0] : candidatesArray.slice(0, candidatesArray.length-1).join(", ") + " ou " + candidatesArray[candidatesArray.length-1]
-    } else {
-        box.title = "Aucune valeur possible !"
+    if (!box.disabled) {
+        while (box.list.firstChild) {
+            box.list.firstChild.remove()
+        }
+        if (box.candidates.size) {
+            const candidatesArray = Array.from(box.candidates).sort()
+            candidatesArray.forEach(candidate => {
+                option = document.createElement('option')
+                option.value = candidate
+                box.list.appendChild(option)
+            })
+        }
     }
 }
 
@@ -69,9 +73,9 @@ function onfocus() {
 }
 
 function oninput() {
-	history.push({input: this, value: this.previousValue})
-	undoButton.disabled = false
-	refresh(this)
+    history.push({input: this, value: this.previousValue})
+    undoButton.disabled = false
+    refresh(this)
 }
 
 function refresh(box) {
@@ -86,16 +90,22 @@ function refresh(box) {
     for (neighbour1 of box.neighbourhood) {
         neighbour1.setCustomValidity("")
         if (neighbour1.value.length) {
-            for (area of [
-                {name: "région", neighbours: regions[neighbour1.regionId]},
-                {name: "ligne", neighbours: rows[neighbour1.rowId]},
-                {name: "colonne", neighbours: columns[neighbour1.columnId]},
-            ])
-                for (neighbour2 of area.neighbours)
-                    if (neighbour2 != neighbour1 && neighbour2.value == neighbour1.value) {
-                        neighbour1.setCustomValidity(`Il y a un autre ${neighbour1.value} dans cette ${area.name}.`)
-                        neighbour2.setCustomValidity(`Il y a un autre ${neighbour1.value} dans cette ${area.name}.`)
-                    }
+            if (neighbour1.candidates.size) {
+                for (area of [
+                    {name: "région", neighbours: regions[neighbour1.regionId]},
+                    {name: "ligne", neighbours: rows[neighbour1.rowId]},
+                    {name: "colonne", neighbours: columns[neighbour1.columnId]},
+                ])
+                    for (neighbour2 of area.neighbours)
+                        if (neighbour2 != neighbour1 && neighbour2.value == neighbour1.value) {
+                            for (neighbour of [neighbour1, neughbour2]) {
+                                neighbour.setCustomValidity(`Il y a un autre ${neighbour.value} dans cette ${area.name}.`)
+                            }
+                        }
+            } 
+        } else if (neighbour1.candidates.size == 0) {
+            console.log("rezgzgzg")
+            neighbour1.setCustomValidity("Aucun value possible !")
         }
     }
     
@@ -111,8 +121,8 @@ function refresh(box) {
             suggestionTimer = setTimeout(showSuggestion, 30000)
         }
     } else { // Errors on grid
-        box.select()
         box.reportValidity()
+        box.select()
     }
 }
 
@@ -150,6 +160,10 @@ function highlight(value) {
         highlightedValue = ""
     } else {
         highlightedValue = value
+    }
+    for (button of buttons.getElementsByTagName("button")) {
+        if (button.textContent == highlightedValue) button.className = "same-value"
+        else button.className = ""
     }
     highlightAndTab()
     boxes.filter(box => box.value == "" && box.tabIndex == 0)[0].focus()
