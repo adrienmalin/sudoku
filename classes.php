@@ -1,13 +1,12 @@
 <?php
-    const UNKOWN = ".";
+    const UNKNOWN = ".";
 
     function isKnown($box) {
-        return $box->value != UNKOWN;
+        return $box->value != UNKNOWN;
     }
 
-
     function isUnknown($box) {
-        return $box->value == UNKOWN;
+        return $box->value == UNKNOWN;
     }
     
     function easyFirst($box1, $box2) {
@@ -28,19 +27,19 @@
         public $values = array("1", "2", "3", "4", "5", "6", "7", "8", "9");
     
         function __construct($rowId, $columnId, $regionId) {
-            $this->value = UNKOWN;
+            $this->value = UNKNOWN;
             $this->rowId = $rowId;
             $this->columnId = $columnId;
             $this->regionId = $regionId;
             $this->candidates = $this->values;
-            $this->testValueWasAllowed = array();
+            $this->candidateRemoved = array();
             $this->neighbourhood = array();
         }
         
         function searchCandidates() {
             $this->candidates = $this->values;
             forEach($this->neighbourhood as $neighbour) {
-                if ($neighbour->value != UNKOWN)
+                if ($neighbour->value != UNKNOWN)
                     array_unset_value($neighbour->value, $this->candidates);
             }
         }
@@ -103,7 +102,7 @@
                 $erasedValues = array();
                 forEach($testBoxes as $testBox) {
                     $erasedValues[] = $testBox->value;
-                    $testBox->value = UNKOWN;
+                    $testBox->value = UNKNOWN;
                     forEach($testBox->neighbourhood as $neighbour)
                         $neighbour->searchCandidates();
                 }
@@ -146,11 +145,14 @@
                 if ($randomized) shuffle($testBox->candidates);
                 $stop = null;
                 foreach($testBox->candidates as $testBox->value) {
-                    foreach($testBox->neighbourhood as $neighbour)
-                        $neighbour->testValueWasAllowed[] = array_unset_value($testBox->value, $neighbour->candidates);
                     $correctGrid = true;
+                    foreach(array_filter($testBox->neighbourhood, "isUnknown") as $neighbour)
+                        $neighbour->candidateRemoved[] = array_unset_value($testBox->value, $neighbour->candidates);
                     foreach(array_filter($testBox->neighbourhood, "isUnknown") as $neighbour) {
-                        if (count($neighbour->candidates) == 0) $correctGrid = false;
+                        if (count($neighbour->candidates) == 0) {
+                            $correctGrid = false;
+                            break;
+                        }
                     }
                     if ($correctGrid) {
                         $solutions = $this->solutionsGenerator($randomized);
@@ -161,14 +163,13 @@
                                 break;
                             }
                         }
-                        
                     }
-                    forEach($testBox->neighbourhood as $neighbour)
-                        if (array_pop($neighbour->testValueWasAllowed))
+                    foreach(array_filter($testBox->neighbourhood, "isUnknown") as $neighbour)
+                        if (array_pop($neighbour->candidateRemoved))
                             $neighbour->candidates[] = $testBox->value;
                     if ($stop) break;
                 }
-                $testBox->value = UNKOWN;
+                $testBox->value = UNKNOWN;
             } else {
                 yield $this->toString();
             }
@@ -178,7 +179,7 @@
             $str = "";
             foreach($this->rows as $row) {
                 forEach($row as $box) {
-                    $str .= ($box->value? $box->value : UNKOWN);
+                    $str .= ($box->value? $box->value : UNKNOWN);
                 }
             }
             return $str;

@@ -1,4 +1,5 @@
 const VALUES = "123456789"
+const SUGESTION_DELAY = 60000 //ms
 
 let boxes = []
 let rows = Array.from(Array(9), x => [])
@@ -56,9 +57,7 @@ function searchCandidatesOf(box) {
 
 function showCandidatesOn(box) {
     if (!box.disabled) {
-        while (box.list.firstChild) {
-            box.list.firstChild.remove()
-        }
+        box.list.replaceChildren()
         if (!box.value && box.candidates.size) {
             const candidatesArray = Array.from(box.candidates).sort()
             candidatesArray.forEach(candidate => {
@@ -128,7 +127,7 @@ function refresh(box) {
             alert(`Bravo ! Vous avez résolu la grille.`)
         } else {
             if (suggestionTimer) clearTimeout(suggestionTimer)
-            suggestionTimer = setTimeout(showSuggestion, 30000)
+            suggestionTimer = setTimeout(showSuggestion, SUGESTION_DELAY)
         }
     } else { // Errors on grid
         box.reportValidity()
@@ -208,4 +207,15 @@ function showSuggestion() {
         clearTimeout(suggestionTimer)
         suggestionTimer = null
     }
+}
+
+function clearAll() {
+    boxes.filter(box => !box.disabled).forEach(box => {
+        box.value = ""
+        box.placeholder = ""
+    })
+    boxes.forEach(searchCandidatesOf)
+    boxes.forEach(showCandidatesOn)
+    enableButtons()
+    highlightAndTab()
 }

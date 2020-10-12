@@ -13,6 +13,7 @@
         <title>Sudoku</title>
         <link rel='stylesheet' type='text/css' href='style.css' />
         <script src='sudoku.js'></script>
+        <link rel="icon" type="image/png" href="favicon.png">
     </head>
     <body>
         <header>
@@ -29,7 +30,7 @@
 <?php
             for ($column = 0; $column < 9; $column++) {
                 $value = $gridStr[9*$row+$column];
-                if ($value == UNKOWN) {
+                if ($value == UNKNOWN) {
                     $value = "";
                     $disabled = "";
                 } else {
@@ -58,7 +59,7 @@
 ?>
             </div>
             <div>
-                <button type='reset'>Tout effacer</button>
+                <button type='button' onclick='clearAll()'>Tout effacer</button>
                 <button id='undoButton' type='button' onclick='undo()' disabled title='Annuler' accesskey='z'>Annuler</button>
                 <input id='colorPicker' type='color' title='Changer de couleur de stylo' value='#00008b'/>
             </div>
