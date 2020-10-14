@@ -57,7 +57,7 @@ function searchCandidatesOf(box) {
 
 function showCandidatesOn(box) {
     if (!box.disabled) {
-        box.list.replaceChildren()
+        while (box.list.firstChild) box.list.firstChild.remove()
         if (!box.value && box.candidates.size) {
             const candidatesArray = Array.from(box.candidates).sort()
             candidatesArray.forEach(candidate => {
@@ -70,8 +70,8 @@ function showCandidatesOn(box) {
 }
 
 function onfocus() {
-	this.previousValue = this.value
-	this.select()
+    this.previousValue = this.value
+    this.select()
 }
 
 function oninput() {
@@ -81,11 +81,11 @@ function oninput() {
 }
 
 function undo() {
-	if (history.length) {
-		previousState = history.pop()
-		previousState.input.value = previousState.value
-    	refresh(previousState.input)
-    	if (history.length < 1) undoButton.disabled = true
+    if (history.length) {
+        previousState = history.pop()
+        previousState.input.value = previousState.value
+        refresh(previousState.input)
+        if (history.length < 1) undoButton.disabled = true
     }
 }
 
