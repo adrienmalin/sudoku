@@ -104,7 +104,7 @@ function refresh(box) {
     for (neighbour1 of box.neighbourhood) {
         neighbour1.setCustomValidity("")
         if (neighbour1.value.length) {
-            if (neighbour1.candidates.size) {
+            if (neighbour1.value) {
                 for (area of [
                     {name: "région", neighbours: regions[neighbour1.regionId]},
                     {name: "ligne", neighbours: rows[neighbour1.rowId]},
@@ -116,9 +116,10 @@ function refresh(box) {
                                 neighbour.setCustomValidity(`Il y a un autre ${neighbour.value} dans cette ${area.name}.`)
                             }
                         }
-            } 
-        } else if (neighbour1.candidates.size == 0) {
-            neighbour1.setCustomValidity("Aucun value possible !")
+            } else {
+                if (neighbour1.candidates.size == 0)
+                    neighbour1.setCustomValidity("Aucun value possible !")
+            }
         }
     }
             
