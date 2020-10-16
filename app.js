@@ -19,6 +19,7 @@ window.onload = function() {
             if (!box.disabled) {
                 box.onfocus = onfocus
                 box.oninput = oninput
+                box.oncontextmenu = oncontextmenu
             }
             box.rowId = rowId
             box.columnId = columnId
@@ -37,36 +38,24 @@ window.onload = function() {
         box.neighbourhood = Array.from(box.neighbourhood)
     })
     boxes.forEach(searchCandidatesOf)
-    boxes.forEach(showCandidatesOn)
     enableButtons()
     highlightAndTab()
     
     if (/Win/.test(navigator.platform) || /Linux/.test(navigator.platform)) accessKeyModifiers = "Alt+Maj+"
     else if (/Mac/.test(navigator.platform)) accessKeyModifiers = "⌃⌥ "
     for(node of document.querySelectorAll("*[accesskey]")) {
-        node.title += " [" + (node.accessKeyLabel || accessKeyModifiers + "+" + node.accessKey) + "]"
+        node.title += " [" + (node.accessKeyLabel || accessKeyModifiers + node.accessKey) + "]"
     }
     
+    document.body.onclick = function (event) {
+        contextMenu.style.display = "none"
+    }
     suggestionTimer = setTimeout(showSuggestion, 30000)
 }
 
 function searchCandidatesOf(box) {
     box.candidates = new Set(VALUES)
     box.neighbourhood.forEach(neighbour => box.candidates.delete(neighbour.value))
-}
-
-function showCandidatesOn(box) {
-    if (!box.disabled) {
-        while (box.list.firstChild) box.list.firstChild.remove()
-        if (!box.value && box.candidates.size) {
-            const candidatesArray = Array.from(box.candidates).sort()
-            candidatesArray.forEach(candidate => {
-                option = document.createElement('option')
-                option.value = candidate
-                box.list.appendChild(option)
-            })
-        }
-    }
 }
 
 function onfocus() {
@@ -94,31 +83,30 @@ function refresh(box) {
 
     box.neighbourhood.concat([box]).forEach(neighbour => {
         searchCandidatesOf(neighbour)
-        showCandidatesOn(neighbour)
         neighbour.setCustomValidity("")
+        neighbour.required = false
     })
     
     enableButtons()
     highlightAndTab()
     
     for (neighbour1 of box.neighbourhood) {
-        neighbour1.setCustomValidity("")
         if (neighbour1.value.length) {
-            if (neighbour1.value) {
-                for (area of [
-                    {name: "région", neighbours: regions[neighbour1.regionId]},
-                    {name: "ligne", neighbours: rows[neighbour1.rowId]},
-                    {name: "colonne", neighbours: columns[neighbour1.columnId]},
-                ])
-                    for (neighbour2 of area.neighbours)
-                        if (neighbour2 != neighbour1 && neighbour2.value == neighbour1.value) {
-                            for (neighbour of [neighbour1, neighbour2]) {
-                                neighbour.setCustomValidity(`Il y a un autre ${neighbour.value} dans cette ${area.name}.`)
-                            }
+            for (area of [
+                {name: "région", neighbours: regions[neighbour1.regionId]},
+                {name: "ligne", neighbours: rows[neighbour1.rowId]},
+                {name: "colonne", neighbours: columns[neighbour1.columnId]},
+            ])
+                for (neighbour2 of area.neighbours)
+                    if (neighbour2 != neighbour1 && neighbour2.value == neighbour1.value) {
+                        for (neighbour of [neighbour1, neighbour2]) {
+                            neighbour.setCustomValidity(`Il y a un autre ${neighbour.value} dans cette ${area.name}.`)
                         }
-            } else {
-                if (neighbour1.candidates.size == 0)
-                    neighbour1.setCustomValidity("Aucun value possible !")
+                    }
+        } else {
+            if (neighbour1.candidates.size == 0) {
+                neighbour1.setCustomValidity("Aucun chiffre possible !")
+                neighbour1.required = true
             }
         }
     }
@@ -131,7 +119,7 @@ function refresh(box) {
             suggestionTimer = setTimeout(showSuggestion, SUGESTION_DELAY)
         }
     } else { // Errors on grid
-        box.reportValidity()
+        box.form.reportValidity()
         box.select()
     }
 }
@@ -216,7 +204,35 @@ function clearAll() {
         box.placeholder = ""
     })
     boxes.forEach(searchCandidatesOf)
-    boxes.forEach(showCandidatesOn)
     enableButtons()
     highlightAndTab()
+}
+
+function oncontextmenu(event) {
+    event.preventDefault()
+    while (contextMenu.firstChild) contextMenu.firstChild.remove()
+    const box = event.target
+    if (box.value == "") {
+        if (box.candidates.size) {
+            candidatesArray = Array.from(box.candidates).sort().forEach(candidate => {
+                li = document.createElement("li")
+                li.innerText = candidate
+                li.onclick = function (event) {
+                    contextMenu.style.display = "none"
+                    box.value = event.target.innerText
+                    refresh(box)
+                }
+                contextMenu.appendChild(li)
+            })
+        } else {
+            li = document.createElement("li")
+            li.innerText = "Aucun chiffre possible"
+            li.className = "error"
+            contextMenu.appendChild(li)
+        }
+        contextMenu.style.left = `${event.pageX}px`
+        contextMenu.style.top = `${event.pageY}px`
+        contextMenu.style.display = "block"
+    }
+    return false
 }

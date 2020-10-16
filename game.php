@@ -12,7 +12,7 @@
         <meta name='viewport' content='width=device-width' />
         <title>Sudoku</title>
         <link rel='stylesheet' type='text/css' href='style.css' />
-        <script src='sudoku.js'></script>
+        <script src='app.js'></script>
         <link rel="icon" type="image/png" href="favicon.png">
     </head>
     <body>
@@ -38,8 +38,8 @@
                 }
 ?>
                             <td>
-                                <input type='number' min='1' max='9' step='1' value='<?=$value?>' list='<?=$row.$column?>' <?=$disabled?>/>
-                                <datalist id='<?=$row.$column?>'></datalist>
+                                <input type='number' min='1' max='9' step='1' value='<?=$value?>' list='list<?=$row.$column?>' title='[Clic-droit]' <?=$disabled?>/>
+                                <datalist id='list<?=$row.$column?>'></datalist>
                             </td>
 <?php
             }
@@ -67,6 +67,8 @@
         <section>
             Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.
         </section>
+        <ul id="contextMenu" class="context-menu">
+        </ul>
         <footer>
             <a href=''>Lien vers cette grille</a><br/>
             <a href='.'>Nouvelle grille</a>
@@ -77,9 +79,9 @@
     } else {
     	$grid = new Grid();
     	$grid->generate();
-    
+
         header("HTTP/1.0 400 Bad Request", true, 400);
-    
+
     	$urlDir = $_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["HTTP_HOST"] . dirname($_SERVER["DOCUMENT_URI"]);
         $urlExample = $urlDir . "/" . $grid->toString();
 ?>

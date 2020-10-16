@@ -143,3 +143,38 @@ input[type="color"] {
 a {
     text-decoration: none;
 }
+
+.context-menu {
+    display: none;
+    z-index: 1000;
+    position: absolute;
+    overflow: hidden;
+    border: 1px solid #CCC;
+    white-space: nowrap;
+    font-family: sans-serif;
+    background: #EEE;
+    color: #333;
+    border-radius: 3px;
+    padding: 0;
+}
+
+.context-menu li {
+    padding: 6px 10px;
+    cursor: default;
+    list-style-type: none;
+    transition: all .3s ease;
+    user-select: none;
+    font-size: 0.8em;
+}
+
+.context-menu li:hover {
+    background-color: #DEF;
+}
+
+.context-menu li.error {
+    color: #888
+}
+
+.context-menu li.error:hover {
+    background-color: #EEE;
+}
