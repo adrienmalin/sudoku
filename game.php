@@ -33,13 +33,14 @@
                 if ($value == UNKNOWN) {
                     $value = "";
                     $disabled = "";
+                    $class = "ink-pen";
                 } else {
                     $disabled = "disabled";
+                    $class = "";
                 }
 ?>
                             <td>
-                                <input type='number' min='1' max='9' step='1' value='<?=$value?>' list='list<?=$row.$column?>' title='[Clic-droit]' <?=$disabled?>/>
-                                <datalist id='list<?=$row.$column?>'></datalist>
+                                <input type='number' min='1' max='9' step='1' value='<?=$value?>' title='Valeurs possibles [Clic-droit]' class="<?=$class?>" <?=$disabled?>/>
                             </td>
 <?php
             }
@@ -59,9 +60,22 @@
 ?>
             </div>
             <div>
-                <button type='button' onclick='clearAll()'>Tout effacer</button>
-                <button id='undoButton' type='button' onclick='undo()' disabled title='Annuler' accesskey='z'>Annuler</button>
-                <input id='colorPicker' type='color' title='Changer de couleur de stylo' value='#00008b'/>
+                <button id='inkPenButton' type='button' onclick='useInkPen()' title='Stylo' class='pressed'>
+                    <img src="img/ink-pen.png" alt='Stylo' width=16 height=16/>
+                </button>
+                <button id='pencilButton' type='button' onclick='usePencil()' title='Crayon'>
+                    <img src="img/pencil.png" alt='Crayon' width=16 height=16/>
+                </button>
+                <button type='button' onclick='erasePencil()' title='Effacer le crayon'>
+                    <img src="img/pencil-eraser.png" alt="Gomme blanche" width=16 height=16/>
+                </button>
+                <button type='button' onclick='eraseAll()' title='Effacer tout'>
+                    <img src="img/ink-eraser.png" alt="Gomme bleue" width=16 height=16/>
+                </button>
+                <button id='undoButton' type='button' onclick='undo()' disabled title='Annuler' accesskey='z'>
+                    <img src="img/undo.png" alt="Annuler" width=16 height=16/>
+                </button>
+                <!--<input id='colorPicker' type='color' title='Changer de couleur de stylo' value='#00008b'/> -->
             </div>
         </form>
         <section>

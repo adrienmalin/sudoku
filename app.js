@@ -9,6 +9,7 @@ let suggestionTimer= null
 let highlightedValue = ""
 let history = []
 let accessKeyModifiers = "AccessKey+"
+let penStyle = "ink-pen"
 
 window.onload = function() {
     let rowId = 0
@@ -79,7 +80,9 @@ function undo() {
 }
 
 function refresh(box) {
-    box.style.color = colorPicker.value
+    //box.style.color = colorPicker.value
+    box.classList.remove("ink-pen", "pencil")
+    box.classList.add(penStyle)
 
     box.neighbourhood.concat([box]).forEach(neighbour => {
         searchCandidatesOf(neighbour)
@@ -142,8 +145,8 @@ function highlight(value) {
         highlightedValue = value
     }
     for (button of buttons.getElementsByTagName("button")) {
-        if (button.textContent == highlightedValue) button.className = "same-value"
-        else button.className = ""
+        if (button.textContent == highlightedValue) button.classList.add("pressed")
+        else button.classList.remove("pressed")
     }
     highlightAndTab()
     boxes.filter(box => box.value == "" && box.tabIndex == 0)[0].focus()
@@ -153,20 +156,23 @@ function highlightAndTab() {
     if (highlightedValue) {
         boxes.forEach(box => {
             if (box.value == highlightedValue) {
-                box.className = "same-value"
+                box.classList.add("same-value")
                 box.tabIndex = -1
             }
-            else if (box.candidates.has(highlightedValue)) {
-                box.className = ""
-                box.tabIndex = 0
-            } else {
-                box.className = "forbidden-value"
-                box.tabIndex = -1
+            else { 
+                box.classList.remove("same-value")
+                if (box.candidates.has(highlightedValue)) {
+                    box.classList.remove("forbidden-value")
+                    box.tabIndex = 0
+                } else {
+                    box.classList.add("forbidden-value")
+                    box.tabIndex = -1
+                }
             }
         })
     } else {
         boxes.forEach(box => {
-            box.className = ""
+            box.classList.remove("same-value", "forbidden-value")
             box.tabIndex = 0
         })
     }
@@ -198,16 +204,6 @@ function showSuggestion() {
     }
 }
 
-function clearAll() {
-    boxes.filter(box => !box.disabled).forEach(box => {
-        box.value = ""
-        box.placeholder = ""
-    })
-    boxes.forEach(searchCandidatesOf)
-    enableButtons()
-    highlightAndTab()
-}
-
 function oncontextmenu(event) {
     event.preventDefault()
     while (contextMenu.firstChild) contextMenu.firstChild.remove()
@@ -227,7 +223,7 @@ function oncontextmenu(event) {
         } else {
             li = document.createElement("li")
             li.innerText = "Aucun chiffre possible"
-            li.className = "error"
+            li.classList.add("error")
             contextMenu.appendChild(li)
         }
         contextMenu.style.left = `${event.pageX}px`
@@ -235,4 +231,36 @@ function oncontextmenu(event) {
         contextMenu.style.display = "block"
     }
     return false
+}
+
+function useInkPen() {
+    inkPenButton.classList.add("pressed")
+    pencilButton.classList.remove("pressed")
+    penStyle = "ink-pen"
+}
+
+function usePencil() {
+    pencilButton.classList.add("pressed")
+    inkPenButton.classList.remove("pressed")
+    penStyle = "pencil"
+}
+
+function erasePencil() {
+    for (box of grid.getElementsByClassName("pencil")) {
+        box.value = ""
+        box.placeholder = ""
+        searchCandidatesOf(box)
+    }
+    enableButtons()
+    highlightAndTab()
+}
+
+function eraseAll() {
+    boxes.filter(box => !box.disabled).forEach(box => {
+        box.value = ""
+        box.placeholder = ""
+    })
+    boxes.forEach(searchCandidatesOf)
+    enableButtons()
+    highlightAndTab()
 }
