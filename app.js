@@ -197,7 +197,7 @@ easyFirst = (box1, box2) => box1.candidates.size - box2.candidates.size
 function showSuggestion() {
     const emptyBoxes = boxes.filter(box => box.value == "" && box.candidates.size == 1)
     if (emptyBoxes.length) {
-        shuffle(emptyBoxes)[0].placeholder = "?"
+        shuffle(emptyBoxes)[0].placeholder = "💡"
     } else {
         clearTimeout(suggestionTimer)
         suggestionTimer = null

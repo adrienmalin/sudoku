@@ -4,6 +4,7 @@ body {
 
 h1 {
     text-align: center;
+    margin: 0.5em;
 }
 
 section, div, footer {
@@ -12,7 +13,7 @@ section, div, footer {
     align-items: center;
     row-gap: 0.5em;
     column-gap: 0.5em;
-    margin: 1em auto;
+    margin: 0.8em auto;
     justify-content: center;
     text-align: center;
 }
@@ -155,10 +156,11 @@ button.pressed:enabled:active {
     margin:  0px 0px 0px 3px;
 }
 button:disabled {
-    color: lightgrey;
+    color: #666;
     background: darkgrey;
     border: 1px outset darkgrey;
-    padding: 1px 9px 3px 9px;
+    padding: 3px 10px 6px 10px;
+    margin:  0px 0px 1px 2px;
 }
 input[type="color"] {
     padding: 0;
