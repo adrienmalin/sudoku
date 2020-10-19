@@ -13,9 +13,9 @@ let penStyle = "ink-pen"
 
 window.onload = function() {
     let rowId = 0
-    for (row of grid.getElementsByTagName('tr')) {
+    for (let row of grid.getElementsByTagName('tr')) {
         let columnId = 0
-        for (box of row.getElementsByTagName('input')) {
+        for (let box of row.getElementsByTagName('input')) {
             let regionId = rowId - rowId%3 + Math.floor(columnId/3)
             if (!box.disabled) {
                 box.onfocus = onfocus
@@ -65,7 +65,7 @@ function onfocus() {
 }
 
 function oninput() {
-    history.push({input: this, value: this.previousValue})
+    history.push({box: this, value: this.previousValue, className: this.className})
     undoButton.disabled = false
     refresh(this)
 }
@@ -73,16 +73,17 @@ function oninput() {
 function undo() {
     if (history.length) {
         previousState = history.pop()
-        previousState.input.value = previousState.value
-        refresh(previousState.input)
+        previousState.box.value = previousState.value
+        previousState.box.className = previousState.className
+        refresh(previousState.box)
         if (history.length < 1) undoButton.disabled = true
     }
 }
 
 function refresh(box) {
-    //box.style.color = colorPicker.value
     box.classList.remove("ink-pen", "pencil")
-    box.classList.add(penStyle)
+    if (box.value.length)
+        box.classList.add(penStyle)
 
     box.neighbourhood.concat([box]).forEach(neighbour => {
         searchCandidatesOf(neighbour)
@@ -94,7 +95,7 @@ function refresh(box) {
     highlightAndTab()
     
     for (neighbour1 of box.neighbourhood) {
-        if (neighbour1.value.length) {
+        if (neighbour1.value.length == 1) {
             for (area of [
                 {name: "région", neighbours: regions[neighbour1.regionId]},
                 {name: "ligne", neighbours: rows[neighbour1.rowId]},
@@ -245,22 +246,23 @@ function usePencil() {
     penStyle = "pencil"
 }
 
-function erasePencil() {
-    for (box of grid.getElementsByClassName("pencil")) {
+function erase(someBoxes) {
+    for (box of someBoxes) {
         box.value = ""
         box.placeholder = ""
         searchCandidatesOf(box)
+        refresh(box)
     }
     enableButtons()
     highlightAndTab()
 }
 
+function erasePencil() {
+    if (confirm("Effacer les chiffres écrits au crayon ?"))
+        erase(grid.getElementsByClassName("pencil"))
+}
+
 function eraseAll() {
-    boxes.filter(box => !box.disabled).forEach(box => {
-        box.value = ""
-        box.placeholder = ""
-    })
-    boxes.forEach(searchCandidatesOf)
-    enableButtons()
-    highlightAndTab()
+    if (confirm("Effacer tous les chiffres (écrits au crayon et au stylo) ?"))
+        erase(boxes.filter(box => !box.disabled && box.value.length))
 }

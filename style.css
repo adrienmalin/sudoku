@@ -96,19 +96,19 @@ input::-webkit-calendar-picker-indicator {
     color: white;
     background: #6666ff;
 }
-.grid input.same-value:enabled {
-    background: #ffff33;
-}
 .grid input.forbidden-value:enabled {
     background: #ffff77;
 }
-.grid input.same-value:disabled, button.same-value:enabled {
-    color: #ffff99;
-    background: #00cc66;
+.grid input.same-value:enabled {
+    background: #ffff33;
 }
 .grid input.forbidden-value:disabled {
     color: #ffff99;
     background: #6666ff;
+}
+.grid input.same-value:disabled, button.same-value:enabled {
+    color: #ffff99 !important;
+    background: #00cc66 !important;
 }
 input::placeholder {
     color: #888;
@@ -117,7 +117,10 @@ input::placeholder {
     color: darkblue;
 }
 .grid input.pencil {
-    color: #666;
+    color: #888;
+    font-size: 0.8em;
+    width: 2.8em;
+    height: 2.8em;
 }
 
 .highlight-buttons {
@@ -127,40 +130,40 @@ button, input[type="color"] {
     border: 2px outset #6666ff;
     border-radius: 4px;
     font-size: 1.2em;
-    padding: 2px 9px 5px 9px;
-    margin:  0px 0px 1px 2px;
+    padding: 4px 9px 5px 9px;
+    margin:  0px 1px 1px 1px;
 }
 button:enabled:hover {
     border-width: 1px;
     border-style: outset;
-    padding: 3px 9px 5px 10px;
-    margin:  1px 0px 1px 3px;
+    padding: 5px 9px 5px 10px;
+    margin:  1px 1px 1px 2px;
 }
 button:enabled:active,
 button.pressed:enabled:hover {
     border-width: 3px;
     border-style: inset;
-    padding: 2px 6px 2px 9px;
-    margin:  1px 0px 1px 3px;
+    padding: 4px 6px 2px 9px;
+    margin:  1px 1px 1px 2px;
 }
 button.pressed {
     border: 2px inset #00cc66;
     background: #00cc66;
-    padding: 2px 8px 4px 9px;
-    margin:  1px 0px 0px 3px;
+    padding: 4px 8px 4px 9px;
+    margin:  1px 1px 0px 2px;
 }
 button.pressed:enabled:active {
     border-width: 4px;
     border-style: inset;
-    padding: 2px 4px 0px 9px;
-    margin:  0px 0px 0px 3px;
+    padding: 4px 4px 0px 9px;
+    margin:  0px 1px 0px 2px;
 }
 button:disabled {
     color: #666;
     background: darkgrey;
     border: 1px outset darkgrey;
-    padding: 3px 10px 6px 10px;
-    margin:  0px 0px 1px 2px;
+    padding: 5px 10px 6px 10px;
+    margin:  0px 1px 1px 1px;
 }
 input[type="color"] {
     padding: 0;
