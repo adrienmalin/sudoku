@@ -19,6 +19,9 @@
         <header>
             <h1>Sudoku</h1>
         </header>
+        <section>
+            Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.
+        </section>
         <form id='sudokuForm'>
             <div>
                 <table id='grid' class='grid'>
@@ -33,14 +36,12 @@
                 if ($value == UNKNOWN) {
                     $value = "";
                     $disabled = "";
-                    $class = "ink-pen";
                 } else {
                     $disabled = "disabled";
-                    $class = "";
                 }
 ?>
                             <td>
-                                <input type='number' min='1' max='9' step='1' value='<?=$value?>' title='Valeurs possibles [Clic-droit]' class="<?=$class?>" <?=$disabled?>/>
+                                <input type='number' min='1' max='9' step='1' value='<?=$value?>' title='Valeurs possibles [Clic-droit]' <?=$disabled?>/>
                             </td>
 <?php
             }
@@ -69,7 +70,7 @@
                 <button type='button' onclick='erasePencil()' title='Effacer le crayon'>
                     <img src="img/pencil-eraser.png" alt="Gomme blanche" width=16 height=16/>
                 </button>
-                <button type='button' onclick='eraseAll()' title='Effacer tout'>
+                <button class="warning" type='button' onclick='eraseAll()' title='Effacer tout'>
                     <img src="img/ink-eraser.png" alt="Gomme bleue" width=16 height=16/>
                 </button>
                 <button id='undoButton' type='button' onclick='undo()' disabled title='Annuler' accesskey='z'>
@@ -78,9 +79,6 @@
                 <!--<input id='colorPicker' type='color' title='Changer de couleur de stylo' value='#00008b'/> -->
             </div>
         </form>
-        <section>
-            Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.
-        </section>
         <ul id="contextMenu" class="context-menu">
         </ul>
         <footer>

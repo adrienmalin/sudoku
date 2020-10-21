@@ -20,8 +20,9 @@ window.onload = function() {
             if (!box.disabled) {
                 box.onfocus = onfocus
                 box.oninput = oninput
-                box.oncontextmenu = oncontextmenu
+                box.onblur = onblur
             }
+            box.oncontextmenu = oncontextmenu
             box.rowId = rowId
             box.columnId = columnId
             box.regionId = regionId
@@ -43,12 +44,12 @@ window.onload = function() {
     highlightAndTab()
     
     if (/Win/.test(navigator.platform) || /Linux/.test(navigator.platform)) accessKeyModifiers = "Alt+Maj+"
-    else if (/Mac/.test(navigator.platform)) accessKeyModifiers = "⌃⌥ "
+    else if (/Mac/.test(navigator.platform)) accessKeyModifiers = "⌃⌥"
     for(node of document.querySelectorAll("*[accesskey]")) {
         node.title += " [" + (node.accessKeyLabel || accessKeyModifiers + node.accessKey) + "]"
     }
     
-    document.body.onclick = function (event) {
+    document.onclick = function (event) {
         contextMenu.style.display = "none"
     }
     suggestionTimer = setTimeout(showSuggestion, 30000)
@@ -60,31 +61,34 @@ function searchCandidatesOf(box) {
 }
 
 function onfocus() {
-    this.previousValue = this.value
-    this.select()
+    if (penStyle == "pencil" && this.value == "") {
+        this.value = this.placeholder
+        this.placeholder = ""
+        this.classList.add("pencil")
+    } else {
+        this.select()
+    }
 }
 
 function oninput() {
-    history.push({box: this, value: this.previousValue, className: this.className})
+    history.push({box: this, value: this.previousValue, placeholder: this.previousPlaceholder})
     undoButton.disabled = false
-    refresh(this)
+    if (penStyle != "pencil") {
+        refresh(this)
+    }
 }
 
 function undo() {
     if (history.length) {
         previousState = history.pop()
         previousState.box.value = previousState.value
-        previousState.box.className = previousState.className
+        previousState.box.placeholder = previousState.placeholder
         refresh(previousState.box)
         if (history.length < 1) undoButton.disabled = true
     }
 }
 
 function refresh(box) {
-    box.classList.remove("ink-pen", "pencil")
-    if (box.value.length)
-        box.classList.add(penStyle)
-
     box.neighbourhood.concat([box]).forEach(neighbour => {
         searchCandidatesOf(neighbour)
         neighbour.setCustomValidity("")
@@ -126,6 +130,16 @@ function refresh(box) {
         box.form.reportValidity()
         box.select()
     }
+}
+
+function onblur() {
+    if (this.classList.contains("pencil")) {
+        this.placeholder = this.value
+        this.value = ""
+        this.classList.remove("pencil")
+    }
+    this.previousValue = this.value
+    this.previousPlaceholder = this.placeholder
 }
 
 function enableButtons() {
@@ -209,28 +223,26 @@ function oncontextmenu(event) {
     event.preventDefault()
     while (contextMenu.firstChild) contextMenu.firstChild.remove()
     const box = event.target
-    if (box.value == "") {
-        if (box.candidates.size) {
-            candidatesArray = Array.from(box.candidates).sort().forEach(candidate => {
-                li = document.createElement("li")
-                li.innerText = candidate
-                li.onclick = function (event) {
-                    contextMenu.style.display = "none"
-                    box.value = event.target.innerText
-                    refresh(box)
-                }
-                contextMenu.appendChild(li)
-            })
-        } else {
+    if (box.candidates.size) {
+        candidatesArray = Array.from(box.candidates).sort().forEach(candidate => {
             li = document.createElement("li")
-            li.innerText = "Aucun chiffre possible"
-            li.classList.add("error")
+            li.innerText = candidate
+            li.onclick = function (event) {
+                contextMenu.style.display = "none"
+                box.value = event.target.innerText
+                oninput.apply(box)
+            }
             contextMenu.appendChild(li)
-        }
-        contextMenu.style.left = `${event.pageX}px`
-        contextMenu.style.top = `${event.pageY}px`
-        contextMenu.style.display = "block"
+        })
+    } else {
+        li = document.createElement("li")
+        li.innerText = "Aucun chiffre possible"
+        li.classList.add("error")
+        contextMenu.appendChild(li)
     }
+    contextMenu.style.left = `${event.pageX}px`
+    contextMenu.style.top = `${event.pageY}px`
+    contextMenu.style.display = "block"
     return false
 }
 
@@ -258,11 +270,23 @@ function erase(someBoxes) {
 }
 
 function erasePencil() {
-    if (confirm("Effacer les chiffres écrits au crayon ?"))
-        erase(grid.getElementsByClassName("pencil"))
+    if (confirm("Effacer les chiffres écrits au crayon ?")) {
+        boxes.filter(box => !box.disabled).forEach(box => {
+            box.placeholder = ""
+        })
+    }
 }
 
 function eraseAll() {
-    if (confirm("Effacer tous les chiffres (écrits au crayon et au stylo) ?"))
-        erase(boxes.filter(box => !box.disabled && box.value.length))
+    if (confirm("Effacer tous les chiffres écrits au crayon et au stylo ?")) {
+        boxes.filter(box => !box.disabled).forEach(box => {
+            box.value = ""
+            box.placeholder = ""
+            box.setCustomValidity("")
+            box.required = false
+        })
+        boxes.forEach(searchCandidatesOf)
+        enableButtons()
+        highlightAndTab()
+    }
 }
