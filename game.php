@@ -33,15 +33,19 @@
 <?php
             for ($column = 0; $column < 9; $column++) {
                 $value = $gridStr[9*$row+$column];
-                if ($value == UNKNOWN) {
-                    $value = "";
-                    $disabled = "";
-                } else {
-                    $disabled = "disabled";
-                }
 ?>
                             <td>
-                                <input type='number' min='1' max='9' step='1' value='<?=$value?>' title='Valeurs possibles [Clic-droit]' <?=$disabled?>/>
+<?php
+                if ($value == UNKNOWN) {
+?>
+                                <input type='number' min='1' max='9' step='1' value='' title='Valeurs possibles [Clic-droit]'/>
+<?php
+                } else {
+?>
+                                <input type='number' min='1' max='9' step='1' value='<?=$value?>' disabled/>
+<?php
+                }
+?>
                             </td>
 <?php
             }

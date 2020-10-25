@@ -38,8 +38,9 @@ window.onload = function() {
         box.neighbourhood = new Set(rows[box.rowId].concat(columns[box.columnId]).concat(regions[box.regionId]))
         box.neighbourhood.delete(box)
         box.neighbourhood = Array.from(box.neighbourhood)
+        searchCandidatesOf(box)
     })
-    boxes.forEach(searchCandidatesOf)
+    
     enableButtons()
     highlightAndTab()
     
@@ -58,6 +59,8 @@ window.onload = function() {
 function searchCandidatesOf(box) {
     box.candidates = new Set(VALUES)
     box.neighbourhood.forEach(neighbour => box.candidates.delete(neighbour.value))
+    if (!box.disabled)
+        box.title = box.candidates.size + (box.candidates.size <= 1 ? " possibilité [Clic-droit]" : " possibilités [Clic-droit]")
 }
 
 function onfocus() {
