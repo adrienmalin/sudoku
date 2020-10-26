@@ -13,7 +13,8 @@
         <title>Sudoku</title>
         <link rel='stylesheet' type='text/css' href='style.css' />
         <script src='app.js'></script>
-        <link rel="icon" type="image/png" href="favicon.png">
+        <link rel="icon" type="image/png" href="favicon.php?size=16&grid=<?=$gridStr?>" sizes="16x16">
+        <link rel="icon" type="image/png" href="favicon.php?size=32&grid=<?=$gridStr?>" sizes="32x32">
     </head>
     <body>
         <header>
@@ -102,12 +103,13 @@
         $urlExample = $urlDir . "/" . $grid->toString();
 ?>
 <!DOCTYPE html>
-<html>
+<html lang='fr'>
     <head>
         <meta charset='utf-8' />
         <meta name='viewport' content='width=device-width' />
         <title>Grille incorrecte</title>
         <link rel='stylesheet' type='text/css' href='style.css' />
+        <link rel="icon" type="image/png" href="favicon.png">
     </head>
     <body>
         <header>
