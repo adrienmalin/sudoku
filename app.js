@@ -34,6 +34,14 @@ window.onload = function() {
         }
         rowId++
     }
+    
+    let savedGame = localStorage[location.href]
+    if (savedGame) {
+        boxes.forEach((box, i) => {
+            if (!box.disabled && savedGame[i] != '.') box.value = savedGame[i]
+        })
+    }
+    
     boxes.forEach(box => {
         box.neighbourhood = new Set(rows[box.rowId].concat(columns[box.columnId]).concat(regions[box.regionId]))
         box.neighbourhood.delete(box)
@@ -59,8 +67,18 @@ window.onload = function() {
 function searchCandidatesOf(box) {
     box.candidates = new Set(VALUES)
     box.neighbourhood.forEach(neighbour => box.candidates.delete(neighbour.value))
-    if (!box.disabled)
-        box.title = box.candidates.size + (box.candidates.size <= 1 ? " possibilité [Clic-droit]" : " possibilités [Clic-droit]")
+    if (!box.disabled) {
+        switch (box.candidates.size) {
+            case 0:
+                box.title = "Aucune possibilité !"
+            break
+            case 1:
+                box.title = "1 possibilité [Clic-droit]"
+            break
+            default:
+                box.title = box.candidates.size + " possibilités [Clic-droit]"
+        }
+    }
 }
 
 function onfocus() {
@@ -74,7 +92,7 @@ function onfocus() {
 }
 
 function oninput() {
-    history.push({box: this, value: this.previousValue, placeholder: this.previousPlaceholder})
+    history.push({box: this, value: this.previousValue || "", placeholder: this.previousPlaceholder || ""})
     undoButton.disabled = false
     if (penStyle != "pencil") {
         refresh(this)
@@ -92,6 +110,8 @@ function undo() {
 }
 
 function refresh(box) {
+    localStorage[location.href] = boxes.map(box => box.value || ".").join("")
+    
     box.neighbourhood.concat([box]).forEach(neighbour => {
         searchCandidatesOf(neighbour)
         neighbour.setCustomValidity("")
@@ -239,7 +259,7 @@ function oncontextmenu(event) {
         })
     } else {
         li = document.createElement("li")
-        li.innerText = "Aucun chiffre possible"
+        li.innerText = "Aucune possibilité !"
         li.classList.add("error")
         contextMenu.appendChild(li)
     }
