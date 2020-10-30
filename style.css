@@ -101,7 +101,7 @@ input::-webkit-calendar-picker-indicator {
     background: #6666ff;
 }
 .grid input.forbidden-value:enabled {
-    background: #ffff77;
+    background: #ffff99;
 }
 .grid input.same-value:enabled {
     background: #ffff33;
@@ -112,7 +112,7 @@ input::-webkit-calendar-picker-indicator {
 }
 .grid input.same-value:disabled, button.same-value:enabled {
     color: #ffff99 !important;
-    background: #00cc66 !important;
+    background: #00b359 !important;
 }
 .grid input.pencil, input::placeholder {
     color: #888 !important;
@@ -144,8 +144,8 @@ button.pressed:enabled:hover {
     margin:  1px 1px 1px 2px;
 }
 button.pressed {
-    border: 2px inset #00cc66;
-    background: #00cc66;
+    border: 2px inset #00b359;
+    background: #00b359;
     padding: 4px 8px 4px 9px;
     margin:  1px 1px 0px 2px;
 }
