@@ -1,7 +1,7 @@
 <?php
     require("classes.php");
 
-    $gridStr = basename(strip_tags($_SERVER["REQUEST_URI"]));
+    $gridStr = basename(strip_tags($_SERVER["DOCUMENT_URI"]));
     // URL contains grid
     if (preg_match("#^[1-9.]{81}$#", $gridStr)) {
 ?>
@@ -13,24 +13,25 @@
         <title>Sudoku</title>
         <link rel='stylesheet' type='text/css' href='style.css' />
         <script src='app.js'></script>
-        <link rel="apple-touch-icon" href="thumbnail.php?grid=<?=$gridStr?>&size=57"  sizes="57x57">
-        <link rel="apple-touch-icon" href="thumbnail.php?grid=<?=$gridStr?>&size=114" sizes="114x114">
-        <link rel="apple-touch-icon" href="thumbnail.php?grid=<?=$gridStr?>&size=72"  sizes="72x72">
-        <link rel="apple-touch-icon" href="thumbnail.php?grid=<?=$gridStr?>&size=144" sizes="144x144">
-        <link rel="apple-touch-icon" href="thumbnail.php?grid=<?=$gridStr?>&size=60"  sizes="60x60">
-        <link rel="apple-touch-icon" href="thumbnail.php?grid=<?=$gridStr?>&size=120" sizes="120x120">
-        <link rel="apple-touch-icon" href="thumbnail.php?grid=<?=$gridStr?>&size=76"  sizes="76x76">
-        <link rel="apple-touch-icon" href="thumbnail.php?grid=<?=$gridStr?>&size=152" sizes="152x152">
-        <link rel="icon" type="image/png" href="thumbnail.php?grid=<?=$gridStr?>&size=196" sizes="196x196">
-        <link rel="icon" type="image/png" href="thumbnail.php?grid=<?=$gridStr?>&size=160" sizes="160x160">
-        <link rel="icon" type="image/png" href="thumbnail.php?grid=<?=$gridStr?>&size=96"  sizes="96x96">
-        <link rel="icon" type="image/png" href="thumbnail.php?grid=<?=$gridStr?>&size=16"  sizes="16x16">
-        <link rel="icon" type="image/png" href="thumbnail.php?grid=<?=$gridStr?>&size=32"  sizes="32x32">
+        <link rel="apple-touch-icon" href="thumbnail.png.php?grid=<?=$gridStr?>&size=57"  sizes="57x57">
+        <link rel="apple-touch-icon" href="thumbnail.png.php?grid=<?=$gridStr?>&size=114" sizes="114x114">
+        <link rel="apple-touch-icon" href="thumbnail.png.php?grid=<?=$gridStr?>&size=72"  sizes="72x72">
+        <link rel="apple-touch-icon" href="thumbnail.png.php?grid=<?=$gridStr?>&size=144" sizes="144x144">
+        <link rel="apple-touch-icon" href="thumbnail.png.php?grid=<?=$gridStr?>&size=60"  sizes="60x60">
+        <link rel="apple-touch-icon" href="thumbnail.png.php?grid=<?=$gridStr?>&size=120" sizes="120x120">
+        <link rel="apple-touch-icon" href="thumbnail.png.php?grid=<?=$gridStr?>&size=76"  sizes="76x76">
+        <link rel="apple-touch-icon" href="thumbnail.png.php?grid=<?=$gridStr?>&size=152" sizes="152x152">
+        <link rel="icon" type="image/png" href="thumbnail.png.php?grid=<?=$gridStr?>&size=196" sizes="196x196">
+        <link rel="icon" type="image/png" href="thumbnail.png.php?grid=<?=$gridStr?>&size=160" sizes="160x160">
+        <link rel="icon" type="image/png" href="thumbnail.png.php?grid=<?=$gridStr?>&size=96"  sizes="96x96">
+        <link rel="icon" type="image/png" href="thumbnail.png.php?grid=<?=$gridStr?>&size=16"  sizes="16x16">
+        <link rel="icon" type="image/png" href="thumbnail.png.php?grid=<?=$gridStr?>&size=32"  sizes="32x32">
+        <link rel="manifest" href="manifest.json.php?grid=<?=$gridStr?>">
         <meta property="og:title" content="Sudoku"/>
         <meta property="og:type" content="website"/>
         <meta property="og:url" content="<?=$_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["HTTP_HOST"] . $_SERVER["DOCUMENT_URI"];
 ?>"/>
-        <meta property="og:image" content="<?=$_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["HTTP_HOST"] . dirname($_SERVER["DOCUMENT_URI"])?>/thumbnail.php?grid=<?=$gridStr?>&size=200"/>
+        <meta property="og:image" content="<?=$_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["HTTP_HOST"] . dirname($_SERVER["DOCUMENT_URI"])?>/thumbnail.png.php?grid=<?=$gridStr?>&size=200"/>
         <meta property="og:image:width" content="200"/>
         <meta property="og:image:height" content="200"/>
         <meta property="og:description" content="Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9."/>
@@ -48,41 +49,29 @@
             <div>
                 <table id='grid' class='grid'>
                     <tbody>
-<?php
-        for ($row = 0; $row < 9; $row++) {
-?>
+<?php   for ($row = 0; $row < 9; $row++) {                                   ?>
                         <tr>
 <?php
             for ($column = 0; $column < 9; $column++) {
                 $value = $gridStr[9*$row+$column];
-?>
-                            <td>
-<?php
                 if ($value == UNKNOWN) {
 ?>
-                                <input type='number' min='1' max='9' step='1' value='' title='Valeurs possibles [Clic-droit]'/>
+                            <td><input type='number' min='1' max='9' step='1' value='' title='Valeurs possibles [Clic-droit]'/></td>
+<?php           } else {                                                     ?>
+                            <td><input type='number' min='1' max='9' step='1' value='<?=$value?>' disabled/></td>
 <?php
-                } else {
-?>
-                                <input type='number' min='1' max='9' step='1' value='<?=$value?>' disabled/>
-<?php
-                }
-?>
-                            </td>
-<?php
+                }                                                            
             }
 ?>
                         </tr>
-<?php
-        }
-?>
+<?php   }                                                                    ?>
                     </tbody>
                 </table>
             </div>
             <div id='buttons' class='highlight-buttons'>
 <?php
         for($value=1; $value<=9; $value++) {
-            echo "                <button type='button' onclick='highlight(\"$value\")' title='Surligner les $value'  accesskey='$value'>$value</button>\n";
+            echo "                <button type='button' onclick='highlight(\"$value\")' title='Surligner les $value' accesskey='$value'>$value</button>\n";
         }
 ?>
             </div>
@@ -102,7 +91,6 @@
                 <button id='undoButton' type='button' onclick='undo()' disabled title='Annuler' accesskey='z'>
                     <img src="img/undo.png" alt="Annuler" width=16 height=16/>
                 </button>
-                <!--<input id='colorPicker' type='color' title='Changer de couleur de stylo' value='#00008b'/> -->
             </div>
         </form>
         <ul id="contextMenu" class="context-menu">

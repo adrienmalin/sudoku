@@ -62,6 +62,10 @@ window.onload = function() {
         contextMenu.style.display = "none"
     }
     suggestionTimer = setTimeout(showSuggestion, 30000)
+    
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("service-worker.js")
+    }
 }
 
 function searchCandidatesOf(box) {

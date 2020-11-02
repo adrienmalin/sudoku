@@ -101,17 +101,17 @@ input::-webkit-calendar-picker-indicator {
     background: #6666ff;
 }
 .grid input.forbidden-value:enabled {
-    background: #ffff99;
+    background: #ffffaa;
 }
 .grid input.same-value:enabled {
     background: #ffff33;
 }
 .grid input.forbidden-value:disabled {
-    color: #ffff99;
+    color: #ffffaa;
     background: #6666ff;
 }
 .grid input.same-value:disabled, button.same-value:enabled {
-    color: #ffff99 !important;
+    color: #ffffaa !important;
     background: #00b359 !important;
 }
 .grid input.pencil, input::placeholder {
