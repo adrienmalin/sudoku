@@ -256,8 +256,10 @@ function oncontextmenu(event) {
             li.innerText = candidate
             li.onclick = function (event) {
                 contextMenu.style.display = "none"
+                onfocus.apply(box)
                 box.value = event.target.innerText
                 oninput.apply(box)
+                onblur.apply(box)
             }
             contextMenu.appendChild(li)
         })
