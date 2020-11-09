@@ -73,10 +73,10 @@
             </table>
         </form>
         <section class='tools'>
-            <div id='radioValues' class='radioValues'>
+            <div id='selectValueRadioGroup' class='selectValueRadioGroup'>
 <?php
         for($value=1; $value<=9; $value++) {
-            echo "                <input type='radio' id='radioValue$value' value='$value' name='radioValues' onclick='highlight(this)' accesskey='$value'/><label for='radioValue$value' title='Écrire un $value'>$value</label>\n";
+            echo "                <input type='radio' id='selectValueRadio$value' value='$value' name='selectValueRadioGroup' onclick='highlight(this)' accesskey='$value'/><label for='selectValueRadio$value' title='Écrire un $value'>$value</label>\n";
         }
 ?>
             </div>

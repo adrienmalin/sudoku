@@ -10,7 +10,6 @@ let suggestionTimer= null
 let selectedValue = ""
 let history = []
 let accessKeyModifiers = "AccessKey+"
-let penStyle = "ink-pen"
 
 window.onload = function() {
     let rowId = 0
@@ -61,7 +60,7 @@ window.onload = function() {
         node.title += " [" + (node.accessKeyLabel || accessKeyModifiers + node.accessKey) + "]"
     }
     
-    enableButtons()
+    enableRadios()
     highlightAndTab()
     
     document.onclick = function (event) {
@@ -93,7 +92,7 @@ function searchCandidatesOf(box) {
 
 function onclick() {
     if (selectedValue) {
-        if (penStyle == "ink-pen") {
+        if (inkPenRadio.checked) {
             this.value = selectedValue
         } else {
             if (!this.value.includes(selectedValue))
@@ -104,12 +103,17 @@ function onclick() {
 }
 
 function onfocus() {
-    if (penStyle == "pencil" && this.value == "") {
+    if (pencilRadio.checked && this.value == "") {
         this.value = this.placeholder
         this.placeholder = ""
         this.classList.add("pencil")
     } else {
         this.select()
+    }
+    if (selectedValue) {
+        this.style.caretColor = "transparent"
+    } else {
+        this.style.caretColor = "auto"
     }
 }
 
@@ -118,7 +122,7 @@ function oninput() {
     this.previousValue = this.value
     this.previousPlaceholder = this.placeholder
     undoButton.disabled = false
-    if (penStyle != "pencil") {
+    if (inkPenRadio.checked) {
         refresh(this)
     }
 }
@@ -142,7 +146,7 @@ function refresh(box) {
         neighbour.required = false
     })
     
-    enableButtons()
+    enableRadios()
     highlightAndTab()
     
     for (neighbour1 of box.neighbourhood) {
@@ -187,8 +191,8 @@ function onblur() {
     }
 }
 
-function enableButtons() {
-    for (radio of radioValues.getElementsByTagName("input")) {
+function enableRadios() {
+    for (radio of selectValueRadioGroup.getElementsByTagName("input")) {
         if (boxes.filter(box => box.value == "").some(box => box.candidates.has(radio.value))) {
             radio.disabled = false
             if (radio.previousTitle) {
@@ -213,7 +217,6 @@ function highlight(radio) {
         selectedValue = radio.value
     }
     highlightAndTab()
-    boxes.filter(box => box.value == "" && box.tabIndex == 0)[0].focus()
 }
 
 function highlightAndTab() {
@@ -225,21 +228,29 @@ function highlightAndTab() {
             }
             else { 
                 box.classList.remove("same-value")
-                if (box.candidates.has(selectedValue)) {
-                    box.classList.remove("forbidden-value")
+                if (box.candidates.has(selectedValue) && !box.disabled) {
+                    box.classList.add("allowed")
+                    box.classList.remove("forbidden")
                     box.tabIndex = 0
                 } else {
-                    box.classList.add("forbidden-value")
+                    box.classList.add("forbidden")
+                    box.classList.remove("allowed")
                     box.tabIndex = -1
                 }
             }
         })
     } else {
         boxes.forEach(box => {
-            box.classList.remove("same-value", "forbidden-value")
+            box.classList.remove("same-value", "forbidden")
+            if (selectedValue && !box.disabled) {
+                box.classList.add("allowed")
+            } else {
+                box.classList.remove("allowed")
+            }
             box.tabIndex = 0
         })
     }
+    boxes.filter(box => box.value == "" && box.tabIndex == 0)[0].focus()
 }
 
 function shuffle(iterable) {
@@ -304,7 +315,7 @@ function erase(someBoxes) {
         searchCandidatesOf(box)
         refresh(box)
     }
-    enableButtons()
+    enableRadios()
     highlightAndTab()
 }
 
@@ -325,7 +336,7 @@ function eraseAll() {
             box.required = false
         })
         boxes.forEach(searchCandidatesOf)
-        enableButtons()
+        enableRadios()
         highlightAndTab()
     }
 }
