@@ -40,7 +40,7 @@
     "shortcuts": [
         {
             "name": "Sudoku : cette grille",
-            "short_name": "Sudoku",
+            "short_name": "Ce sudoku",
             "description": "Continuer cette grille de sudoku",
             "url": "<?=$gridStr?>",
             "icons": [{
@@ -70,7 +70,38 @@
             }]
         },
         {
-            "name": "Nouvelle grille de sudoku",
+            "name": "Sudoku : Grille vierge",
+            "short_name": "Sudoku vierge",
+            "description": "Grille de sudoku vierge",
+            "url": ".................................................................................",
+            "icons": [{
+                    "src": "thumbnail.png.php?grid=.................................................................................&size=48",
+                    "sizes": "48x48",
+                    "type": "image/png"
+                }, {
+                    "src": "thumbnail.png.php?grid=.................................................................................&size=72",
+                    "sizes": "72x72",
+                    "type": "image/png"
+                }, {
+                    "src": "thumbnail.png.php?grid=.................................................................................&size=96",
+                    "sizes": "96x96",
+                    "type": "image/png"
+                }, {
+                    "src": "thumbnail.png.php?grid=.................................................................................&size=144",
+                    "sizes": "144x144",
+                    "type": "image/png"
+                }, {
+                    "src": "thumbnail.png.php?grid=.................................................................................&size=168",
+                    "sizes": "168x168",
+                    "type": "image/png"
+                }, {
+                    "src": "thumbnail.png.php?grid=.................................................................................&size=192",
+                    "sizes": "192x192",
+                    "type": "image/png"
+            }]
+        },
+        {
+            "name": "Sudoku : Nouvelle grille",
             "short_name": "Nouveau sudoku",
             "description": "Nouvelle grille de sudoku",
             "url": ".",

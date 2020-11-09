@@ -82,6 +82,7 @@ section, div, footer {
     padding: 0;
     text-align: center;
     transition: background 0.5s;
+    caret-color: transparent;
     -moz-appearance: textfield;
 }
 input::-webkit-outer-spin-button,

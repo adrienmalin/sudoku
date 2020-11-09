@@ -169,7 +169,7 @@ function refresh(box) {
             
     if (box.form.checkValidity()) { // Correct grid
         if (boxes.filter(box => box.value == "").length == 0) {
-            alert(`Bravo ! Vous avez résolu la grille.`)
+            setTimeout(() => alert(`Bravo ! Vous avez résolu la grille.`), 0)
         } else {
             if (suggestionTimer) clearTimeout(suggestionTimer)
             suggestionTimer = setTimeout(showSuggestion, SUGESTION_DELAY)
