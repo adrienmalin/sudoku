@@ -1,4 +1,5 @@
 const VALUES = "123456789"
+const UNKNOWN = '.'
 const SUGESTION_DELAY = 60000 //ms
 
 let boxes = []
@@ -6,10 +7,11 @@ let rows = Array.from(Array(9), x => [])
 let columns = Array.from(Array(9), x => [])
 let regions = Array.from(Array(9), x => [])
 let suggestionTimer= null
-let highlightedValue = ""
+let selectedValue = ""
 let history = []
 let accessKeyModifiers = "AccessKey+"
 let penStyle = "ink-pen"
+let highlighting = false
 
 window.onload = function() {
     let rowId = 0
@@ -21,6 +23,8 @@ window.onload = function() {
                 box.onfocus = onfocus
                 box.oninput = oninput
                 box.onblur = onblur
+                box.onclick = onclick
+                box.previousPlaceholder = ""
             }
             box.oncontextmenu = oncontextmenu
             box.rowId = rowId
@@ -38,7 +42,10 @@ window.onload = function() {
     let savedGame = localStorage[location.href]
     if (savedGame) {
         boxes.forEach((box, i) => {
-            if (!box.disabled && savedGame[i] != '.') box.value = savedGame[i]
+            if (!box.disabled && savedGame[i] != UNKNOWN) {
+                box.value = savedGame[i]
+                box.previousValue = savedGame[i]
+            }
         })
     }
     
@@ -49,19 +56,19 @@ window.onload = function() {
         searchCandidatesOf(box)
     })
     
-    enableButtons()
-    highlightAndTab()
-    
     if (/Win/.test(navigator.platform) || /Linux/.test(navigator.platform)) accessKeyModifiers = "Alt+Maj+"
     else if (/Mac/.test(navigator.platform)) accessKeyModifiers = "⌃⌥"
     for(node of document.querySelectorAll("*[accesskey]")) {
         node.title += " [" + (node.accessKeyLabel || accessKeyModifiers + node.accessKey) + "]"
     }
     
+    enableButtons()
+    highlightAndTab()
+    
     document.onclick = function (event) {
         contextMenu.style.display = "none"
     }
-    suggestionTimer = setTimeout(showSuggestion, 30000)
+    suggestionTimer = setTimeout(showSuggestion, SUGESTION_DELAY)
     
     if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register("service-worker.js")
@@ -85,6 +92,18 @@ function searchCandidatesOf(box) {
     }
 }
 
+function onclick() {
+    if (selectedValue) {
+        if (penStyle == "ink-pen") {
+            this.value = selectedValue
+        } else {
+            if (!this.value.includes(selectedValue))
+                this.value += selectedValue
+        }
+        oninput.apply(this)
+    }
+}
+
 function onfocus() {
     if (penStyle == "pencil" && this.value == "") {
         this.value = this.placeholder
@@ -96,7 +115,9 @@ function onfocus() {
 }
 
 function oninput() {
-    history.push({box: this, value: this.previousValue || "", placeholder: this.previousPlaceholder || ""})
+    history.push({box: this, value: this.previousValue, placeholder: this.previousPlaceholder})
+    this.previousValue = this.value
+    this.previousPlaceholder = this.placeholder
     undoButton.disabled = false
     if (penStyle != "pencil") {
         refresh(this)
@@ -165,29 +186,33 @@ function onblur() {
         this.value = ""
         this.classList.remove("pencil")
     }
-    this.previousValue = this.value
-    this.previousPlaceholder = this.placeholder
 }
 
 function enableButtons() {
     for (button of buttons.getElementsByTagName("button")) {
         if (boxes.filter(box => box.value == "").some(box => box.candidates.has(button.textContent))) {
             button.disabled = false
+            if (button.previousTitle) {
+                button.title = button.previousTitle
+                button.previousTitle = null
+            }
         } else {
             button.disabled = true
-            if (highlightedValue == button.textContent) highlightedValue = ""
+            button.previousTitle = button.title
+            button.title = "Tous les " + button.textContent + " sont posés"
+            if (selectedValue == button.textContent) selectedValue = ""
         }
     }
 }
 
 function highlight(value) {
-    if (value == highlightedValue) {
-        highlightedValue = ""
+    if (value == selectedValue) {
+        selectedValue = ""
     } else {
-        highlightedValue = value
+        selectedValue = value
     }
     for (button of buttons.getElementsByTagName("button")) {
-        if (button.textContent == highlightedValue) button.classList.add("pressed")
+        if (button.textContent == selectedValue) button.classList.add("pressed")
         else button.classList.remove("pressed")
     }
     highlightAndTab()
@@ -195,15 +220,15 @@ function highlight(value) {
 }
 
 function highlightAndTab() {
-    if (highlightedValue) {
+    if (highlighting && selectedValue) {
         boxes.forEach(box => {
-            if (box.value == highlightedValue) {
+            if (box.value == selectedValue) {
                 box.classList.add("same-value")
                 box.tabIndex = -1
             }
             else { 
                 box.classList.remove("same-value")
-                if (box.candidates.has(highlightedValue)) {
+                if (box.candidates.has(selectedValue)) {
                     box.classList.remove("forbidden-value")
                     box.tabIndex = 0
                 } else {
@@ -318,4 +343,14 @@ function eraseAll() {
         enableButtons()
         highlightAndTab()
     }
+}
+
+function toggleHighlighting() {
+    highlighting = !highlighting
+    if (highlighting) {
+        highlighterButton.classList.add("pressed")
+    } else {
+        highlighterButton.classList.remove("pressed")
+    }
+    highlightAndTab()
 }

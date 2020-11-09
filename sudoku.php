@@ -68,28 +68,31 @@
                     </tbody>
                 </table>
             </div>
-            <div id='buttons' class='highlight-buttons'>
+            <div id='buttons' class='select-buttons'>
 <?php
         for($value=1; $value<=9; $value++) {
-            echo "                <button type='button' onclick='highlight(\"$value\")' title='Surligner les $value' accesskey='$value'>$value</button>\n";
+            echo "                <button type='button' onclick='highlight(\"$value\")' title='Écrire un $value' accesskey='$value'>$value</button>\n";
         }
 ?>
             </div>
             <div>
-                <button id='inkPenButton' type='button' onclick='useInkPen()' title='Stylo' class='pressed'>
-                    <img src="img/ink-pen.png" alt='Stylo' width=16 height=16/>
+                <button id='highlighterButton' type='button' onclick='toggleHighlighting()' title='Surligner les chiffres sélectionnés'>
+                    <img src="img/highlighter.svg" alt='Surligneur'/>
                 </button>
-                <button id='pencilButton' type='button' onclick='usePencil()' title='Crayon'>
-                    <img src="img/pencil.png" alt='Crayon' width=16 height=16/>
+                <button id='inkPenButton' type='button' onclick='useInkPen()' title='Écrire au stylo' class='pressed'>
+                    <img src="img/ink-pen.svg" alt='Stylo'/>
+                </button>
+                <button id='pencilButton' type='button' onclick='usePencil()' title='Écrire au crayon'>
+                    <img src="img/pencil.svg" alt='Crayon'/>
                 </button>
                 <button type='button' onclick='erasePencil()' title='Effacer le crayon'>
-                    <img src="img/pencil-eraser.png" alt="Gomme blanche" width=16 height=16/>
+                    <img src="img/pencil-eraser.svg" alt="Gomme blanche"/>
                 </button>
                 <button class="warning" type='button' onclick='eraseAll()' title='Effacer tout'>
-                    <img src="img/ink-eraser.png" alt="Gomme bleue" width=16 height=16/>
+                    <img src="img/ink-eraser.svg" alt="Gomme bleue"/>
                 </button>
                 <button id='undoButton' type='button' onclick='undo()' disabled title='Annuler' accesskey='z'>
-                    <img src="img/undo.png" alt="Annuler" width=16 height=16/>
+                    <img src="img/undo.svg" alt="Annuler"/>
                 </button>
             </div>
         </form>
@@ -98,6 +101,7 @@
         <footer>
             <a href=''>Lien vers cette grille</a><br/>
             <a href='.'>Nouvelle grille</a>
+            <div class="credits">Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
         </footer>
     </body>
 </html>

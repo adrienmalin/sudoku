@@ -121,7 +121,7 @@ input::-webkit-calendar-picker-indicator {
     height: 2.5rem !important;
 }
 
-.highlight-buttons {
+.select-buttons {
     column-gap: 2px;
 }
 button, input[type="color"] {
@@ -130,6 +130,10 @@ button, input[type="color"] {
     font-size: 1.3rem;
     padding: 4px 9px 5px 9px;
     margin:  0px 1px 1px 1px;
+}
+button img {
+    width: 16px;
+    height: 16px;
 }
 button:enabled:hover {
     border-width: 1px;
@@ -210,4 +214,9 @@ a {
 
 .context-menu li.error:hover {
     background-color: #EEE;
+}
+
+.credits {
+    font-size: 0.8rem;
+    margin: 0;
 }
