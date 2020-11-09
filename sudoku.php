@@ -41,9 +41,6 @@
         <header>
             <h1>Sudoku</h1>
         </header>
-        <section>
-            Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.
-        </section>
         <form id='sudokuForm'>
             <table id='grid' class='grid'>
                 <tbody>
@@ -73,15 +70,16 @@
             </table>
         </form>
         <section class='tools'>
-            <div id='selectValueRadioGroup' class='selectValueRadioGroup'>
+            <div id='insertRadioGroup' class='insertRadioGroup'>
 <?php
         for($value=1; $value<=9; $value++) {
-            echo "                <input type='radio' id='selectValueRadio$value' value='$value' name='selectValueRadioGroup' onclick='highlight(this)' accesskey='$value'/><label for='selectValueRadio$value' title='Écrire un $value'>$value</label>\n";
+            echo "                <input type='radio' id='insertRadio$value' value='$value' name='insertRadioGroup' onclick='insert(this)' accesskey='$value'/>\n";
+            echo "                <label for='insertRadio$value' title='Insérer un $value'>$value</label>\n";
         }
 ?>
             </div>
             <div>
-                <input id='highlighterCheckbox' type="checkbox" onclick='highlightAndTab()'/>
+                <input id='highlighterCheckbox' type="checkbox" onclick='highlight()'/>
                 <label for='highlighterCheckbox' title='Surligner les chiffres sélectionnés'><img src='img/highlighter.svg' alt='Surligneur'></label>
                 <input type='radio' id='inkPenRadio' name='pen' onclick='penStyle = "ink-pen"' checked/>
                 <label for='inkPenRadio' title='Écrire au stylo indélébile'><img src='img/ink-pen.svg' alt='Stylo'/></label>
@@ -97,6 +95,9 @@
                     <img src='img/undo.svg' alt='Annuler'/>
                 </button>
             </div>
+        </section>
+        <section>
+            Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.
         </section>
         <ul id="contextMenu" class="context-menu"></ul>
         <footer>

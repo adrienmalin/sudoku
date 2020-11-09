@@ -7,9 +7,23 @@ let rows = Array.from(Array(9), x => [])
 let columns = Array.from(Array(9), x => [])
 let regions = Array.from(Array(9), x => [])
 let suggestionTimer= null
-let selectedValue = ""
+let valueToInsert = ""
 let history = []
 let accessKeyModifiers = "AccessKey+"
+
+function shuffle(iterable) {
+    array = Array.from(iterable)
+    if (array.length > 1) {
+        let i, j, tmp
+        for (i = array.length - 1; i > 0; i--) {
+            j = Math.floor(Math.random() * (i+1))
+            tmp = array[i]
+            array[i] = array[j]
+            array[j] = tmp
+        }
+    } 
+    return array
+}
 
 window.onload = function() {
     let rowId = 0
@@ -61,7 +75,7 @@ window.onload = function() {
     }
     
     enableRadios()
-    highlightAndTab()
+    highlight()
     
     document.onclick = function (event) {
         contextMenu.style.display = "none"
@@ -91,12 +105,12 @@ function searchCandidatesOf(box) {
 }
 
 function onclick() {
-    if (selectedValue) {
+    if (valueToInsert) {
         if (inkPenRadio.checked) {
-            this.value = selectedValue
+            this.value = valueToInsert
         } else {
-            if (!this.value.includes(selectedValue))
-                this.value += selectedValue
+            if (!this.value.includes(valueToInsert))
+                this.value += valueToInsert
         }
         oninput.apply(this)
     }
@@ -110,7 +124,7 @@ function onfocus() {
     } else {
         this.select()
     }
-    if (selectedValue) {
+    if (valueToInsert) {
         this.style.caretColor = "transparent"
     } else {
         this.style.caretColor = "auto"
@@ -147,7 +161,7 @@ function refresh(box) {
     })
     
     enableRadios()
-    highlightAndTab()
+    highlight()
     
     for (neighbour1 of box.neighbourhood) {
         if (neighbour1.value.length == 1) {
@@ -174,6 +188,7 @@ function refresh(box) {
         if (boxes.filter(box => box.value == "").length == 0) {
             setTimeout(() => alert(`Bravo ! Vous avez résolu la grille.`), 0)
         } else {
+            boxes.filter(box => box.value == "" && box.tabIndex == 0)[0].focus()
             if (suggestionTimer) clearTimeout(suggestionTimer)
             suggestionTimer = setTimeout(showSuggestion, SUGESTION_DELAY)
         }
@@ -183,16 +198,8 @@ function refresh(box) {
     }
 }
 
-function onblur() {
-    if (this.classList.contains("pencil")) {
-        this.placeholder = this.value
-        this.value = ""
-        this.classList.remove("pencil")
-    }
-}
-
 function enableRadios() {
-    for (radio of selectValueRadioGroup.getElementsByTagName("input")) {
+    for (radio of insertRadioGroup.getElementsByTagName("input")) {
         if (boxes.filter(box => box.value == "").some(box => box.candidates.has(radio.value))) {
             radio.disabled = false
             if (radio.previousTitle) {
@@ -201,34 +208,33 @@ function enableRadios() {
             }
         } else {
             radio.disabled = true
-            console.log(radio.disabled)
             radio.previousTitle = radio.title
             radio.title = "Tous les " + radio.value + " sont posés"
-            if (selectedValue == radio.value) selectedValue = ""
+            if (valueToInsert == radio.value) valueToInsert = ""
         }
     }
 }
 
-function highlight(radio) {
-    if (radio.value == selectedValue) {
-        selectedValue = ""
+function insert(radio) {
+    if (radio.value == valueToInsert) {
+        valueToInsert = ""
         radio.checked = false
     } else {
-        selectedValue = radio.value
+        valueToInsert = radio.value
     }
-    highlightAndTab()
+    highlight()
 }
 
-function highlightAndTab() {
-    if (highlighterCheckbox.checked && selectedValue) {
+function highlight() {
+    if (highlighterCheckbox.checked && valueToInsert) {
         boxes.forEach(box => {
-            if (box.value == selectedValue) {
+            if (box.value == valueToInsert) {
                 box.classList.add("same-value")
                 box.tabIndex = -1
             }
             else { 
                 box.classList.remove("same-value")
-                if (box.candidates.has(selectedValue) && !box.disabled) {
+                if (box.candidates.has(valueToInsert) && !box.disabled) {
                     box.classList.add("allowed")
                     box.classList.remove("forbidden")
                     box.tabIndex = 0
@@ -241,33 +247,24 @@ function highlightAndTab() {
         })
     } else {
         boxes.forEach(box => {
-            box.classList.remove("same-value", "forbidden")
-            if (selectedValue && !box.disabled) {
+            box.classList.remove("same-value", "allowed", "forbidden")
+            if (box.disabled) {
+                box.classList.add("forbidden")
+            } else if (valueToInsert) {
                 box.classList.add("allowed")
-            } else {
-                box.classList.remove("allowed")
             }
             box.tabIndex = 0
         })
     }
-    boxes.filter(box => box.value == "" && box.tabIndex == 0)[0].focus()
 }
 
-function shuffle(iterable) {
-    array = Array.from(iterable)
-    if (array.length > 1) {
-        let i, j, tmp
-        for (i = array.length - 1; i > 0; i--) {
-            j = Math.floor(Math.random() * (i+1))
-            tmp = array[i]
-            array[i] = array[j]
-            array[j] = tmp
-        }
-    } 
-    return array
+function onblur() {
+    if (this.classList.contains("pencil")) {
+        this.placeholder = this.value
+        this.value = ""
+        this.classList.remove("pencil")
+    }
 }
-
-easyFirst = (box1, box2) => box1.candidates.size - box2.candidates.size
 
 function showSuggestion() {
     const emptyBoxes = boxes.filter(box => box.value == "" && box.candidates.size == 1)
@@ -308,17 +305,6 @@ function oncontextmenu(event) {
     return false
 }
 
-function erase(someBoxes) {
-    for (box of someBoxes) {
-        box.value = ""
-        box.placeholder = ""
-        searchCandidatesOf(box)
-        refresh(box)
-    }
-    enableRadios()
-    highlightAndTab()
-}
-
 function erasePencil() {
     if (confirm("Effacer les chiffres écrits au crayon ?")) {
         boxes.filter(box => !box.disabled).forEach(box => {
@@ -337,6 +323,6 @@ function eraseAll() {
         })
         boxes.forEach(searchCandidatesOf)
         enableRadios()
-        highlightAndTab()
+        highlight()
     }
 }
