@@ -11,7 +11,6 @@ let selectedValue = ""
 let history = []
 let accessKeyModifiers = "AccessKey+"
 let penStyle = "ink-pen"
-let highlighting = false
 
 window.onload = function() {
     let rowId = 0
@@ -189,38 +188,36 @@ function onblur() {
 }
 
 function enableButtons() {
-    for (button of buttons.getElementsByTagName("button")) {
-        if (boxes.filter(box => box.value == "").some(box => box.candidates.has(button.textContent))) {
-            button.disabled = false
-            if (button.previousTitle) {
-                button.title = button.previousTitle
-                button.previousTitle = null
+    for (radio of radioValues.getElementsByTagName("input")) {
+        if (boxes.filter(box => box.value == "").some(box => box.candidates.has(radio.value))) {
+            radio.disabled = false
+            if (radio.previousTitle) {
+                radio.title = radio.previousTitle
+                radio.previousTitle = null
             }
         } else {
-            button.disabled = true
-            button.previousTitle = button.title
-            button.title = "Tous les " + button.textContent + " sont posés"
-            if (selectedValue == button.textContent) selectedValue = ""
+            radio.disabled = true
+            console.log(radio.disabled)
+            radio.previousTitle = radio.title
+            radio.title = "Tous les " + radio.value + " sont posés"
+            if (selectedValue == radio.value) selectedValue = ""
         }
     }
 }
 
-function highlight(value) {
-    if (value == selectedValue) {
+function highlight(radio) {
+    if (radio.value == selectedValue) {
         selectedValue = ""
+        radio.checked = false
     } else {
-        selectedValue = value
-    }
-    for (button of buttons.getElementsByTagName("button")) {
-        if (button.textContent == selectedValue) button.classList.add("pressed")
-        else button.classList.remove("pressed")
+        selectedValue = radio.value
     }
     highlightAndTab()
     boxes.filter(box => box.value == "" && box.tabIndex == 0)[0].focus()
 }
 
 function highlightAndTab() {
-    if (highlighting && selectedValue) {
+    if (highlighterCheckbox.checked && selectedValue) {
         boxes.forEach(box => {
             if (box.value == selectedValue) {
                 box.classList.add("same-value")
@@ -300,18 +297,6 @@ function oncontextmenu(event) {
     return false
 }
 
-function useInkPen() {
-    inkPenButton.classList.add("pressed")
-    pencilButton.classList.remove("pressed")
-    penStyle = "ink-pen"
-}
-
-function usePencil() {
-    pencilButton.classList.add("pressed")
-    inkPenButton.classList.remove("pressed")
-    penStyle = "pencil"
-}
-
 function erase(someBoxes) {
     for (box of someBoxes) {
         box.value = ""
@@ -343,14 +328,4 @@ function eraseAll() {
         enableButtons()
         highlightAndTab()
     }
-}
-
-function toggleHighlighting() {
-    highlighting = !highlighting
-    if (highlighting) {
-        highlighterButton.classList.add("pressed")
-    } else {
-        highlighterButton.classList.remove("pressed")
-    }
-    highlightAndTab()
 }

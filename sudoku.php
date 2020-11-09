@@ -29,9 +29,8 @@
         <link rel="manifest" href="manifest.json.php?grid=<?=$gridStr?>">
         <meta property="og:title" content="Sudoku"/>
         <meta property="og:type" content="website"/>
-        <meta property="og:url" content="<?=$_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["HTTP_HOST"] . $_SERVER["DOCUMENT_URI"];
-?>"/>
-        <meta property="og:image" content="<?=$_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["HTTP_HOST"] . dirname($_SERVER["DOCUMENT_URI"])?>/thumbnail.png.php?grid=<?=$gridStr?>&size=200"/>
+        <meta property="og:url" content="<?=$_SERVER["REQUEST_SCHEME"]."://" . $_SERVER["HTTP_HOST"].$_SERVER["DOCUMENT_URI"]?>"/>
+        <meta property="og:image" content="<?=$_SERVER["REQUEST_SCHEME"]."://" . $_SERVER["HTTP_HOST"].dirname($_SERVER["DOCUMENT_URI"])?>/thumbnail.png.php?grid=<?=$gridStr?>&size=200"/>
         <meta property="og:image:width" content="200"/>
         <meta property="og:image:height" content="200"/>
         <meta property="og:description" content="Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9."/>
@@ -46,58 +45,60 @@
             Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.
         </section>
         <form id='sudokuForm'>
-            <div>
-                <table id='grid' class='grid'>
-                    <tbody>
-<?php   for ($row = 0; $row < 9; $row++) {                                   ?>
-                        <tr>
+            <table id='grid' class='grid'>
+                <tbody>
 <?php
-            for ($column = 0; $column < 9; $column++) {
-                $value = $gridStr[9*$row+$column];
-                if ($value == UNKNOWN) {
+        for ($row = 0; $row < 9; $row++) {
 ?>
-                            <td><input type='number' min='1' max='9' step='1' value='' title='Valeurs possibles [Clic-droit]'/></td>
-<?php           } else {                                                     ?>
-                            <td><input type='number' min='1' max='9' step='1' value='<?=$value?>' disabled/></td>
+                    <tr>
 <?php
-                }                                                            
-            }
+        for ($column = 0; $column < 9; $column++) {
+            $value = $gridStr[9*$row+$column];
+            if ($value == UNKNOWN) {
 ?>
-                        </tr>
-<?php   }                                                                    ?>
-                    </tbody>
-                </table>
-            </div>
-            <div id='buttons' class='select-buttons'>
+                        <td><input type='number' min='1' max='9' step='1' value='' title='Valeurs possibles [Clic-droit]'/></td>
+<?php
+                } else {
+?>
+                        <td><input type='number' min='1' max='9' step='1' value='<?=$value?>' disabled/></td>
+<?php
+            }                                                            
+        }
+?>
+                    </tr>
+<?php
+   }
+?>
+                </tbody>
+            </table>
+        </form>
+        <section class='tools'>
+            <div id='radioValues' class='radioValues'>
 <?php
         for($value=1; $value<=9; $value++) {
-            echo "                <button type='button' onclick='highlight(\"$value\")' title='Écrire un $value' accesskey='$value'>$value</button>\n";
+            echo "                <input type='radio' id='radioValue$value' value='$value' name='radioValues' onclick='highlight(this)' accesskey='$value'/><label for='radioValue$value' title='Écrire un $value'>$value</label>\n";
         }
 ?>
             </div>
             <div>
-                <button id='highlighterButton' type='button' onclick='toggleHighlighting()' title='Surligner les chiffres sélectionnés'>
-                    <img src="img/highlighter.svg" alt='Surligneur'/>
+                <input id='highlighterCheckbox' type="checkbox" onclick='highlightAndTab()'/>
+                <label for='highlighterCheckbox' title='Surligner les chiffres sélectionnés'><img src='img/highlighter.svg' alt='Surligneur'></label>
+                <input type='radio' id='inkPenRadio' name='pen' onclick='penStyle = "ink-pen"' checked/>
+                <label for='inkPenRadio' title='Écrire au stylo indélébile'><img src='img/ink-pen.svg' alt='Stylo'/></label>
+                <input type='radio' id='pencilRadio' name='pen' onclick='penStyle = "pencil"'/>
+                <label for='pencilRadio' title='Écrire au crayon'><img src='img/pencil.svg' alt='Crayon'/></label>
+                <button type='button' onclick='erasePencil()' title='Gommer le crayon'>
+                    <img src='img/pencil-eraser.svg' alt='Gomme blanche'/>
                 </button>
-                <button id='inkPenButton' type='button' onclick='useInkPen()' title='Écrire au stylo' class='pressed'>
-                    <img src="img/ink-pen.svg" alt='Stylo'/>
-                </button>
-                <button id='pencilButton' type='button' onclick='usePencil()' title='Écrire au crayon'>
-                    <img src="img/pencil.svg" alt='Crayon'/>
-                </button>
-                <button type='button' onclick='erasePencil()' title='Effacer le crayon'>
-                    <img src="img/pencil-eraser.svg" alt="Gomme blanche"/>
-                </button>
-                <button class="warning" type='button' onclick='eraseAll()' title='Effacer tout'>
-                    <img src="img/ink-eraser.svg" alt="Gomme bleue"/>
+                <button class='warning' type='button' onclick='eraseAll()' title='Gommer tout'>
+                    <img src='img/ink-eraser.svg' alt='Gomme bleue'/>
                 </button>
                 <button id='undoButton' type='button' onclick='undo()' disabled title='Annuler' accesskey='z'>
-                    <img src="img/undo.svg" alt="Annuler"/>
+                    <img src='img/undo.svg' alt='Annuler'/>
                 </button>
             </div>
-        </form>
-        <ul id="contextMenu" class="context-menu">
-        </ul>
+        </section>
+        <ul id="contextMenu" class="context-menu"></ul>
         <footer>
             <a href=''>Lien vers cette grille</a><br/>
             <a href='.................................................................................'>Grille vierge</a><br/>
