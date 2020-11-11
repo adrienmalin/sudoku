@@ -80,16 +80,15 @@
             </div>
             <div>
                 <input id='highlighterCheckbox' type="checkbox" onclick='highlight()'/>
-                <label for='highlighterCheckbox' title='Surligner les chiffres sélectionnés'><img src='img/highlighter.svg' alt='Surligneur'></label>
-                <input type='radio' id='inkPenRadio' name='pen' onclick='penStyle = "ink-pen"' checked/>
-                <label for='inkPenRadio' title='Écrire au stylo indélébile'><img src='img/ink-pen.svg' alt='Stylo'/></label>
-                <input type='radio' id='pencilRadio' name='pen' onclick='penStyle = "pencil"'/>
+                <label for='highlighterCheckbox' title='Surligner les cases interdites'><img src='img/highlighter.svg' alt='Surligneur'></label>
+                <input type='radio' id='inkPenRadio' name='tool' onclick='grid.style.cursor = "url(img/ink-pen.svg) 2 22, auto"' checked/>
+                <label for='inkPenRadio' title='Écrire au stylo'><img src='img/ink-pen.svg' alt='Stylo indélébile'/></label>
+                <input type='radio' id='pencilRadio' name='tool' onclick='grid.style.cursor = "url(img/pencil.svg) 2 22, auto"'/>
                 <label for='pencilRadio' title='Écrire au crayon'><img src='img/pencil.svg' alt='Crayon'/></label>
-                <button type='button' onclick='erasePencil()' title='Gommer le crayon'>
-                    <img src='img/pencil-eraser.svg' alt='Gomme blanche'/>
-                </button>
-                <button class='warning' type='button' onclick='eraseAll()' title='Gommer tout'>
-                    <img src='img/ink-eraser.svg' alt='Gomme bleue'/>
+                <input type='radio' id='eraserRadio' name='tool' onclick='grid.style.cursor = "url(img/eraser.svg) 2 22, auto"'/>
+                <label for='eraserRadio' title='Effacer une case'><img src='img/eraser.svg' alt='Gomme'/></label>
+                <button type='button' class='warning' onclick='restart()' title='Recommencer'>
+                    <img src='img/restart.svg' alt='Recommencer'/>
                 </button>
                 <button id='undoButton' type='button' onclick='undo()' disabled title='Annuler' accesskey='z'>
                     <img src='img/undo.svg' alt='Annuler'/>
@@ -101,10 +100,14 @@
         </section>
         <ul id="contextMenu" class="context-menu"></ul>
         <footer>
-            <a href=''>Lien vers cette grille</a><br/>
-            <a href='.................................................................................'>Grille vierge</a><br/>
-            <a href='.'>Nouvelle grille</a>
-            <div class="credits">Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+            <div id='links'>
+                <a href=''>Lien vers cette grille</a><br/>
+                <a href='.................................................................................'>Grille vierge</a><br/>
+                <a href='.'>Nouvelle grille</a>
+            </div>
+            <div class='credits'>
+                Icônes par <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> chez <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+            </div>
         </footer>
     </body>
 </html>

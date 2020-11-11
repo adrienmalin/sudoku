@@ -6,7 +6,7 @@ let boxes = []
 let rows = Array.from(Array(9), x => [])
 let columns = Array.from(Array(9), x => [])
 let regions = Array.from(Array(9), x => [])
-let suggestionTimer= null
+let suggestionTimer = null
 let valueToInsert = ""
 let history = []
 let accessKeyModifiers = "AccessKey+"
@@ -16,26 +16,27 @@ function shuffle(iterable) {
     if (array.length > 1) {
         let i, j, tmp
         for (i = array.length - 1; i > 0; i--) {
-            j = Math.floor(Math.random() * (i+1))
+            j = Math.floor(Math.random() * (i + 1))
             tmp = array[i]
             array[i] = array[j]
             array[j] = tmp
         }
-    } 
+    }
     return array
 }
 
-window.onload = function() {
+window.onload = function () {
     let rowId = 0
     for (let row of grid.getElementsByTagName('tr')) {
         let columnId = 0
         for (let box of row.getElementsByTagName('input')) {
-            let regionId = rowId - rowId%3 + Math.floor(columnId/3)
+            let regionId = rowId - rowId % 3 + Math.floor(columnId / 3)
             if (!box.disabled) {
                 box.onfocus = onfocus
                 box.oninput = oninput
                 box.onblur = onblur
                 box.onclick = onclick
+                box.previousValue = ""
                 box.previousPlaceholder = ""
             }
             box.oncontextmenu = oncontextmenu
@@ -50,8 +51,8 @@ window.onload = function() {
         }
         rowId++
     }
-    
-    let savedGame = localStorage[location.href]
+
+    const savedGame = localStorage[location.href]
     if (savedGame) {
         boxes.forEach((box, i) => {
             if (!box.disabled && savedGame[i] != UNKNOWN) {
@@ -60,28 +61,22 @@ window.onload = function() {
             }
         })
     }
-    
+
     boxes.forEach(box => {
         box.neighbourhood = new Set(rows[box.rowId].concat(columns[box.columnId]).concat(regions[box.regionId]))
         box.neighbourhood.delete(box)
         box.neighbourhood = Array.from(box.neighbourhood)
         searchCandidatesOf(box)
     })
-    
+
     if (/Win/.test(navigator.platform) || /Linux/.test(navigator.platform)) accessKeyModifiers = "Alt+Maj+"
     else if (/Mac/.test(navigator.platform)) accessKeyModifiers = "⌃⌥"
-    for(node of document.querySelectorAll("*[accesskey]")) {
+    for (node of document.querySelectorAll("*[accesskey]")) {
         node.title += " [" + (node.accessKeyLabel || accessKeyModifiers + node.accessKey) + "]"
     }
-    
-    enableRadios()
-    highlight()
-    
-    document.onclick = function (event) {
-        contextMenu.style.display = "none"
-    }
-    suggestionTimer = setTimeout(showSuggestion, SUGESTION_DELAY)
-    
+
+    refreshUI()
+
     if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register("service-worker.js")
     }
@@ -94,81 +89,69 @@ function searchCandidatesOf(box) {
         switch (box.candidates.size) {
             case 0:
                 box.title = "Aucune possibilité !"
-            break
+                break
             case 1:
                 box.title = "1 possibilité [Clic-droit]"
-            break
+                break
             default:
                 box.title = box.candidates.size + " possibilités [Clic-droit]"
         }
     }
 }
 
-function onclick() {
-    if (valueToInsert) {
-        if (inkPenRadio.checked) {
-            this.value = valueToInsert
-        } else {
-            if (!this.value.includes(valueToInsert))
-                this.value += valueToInsert
-        }
-        oninput.apply(this)
-    }
-}
-
 function onfocus() {
-    if (pencilRadio.checked && this.value == "") {
+    if (pencilRadio.checked) {
         this.value = this.placeholder
-        this.placeholder = ""
         this.classList.add("pencil")
     } else {
         this.select()
     }
-    if (valueToInsert) {
-        this.style.caretColor = "transparent"
+    this.style.caretColor = valueToInsert? "transparent": "auto"
+}
+
+function onclick() {
+    if (inkPenRadio.checked) {
+        this.value = valueToInsert
+    } else if (pencilRadio.checked) {
+        this.value += valueToInsert
     } else {
-        this.style.caretColor = "auto"
+        this.value = ""
+        this.placeholder = ""
     }
+    this.oninput()
 }
 
 function oninput() {
-    history.push({box: this, value: this.previousValue, placeholder: this.previousPlaceholder})
-    this.previousValue = this.value
-    this.previousPlaceholder = this.placeholder
+    history.push({ box: this, value: this.previousValue, placeholder: this.previousPlaceholder })
     undoButton.disabled = false
-    if (inkPenRadio.checked) {
-        refresh(this)
+    if (pencilRadio.checked) {
+        this.value = Array.from(new Set(this.value)).sort().join("")
+        this.previousValue = ""
+        this.previousPlaceholder = this.value
+    } else {
+        this.previousValue = this.value
+        this.previousPlaceholder = this.placeholder
+        refreshBox(this)
     }
 }
 
-function undo() {
-    if (history.length) {
-        previousState = history.pop()
-        previousState.box.value = previousState.value
-        previousState.box.placeholder = previousState.placeholder
-        refresh(previousState.box)
-        if (history.length < 1) undoButton.disabled = true
-    }
-}
-
-function refresh(box) {
+function refreshBox(box) {
     localStorage[location.href] = boxes.map(box => box.value || ".").join("")
-    
+
     box.neighbourhood.concat([box]).forEach(neighbour => {
         searchCandidatesOf(neighbour)
         neighbour.setCustomValidity("")
         neighbour.required = false
     })
-    
-    enableRadios()
-    highlight()
-    
+
+    refreshUI()
+
     for (neighbour1 of box.neighbourhood) {
         if (neighbour1.value.length == 1) {
             for (area of [
-                {name: "région", neighbours: regions[neighbour1.regionId]},
-                {name: "ligne", neighbours: rows[neighbour1.rowId]},
-                {name: "colonne", neighbours: columns[neighbour1.columnId]},
+                { name: "région", neighbours: regions[neighbour1.regionId] },
+                { name: "ligne", neighbours: rows[neighbour1.rowId] },
+                { name: "colonne", neighbours: columns[neighbour1.columnId] },
             ])
                 for (neighbour2 of area.neighbours)
                     if (neighbour2 != neighbour1 && neighbour2.value == neighbour1.value) {
@@ -183,76 +166,76 @@ function refresh(box) {
             }
         }
     }
-            
+
     if (box.form.checkValidity()) { // Correct grid
-        if (boxes.filter(box => box.value == "").length == 0) {
-            setTimeout(() => alert(`Bravo ! Vous avez résolu la grille.`), 0)
-        } else {
-            boxes.filter(box => box.value == "" && box.tabIndex == 0)[0].focus()
-            if (suggestionTimer) clearTimeout(suggestionTimer)
-            suggestionTimer = setTimeout(showSuggestion, SUGESTION_DELAY)
-        }
+        if (boxes.filter(box => box.value == "").length == 0)
+            setTimeout(() => alert(`Bravo ! Vous avez résolu la grille.`), 500)
     } else { // Errors on grid
         box.form.reportValidity()
         box.select()
     }
 }
 
-function enableRadios() {
+function refreshUI() {
     for (radio of insertRadioGroup.getElementsByTagName("input")) {
+        const label = radio.nextElementSibling
         if (boxes.filter(box => box.value == "").some(box => box.candidates.has(radio.value))) {
             radio.disabled = false
             if (radio.previousTitle) {
-                radio.title = radio.previousTitle
-                radio.previousTitle = null
+                label.title = radio.previousTitle
+                label.previousTitle = null
             }
         } else {
             radio.disabled = true
-            radio.previousTitle = radio.title
-            radio.title = "Tous les " + radio.value + " sont posés"
+            label.previousTitle = label.title
+            label.title = `Tous les ${radio.value} sont posés`
             if (valueToInsert == radio.value) valueToInsert = ""
         }
     }
-}
 
-function insert(radio) {
-    if (radio.value == valueToInsert) {
-        valueToInsert = ""
-        radio.checked = false
-    } else {
-        valueToInsert = radio.value
-    }
     highlight()
+
+    boxes.filter(box => !box.disabled).forEach(box => {
+        if (!box.value && box.candidates.size == 1) box.classList.add("one-candidate")
+        else box.classList.remove("one-candidate")
+    })
+    if (suggestionTimer) clearTimeout(suggestionTimer)
+    suggestionTimer = setTimeout(showSuggestion, SUGESTION_DELAY)
 }
 
 function highlight() {
-    if (highlighterCheckbox.checked && valueToInsert) {
-        boxes.forEach(box => {
-            if (box.value == valueToInsert) {
-                box.classList.add("same-value")
-                box.tabIndex = -1
-            }
-            else { 
-                box.classList.remove("same-value")
-                if (box.candidates.has(valueToInsert) && !box.disabled) {
-                    box.classList.add("allowed")
-                    box.classList.remove("forbidden")
-                    box.tabIndex = 0
-                } else {
-                    box.classList.add("forbidden")
-                    box.classList.remove("allowed")
+    if (valueToInsert) {
+        if (highlighterCheckbox.checked) {
+            boxes.forEach(box => {
+                if (box.value == valueToInsert) {
+                    box.classList.add("same-value")
                     box.tabIndex = -1
                 }
-            }
-        })
+                else {
+                    box.classList.remove("same-value")
+                    if (box.candidates.has(valueToInsert) && !box.disabled) {
+                        box.classList.remove("forbidden")
+                        box.tabIndex = 0
+                    } else {
+                        box.classList.add("forbidden")
+                        box.tabIndex = -1
+                    }
+                }
+            })
+        } else {
+            boxes.forEach(box => {
+                box.classList.remove("same-value")
+                if (box.disabled) {
+                    box.classList.add("forbidden")
+                } else {
+                    box.classList.remove("forbidden")
+                }
+                box.tabIndex = 0
+            })
+        }
     } else {
         boxes.forEach(box => {
-            box.classList.remove("same-value", "allowed", "forbidden")
-            if (box.disabled) {
-                box.classList.add("forbidden")
-            } else if (valueToInsert) {
-                box.classList.add("allowed")
-            }
+            box.classList.remove("same-value", "forbidden")
             box.tabIndex = 0
         })
     }
@@ -266,10 +249,47 @@ function onblur() {
     }
 }
 
+function insert(radio) {
+    if (radio.value == valueToInsert) {
+        valueToInsert = ""
+        radio.checked = false
+    } else {
+        valueToInsert = radio.value
+    }
+    highlight()
+}
+
+function undo() {
+    if (history.length) {
+        const previousState = history.pop()
+        previousState.box.value = previousState.value
+        previousState.box.placeholder = previousState.placeholder
+        refreshBox(previousState.box)
+        if (history.length < 1) undoButton.disabled = true
+    }
+}
+
+function restart() {
+    if (confirm("Effacer toutes les cases ?")) {
+        boxes.filter(box => !box.disabled).forEach(box => {
+            box.value = ""
+            box.previousValue = ""
+            box.placeholder = ""
+            box.previousPlaceholder = ""
+            box.required = false
+            box.setCustomValidity("")
+        })
+        let history = []
+        undoButton.disabled = true
+        boxes.forEach(searchCandidatesOf)
+        refreshUI()
+    }
+}
+
 function showSuggestion() {
-    const emptyBoxes = boxes.filter(box => box.value == "" && box.candidates.size == 1)
-    if (emptyBoxes.length) {
-        shuffle(emptyBoxes)[0].placeholder = "💡"
+    const easyBoxes = boxes.filter(box => box.value == "" && box.candidates.size == 1)
+    if (easyBoxes.length) {
+        shuffle(easyBoxes)[0].placeholder = "💡"
     } else {
         clearTimeout(suggestionTimer)
         suggestionTimer = null
@@ -281,15 +301,15 @@ function oncontextmenu(event) {
     while (contextMenu.firstChild) contextMenu.firstChild.remove()
     const box = event.target
     if (box.candidates.size) {
-        candidatesArray = Array.from(box.candidates).sort().forEach(candidate => {
+        Array.from(box.candidates).sort().forEach(candidate => {
             li = document.createElement("li")
             li.innerText = candidate
             li.onclick = function (event) {
                 contextMenu.style.display = "none"
-                onfocus.apply(box)
+                box.onfocus()
                 box.value = event.target.innerText
-                oninput.apply(box)
-                onblur.apply(box)
+                box.oninput()
+                box.onblur()
             }
             contextMenu.appendChild(li)
         })
@@ -305,24 +325,13 @@ function oncontextmenu(event) {
     return false
 }
 
-function erasePencil() {
-    if (confirm("Effacer les chiffres écrits au crayon ?")) {
-        boxes.filter(box => !box.disabled).forEach(box => {
-            box.placeholder = ""
-        })
-    }
+document.onclick = function (event) {
+    contextMenu.style.display = "none"
 }
 
-function eraseAll() {
-    if (confirm("Effacer tous les chiffres écrits au crayon et au stylo ?")) {
-        boxes.filter(box => !box.disabled).forEach(box => {
-            box.value = ""
-            box.placeholder = ""
-            box.setCustomValidity("")
-            box.required = false
-        })
-        boxes.forEach(searchCandidatesOf)
-        enableRadios()
-        highlight()
+document.onkeydown = function(event) {
+    if (event.key == "Escape") {
+        event.preventDefault()
+        contextMenu.style.display = "none"
     }
 }

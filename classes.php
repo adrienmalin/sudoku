@@ -179,7 +179,7 @@
             $str = "";
             foreach($this->rows as $row) {
                 forEach($row as $box) {
-                    $str .= ($box->value? $box->value : UNKNOWN);
+                    $str .= $box->value;
                 }
             }
             return $str;
