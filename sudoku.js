@@ -78,7 +78,7 @@ window.onload = function () {
     refreshUI()
 
     if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("service-worker.js")
+        navigator.serviceWorker.register(`service-worker.js?location=${location.href}`)
     }
 }
 
@@ -256,6 +256,11 @@ function insert(radio) {
     } else {
         valueToInsert = radio.value
     }
+    if (inkPenRadio.checked) customCursor = "url(img/ink-pen.svg) 2 22"
+    if (pencilRadio.checked) customCursor = "url(img/pencil.svg) 2 22"
+    if (eraserRadio.checked) customCursor = "url(img/eraser.svg) 2 22"
+    fallbackCursor = valueToInsert? "copy": "text"
+    grid.style.cursor = `${customCursor}, ${fallbackCursor}`
     highlight()
 }
 

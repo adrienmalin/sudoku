@@ -30,7 +30,7 @@ div {
     border: 1px solid black;
     border-radius: 6px;
     margin: auto;
-    cursor: url(img/ink-pen.svg) 2 22, auto;
+    cursor: url(img/ink-pen.svg) 2 22, text;
 }
 .grid td, tr {
     padding: 0;
@@ -91,15 +91,15 @@ div {
     transition: background 0.5s;
     -moz-appearance: textfield;
 }
-input::-webkit-outer-spin-button,
+input[type="number"]::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
-input::-webkit-calendar-picker-indicator {
+input[type="number"]::-webkit-calendar-picker-indicator {
     display: none;
 }
-.grid input:enabled{
+.grid input:enabled {
     background: white;
     color: darkblue;
     cursor: inherit;
@@ -108,9 +108,6 @@ input::-webkit-calendar-picker-indicator {
 .grid input::placeholder {
     color: #666 !important;
     font-size: 0.9rem !important;
-    text-align: bottom;
-    height: 2.2rem;
-    padding: 0.3rem 0 0 0;
 }
 .grid input:disabled {
     color: white;

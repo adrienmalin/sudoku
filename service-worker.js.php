@@ -1,3 +1,7 @@
+<?php
+    $location = strip_tags($_GET['location']);
+    header ("Content-type: application/javascript");
+?>
 /*
 Copyright 2015, 2019, 2020 Google LLC. All Rights Reserved.
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +20,7 @@ Copyright 2015, 2019, 2020 Google LLC. All Rights Reserved.
 const OFFLINE_VERSION = 1;
 const CACHE_NAME = "offline";
 // Customize this with a different URL if needed.
-const OFFLINE_URL = ".";
+const OFFLINE_URL = "<?=$location?>";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
