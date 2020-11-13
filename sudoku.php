@@ -1,9 +1,7 @@
 <?php
-    require("classes.php");
+    const UNKNOWN = ".";
 
     $gridStr = strip_tags($_GET['grid']);
-    // URL contains grid
-    if (preg_match("#^[1-9.]{81}$#", $gridStr)) {
 ?>
 <!DOCTYPE html>
 <html lang='fr' prefix="og: https://ogp.me/ns#">
@@ -111,38 +109,3 @@
         </footer>
     </body>
 </html>
-<?php
-    } else {
-        $grid = new Grid();
-        $grid->generate();
-
-        header("HTTP/1.0 400 Bad Request", true, 400);
-
-        $urlDir = $_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["HTTP_HOST"] . dirname($_SERVER["DOCUMENT_URI"]);
-        $urlExample = $urlDir . "/" . $grid->toString();
-?>
-<!DOCTYPE html>
-<html lang='fr'>
-    <head>
-        <meta charset='utf-8' />
-        <meta name='viewport' content='width=device-width' />
-        <title>Adresse incorrecte</title>
-        <link rel='stylesheet' type='text/css' href='style.css' />
-        <link rel="icon" type="image/png" href="favicon.png">
-    </head>
-    <body>
-        <header>
-            <h1>Adresse incorrecte</h1>
-        </header>
-        L'adresse URL doit être de la forme : <?=$urlDir?>/<em>grille</em>,<br/>
-        <em>grille</em> étant une suite de 81 caractères représentant la grille de gauche à droite puis de haut en bas, soit :
-        <ul>
-            <li>un chiffre entre 1 et 9 pour les cases connues</li>
-            <li>un point pour les case vides</li>
-        </ul>
-        Exemple : <a href='<?=$urlExample?>'><?=$urlExample?></a><br/>
-    </body>
-</html>
-<?php
-    }
-?>
