@@ -52,8 +52,8 @@
             $this->columns = array_fill(0, 9, array());
             $this->regions = array_fill(0, 9, array());
             for ($regionRowId = 0; $regionRowId < 3; $regionRowId++) {
-                for($regionColumnId = 0; $regionColumnId < 3; $regionColumnId++) {
-                    for ($rowId = 3*$regionRowId; $rowId < 3*($regionRowId+1); $rowId++) {
+                for ($rowId = 3*$regionRowId; $rowId < 3*($regionRowId+1); $rowId++) {
+                    for($regionColumnId = 0; $regionColumnId < 3; $regionColumnId++) {
                         for ($columnId = 3*$regionColumnId; $columnId < 3*($regionColumnId+1); $columnId++) {
                             $regionId = 3*$regionRowId + $regionColumnId;
                             $box = new Box($rowId, $columnId, $regionId);
@@ -73,14 +73,37 @@
                         $box->neighbourhood[] = $neighbour;
             }
         }
+
+        function import($gridStr) {
+            foreach ($this->boxes as $i => $box) { 
+                $box->value = $gridStr[$i];
+            }
+            forEach($this->boxes as $box) {
+                forEach($box->neighbourhood as $neighbour)
+                    array_unset_value($box->value, $neighbour->candidates);
+            }
+        }
+
+        function containsDuplicates() {
+            foreach(array_merge($this->rows, $this->columns, $this->regions) as $area) {
+                $unknownBoxes = array_filter($area, "isUnknown");
+                foreach($unknownBoxes as $box1) {
+                    foreach($unknownBoxes as $box2) {
+                        if (($box1 !== $box2) && ($box1->value == $box2->value)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        }
             
         function generate() {
             // Init with a shuffle row
             $values = array("1", "2", "3", "4", "5", "6", "7", "8", "9");
             shuffle($values);
-            forEach($values as $columnId => $value) {
-                $box = $this->rows[0][$columnId];
-                $box->value = $value;
+            forEach($this->rows[0] as $columnId => $box) {
+                $box->value = $values[$columnId];
                 forEach($box->neighbourhood as $neighbour)
                     array_unset_value($box->value, $neighbour->candidates);
             }
@@ -145,16 +168,9 @@
                 if ($randomized) shuffle($testBox->candidates);
                 $stop = null;
                 foreach($testBox->candidates as $testBox->value) {
-                    $correctGrid = true;
                     foreach(array_filter($testBox->neighbourhood, "isUnknown") as $neighbour)
                         $neighbour->candidateRemoved[] = array_unset_value($testBox->value, $neighbour->candidates);
-                    foreach(array_filter($testBox->neighbourhood, "isUnknown") as $neighbour) {
-                        if (count($neighbour->candidates) == 0) {
-                            $correctGrid = false;
-                            break;
-                        }
-                    }
-                    if ($correctGrid) {
+                    if ($this->candidatesOnEachUnknownBoxeOf($testBox->neighbourhood)) {
                         $solutions = $this->solutionsGenerator($randomized);
                         foreach($solutions as $solution) {
                             $stop = (yield $solution);
@@ -171,8 +187,31 @@
                 }
                 $testBox->value = UNKNOWN;
             } else {
+                foreach(array($this->rows, $this->columns, $this->regions) as $areas) {
+                    foreach ($areas as $area) {
+                        foreach($area as $box1) {
+                            if (($box1->value == UNKNOWN) && (count($box1->candidates) == 0)) {
+                                return;
+                            }
+                            foreach($area as $box2) {
+                                if (($box1 !== $box2) && ($box1->value != UNKNOWN) && ($box1->value == $box2->value)) {
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
                 yield $this->toString();
             }
+        }
+
+        function candidatesOnEachUnknownBoxeOf($area) {
+            foreach($area as $box) {
+                if (($box->value == UNKNOWN) && (count($box->candidates) == 0)) {
+                    return false;
+                }
+            }
+            return true;
         }
         
         function toString() {

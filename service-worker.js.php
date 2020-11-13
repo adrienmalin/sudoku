@@ -1,6 +1,9 @@
 <?php
     session_start();
-    $currentGrid = $_SESSION["currentGrid"];
+    if ($_SESSION["currentGrid"])
+        $currentGrid = $_SESSION["currentGrid"];
+    else
+        $currentGrid = ".";
     header ("Content-type: application/javascript");
 ?>
 /*

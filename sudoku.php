@@ -3,6 +3,24 @@
     session_start();
     $currentGrid = strip_tags($_GET['grid']);
     $_SESSION["currentGrid"] = $currentGrid;
+
+    if (!isset($_SESSION[$currentGrid])) {
+        $grid = new Grid();
+        $grid->import($currentGrid);
+        if ($grid->containsDuplicates()) {
+            $warning = "Cette grille contient des doublons.";
+        } else {
+            switch($grid->countSolutions(2)) {
+                case 0:
+                    $warning = "Cette grille n'a pas de solution.";
+                    break;
+                case 1:
+                    break;
+                default:
+                    $warning = "Cette grille a plusieurs solutions.";
+            }
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html lang='fr' prefix="og: https://ogp.me/ns#">
@@ -95,7 +113,12 @@
             </div>
         </section>
         <section>
-            Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.
+<?php
+    if (isset($warning))
+        echo("            <strong>⚠️ $warning</strong><br/>\n");
+    else
+        echo("            Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.\n")
+?>
         </section>
         <ul id="contextMenu" class="context-menu"></ul>
         <footer>
