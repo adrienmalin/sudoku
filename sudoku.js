@@ -78,7 +78,7 @@ window.onload = function () {
     refreshUI()
 
     if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register(`service-worker.js?location=${location.href}`)
+        navigator.serviceWorker.register(`service-worker.php?location=${location.href}`)
     }
 }
 

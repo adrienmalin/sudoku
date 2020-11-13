@@ -1,10 +1,10 @@
 <?php
     require("classes.php");
     session_start();
-    if ($_SESSION["currentGrid"])
+    if (isset($_SESSION["currentGrid"]))
         $currentGrid = $_SESSION["currentGrid"];
     else
-        $currentGrid = ".528.3....4.9.1...39.562......73.129...1.64.7...42.3656.13.5...28.6.4...4.5287...w";
+        $currentGrid = ".528.3....4.9.1...39.562......73.129...1.64.7...42.3656.13.5...28.6.4...4.5287...";
     header ("Content-type: image/png");
     $size = (int) $_GET['size'];
 
@@ -30,7 +30,7 @@
         $x = $start;
         $y = $start;
         $boxSizeMinusOne = $boxSize - 1;
-        foreach(str_split($_SESSION["currentGrid"]) as $i => $value) {
+        foreach(str_split($currentGrid) as $i => $value) {
             if ($i % 3 == 0) $x++;
             if ($i % 27 == 0) $y++;
             if ($value == UNKNOWN) {
@@ -63,7 +63,7 @@
         $x = $start + 1;
         $y = $start + 1;
         $boxSizeMinusTwo = $boxSize - 2;
-        foreach(str_split($_SESSION["currentGrid"]) as $i => $value) {
+        foreach(str_split($currentGrid) as $i => $value) {
             if ($value == UNKNOWN) {
                 $bgColor = $white;
             } else {
@@ -98,7 +98,7 @@
         $x = $start + 1;
         $y = $start + 1;
         $boxSizeMinusTwo = $boxSize - 2;
-        foreach(str_split($_SESSION["currentGrid"]) as $i => $value) {
+        foreach(str_split($currentGrid) as $i => $value) {
             if ($value == UNKNOWN) {
                 $bgColor = $white;
             } else {

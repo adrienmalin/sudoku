@@ -1,6 +1,6 @@
 <?php
     session_start();
-    if ($_SESSION["currentGrid"])
+    if (isset($_SESSION["currentGrid"]))
         $currentGrid = $_SESSION["currentGrid"];
     else
         $currentGrid = ".";
