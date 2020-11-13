@@ -1,5 +1,6 @@
 <?php
-    $location = strip_tags($_GET['location']);
+    session_start();
+    $currentGrid = $_SESSION["currentGrid"];
     header ("Content-type: application/javascript");
 ?>
 /*
@@ -20,7 +21,7 @@ Copyright 2015, 2019, 2020 Google LLC. All Rights Reserved.
 const OFFLINE_VERSION = 1;
 const CACHE_NAME = "offline";
 // Customize this with a different URL if needed.
-const OFFLINE_URL = "<?=$location?>";
+const OFFLINE_URL = "<?=$currentGrid?>";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

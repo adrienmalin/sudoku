@@ -1,7 +1,8 @@
 <?php
-    const UNKNOWN = ".";
-
-    $gridStr = strip_tags($_GET['grid']);
+    require("classes.php");
+    session_start();
+    $currentGrid = strip_tags($_GET['grid']);
+    $_SESSION["currentGrid"] = $currentGrid;
 ?>
 <!DOCTYPE html>
 <html lang='fr' prefix="og: https://ogp.me/ns#">
@@ -11,24 +12,24 @@
         <title>Sudoku</title>
         <link rel='stylesheet' type='text/css' href='style.css' />
         <script src='sudoku.js'></script>
-        <link rel="apple-touch-icon" href="thumbnail.png?grid=<?=$gridStr?>&size=57"  sizes="57x57">
-        <link rel="apple-touch-icon" href="thumbnail.png?grid=<?=$gridStr?>&size=114" sizes="114x114">
-        <link rel="apple-touch-icon" href="thumbnail.png?grid=<?=$gridStr?>&size=72"  sizes="72x72">
-        <link rel="apple-touch-icon" href="thumbnail.png?grid=<?=$gridStr?>&size=144" sizes="144x144">
-        <link rel="apple-touch-icon" href="thumbnail.png?grid=<?=$gridStr?>&size=60"  sizes="60x60">
-        <link rel="apple-touch-icon" href="thumbnail.png?grid=<?=$gridStr?>&size=120" sizes="120x120">
-        <link rel="apple-touch-icon" href="thumbnail.png?grid=<?=$gridStr?>&size=76"  sizes="76x76">
-        <link rel="apple-touch-icon" href="thumbnail.png?grid=<?=$gridStr?>&size=152" sizes="152x152">
-        <link rel="icon" type="image/png" href="thumbnail.png?grid=<?=$gridStr?>&size=196" sizes="196x196">
-        <link rel="icon" type="image/png" href="thumbnail.png?grid=<?=$gridStr?>&size=160" sizes="160x160">
-        <link rel="icon" type="image/png" href="thumbnail.png?grid=<?=$gridStr?>&size=96"  sizes="96x96">
-        <link rel="icon" type="image/png" href="thumbnail.png?grid=<?=$gridStr?>&size=16"  sizes="16x16">
-        <link rel="icon" type="image/png" href="thumbnail.png?grid=<?=$gridStr?>&size=32"  sizes="32x32">
-        <link rel="manifest" href="manifest.json?grid=<?=$gridStr?>">
+        <link rel="apple-touch-icon" href="thumbnail.png?size=57"  sizes="57x57">
+        <link rel="apple-touch-icon" href="thumbnail.png?size=114" sizes="114x114">
+        <link rel="apple-touch-icon" href="thumbnail.png?size=72"  sizes="72x72">
+        <link rel="apple-touch-icon" href="thumbnail.png?size=144" sizes="144x144">
+        <link rel="apple-touch-icon" href="thumbnail.png?size=60"  sizes="60x60">
+        <link rel="apple-touch-icon" href="thumbnail.png?size=120" sizes="120x120">
+        <link rel="apple-touch-icon" href="thumbnail.png?size=76"  sizes="76x76">
+        <link rel="apple-touch-icon" href="thumbnail.png?size=152" sizes="152x152">
+        <link rel="icon" type="image/png" href="thumbnail.png?size=196" sizes="196x196">
+        <link rel="icon" type="image/png" href="thumbnail.png?size=160" sizes="160x160">
+        <link rel="icon" type="image/png" href="thumbnail.png?size=96"  sizes="96x96">
+        <link rel="icon" type="image/png" href="thumbnail.png?size=16"  sizes="16x16">
+        <link rel="icon" type="image/png" href="thumbnail.png?size=32"  sizes="32x32">
+        <link rel="manifest" href="manifest.json">
         <meta property="og:title" content="Sudoku"/>
         <meta property="og:type" content="website"/>
-        <meta property="og:url" content="<?=$_SERVER["REQUEST_SCHEME"]."://" . $_SERVER["HTTP_HOST"].$_SERVER["DOCUMENT_URI"]?>"/>
-        <meta property="og:image" content="<?=$_SERVER["REQUEST_SCHEME"]."://" . $_SERVER["HTTP_HOST"].dirname($_SERVER["DOCUMENT_URI"])?>/thumbnail.png?grid=<?=$gridStr?>&size=200"/>
+        <meta property="og:url" content="<?=$_SERVER["REQUEST_SCHEME"]."://".$_SERVER["HTTP_HOST"].$_SERVER["DOCUMENT_URI"]?>"/>
+        <meta property="og:image" content="<?=$_SERVER["REQUEST_SCHEME"]."://".$_SERVER["HTTP_HOST"].dirname($_SERVER["DOCUMENT_URI"])?>/thumbnail.png?size=200"/>
         <meta property="og:image:width" content="200"/>
         <meta property="og:image:height" content="200"/>
         <meta property="og:description" content="Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9."/>
@@ -48,7 +49,7 @@
                     <tr>
 <?php
         for ($column = 0; $column < 9; $column++) {
-            $value = $gridStr[9*$row+$column];
+            $value = $currentGrid[9*$row+$column];
             if ($value == UNKNOWN) {
 ?>
                         <td><input type='number' min='1' max='9' step='1' value='' title='Valeurs possibles [Clic-droit]'/></td>

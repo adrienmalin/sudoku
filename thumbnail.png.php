@@ -1,7 +1,8 @@
 <?php
+    require("classes.php");
+    session_start();
+    $currentGrid = $_SESSION["currentGrid"];
     header ("Content-type: image/png");
-    const UNKNOWN = ".";
-    $gridStr = strip_tags($_GET['grid']);
     $size = (int) $_GET['size'];
     $thumbnail = imagecreate($size, $size);
     $transparent = imagecolorallocate($thumbnail, 1, 1, 1);
@@ -25,7 +26,7 @@
         $x = $start;
         $y = $start;
         $boxSizeMinusOne = $boxSize - 1;
-        foreach(str_split($gridStr) as $i => $value) {
+        foreach(str_split($_SESSION["currentGrid"]) as $i => $value) {
             if ($i % 3 == 0) $x++;
             if ($i % 27 == 0) $y++;
             if ($value == UNKNOWN) {
@@ -58,7 +59,7 @@
         $x = $start + 1;
         $y = $start + 1;
         $boxSizeMinusTwo = $boxSize - 2;
-        foreach(str_split($gridStr) as $i => $value) {
+        foreach(str_split($_SESSION["currentGrid"]) as $i => $value) {
             if ($value == UNKNOWN) {
                 $bgColor = $white;
             } else {
@@ -93,7 +94,7 @@
         $x = $start + 1;
         $y = $start + 1;
         $boxSizeMinusTwo = $boxSize - 2;
-        foreach(str_split($gridStr) as $i => $value) {
+        foreach(str_split($_SESSION["currentGrid"]) as $i => $value) {
             if ($value == UNKNOWN) {
                 $bgColor = $white;
             } else {
