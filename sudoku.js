@@ -110,11 +110,19 @@ function onfocus() {
 }
 
 function onclick() {
-    if (inkPenRadio.checked) {
+    if (this.value == "" && this.candidates.size == 1) {
+        valueToInsert = this.candidates.values().next().value
+        document.getElementById("insertRadio" + valueToInsert).checked = true
         this.value = valueToInsert
+    } else if (inkPenRadio.checked) {
+        if (valueToInsert)
+            this.value = valueToInsert
+        else
+            this.select()
     } else if (pencilRadio.checked) {
-        this.value += valueToInsert
-    } else {
+        if (valueToInsert)
+            this.value += valueToInsert
+    } else if (eraserRadio.checked) {
         this.value = ""
         this.placeholder = ""
     }
