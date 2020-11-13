@@ -114,19 +114,23 @@ function onclick() {
         valueToInsert = this.candidates.values().next().value
         document.getElementById("insertRadio" + valueToInsert).checked = true
         this.value = valueToInsert
+        this.oninput()
     } else if (inkPenRadio.checked) {
-        if (valueToInsert)
+        if (valueToInsert) {
             this.value = valueToInsert
-        else
+            this.oninput()
+        } else {
             this.select()
+        }
     } else if (pencilRadio.checked) {
         if (valueToInsert)
             this.value += valueToInsert
+            this.oninput()
     } else if (eraserRadio.checked) {
         this.value = ""
         this.placeholder = ""
+        this.oninput()
     }
-    this.oninput()
 }
 
 function oninput() {
@@ -149,13 +153,12 @@ function refreshBox(box) {
     box.neighbourhood.concat([box]).forEach(neighbour => {
         searchCandidatesOf(neighbour)
         neighbour.setCustomValidity("")
-        neighbour.required = false
     })
 
     refreshUI()
 
     for (neighbour1 of box.neighbourhood) {
-        if (neighbour1.value.length == 1) {
+        if (neighbour1.value) {
             for (area of [
                 { name: "région", neighbours: regions[neighbour1.regionId] },
                 { name: "ligne", neighbours: rows[neighbour1.rowId] },
@@ -170,7 +173,6 @@ function refreshBox(box) {
         } else {
             if (neighbour1.candidates.size == 0) {
                 neighbour1.setCustomValidity("Aucun chiffre possible !")
-                neighbour1.required = true
             }
         }
     }
@@ -180,7 +182,6 @@ function refreshBox(box) {
             setTimeout(() => alert(`Bravo ! Vous avez résolu la grille.`), 500)
     } else { // Errors on grid
         box.form.reportValidity()
-        box.select()
     }
 }
 
@@ -289,7 +290,6 @@ function restart() {
             box.previousValue = ""
             box.placeholder = ""
             box.previousPlaceholder = ""
-            box.required = false
             box.setCustomValidity("")
         })
         let history = []
