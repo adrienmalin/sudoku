@@ -85,18 +85,18 @@
         }
 
         function containsDuplicates() {
-            foreach(array($this->rows, $this->columns, $this->regions) as $areas) {
-                foreach ($areas as $area) {
-                    $unknownBoxes = array_filter($area, "isKnown");
-                    foreach($unknownBoxes as $box1) {
-                        foreach($unknownBoxes as $box2) {
+            foreach(array_merge($this->rows, $this->columns, $this->regions) as $area) {
+                $knownBoxes = array_filter($area, "isKnown");
+                foreach($area as $box1) {
+                    if ($box1->value != UNKNOWN) {
+                        foreach($area as $box2) {
                             if (($box1 !== $box2) && ($box1->value == $box2->value)) {
                                 return true;
                             }
                         }
                     }
-                    return false;
                 }
+                return false;
             }
         }
             

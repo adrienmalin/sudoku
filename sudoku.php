@@ -115,7 +115,7 @@
         <section>
 <?php
     if (isset($warning))
-        echo("            <strong>⚠️ $warning</strong><br/>\n");
+        echo("            <strong>⚠️ $warning ⚠️</strong><br/>\n");
     else
         echo("            Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.\n")
 ?>
