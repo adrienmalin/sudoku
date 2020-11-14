@@ -52,7 +52,7 @@ window.onload = function () {
         rowId++
     }
 
-    const savedGame = localStorage[location.href]
+    const savedGame = localStorage[location.pathname]
     if (savedGame) {
         boxes.forEach((box, i) => {
             if (!box.disabled && savedGame[i] != UNKNOWN) {
@@ -79,7 +79,7 @@ window.onload = function () {
     refreshUI()
 
     if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register(`service-worker.php?location=${location.href}`)
+        navigator.serviceWorker.register(`service-worker.php?location=${location.pathname}`)
     }
 }
 
@@ -150,7 +150,7 @@ function oninput() {
 
 function refreshBox(box) {
     let saveGame = boxes.map(box => box.value || UNKNOWN).join("")
-    localStorage[location.href] = saveGame
+    localStorage[location.pathname] = saveGame
     fixGridLink.href = saveGame
 
     box.neighbourhood.concat([box]).forEach(neighbour => {
