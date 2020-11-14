@@ -60,6 +60,7 @@ window.onload = function () {
                 box.previousValue = savedGame[i]
             }
         })
+        fixGridLink.href = savedGame
     }
 
     boxes.forEach(box => {
@@ -148,7 +149,9 @@ function oninput() {
 }
 
 function refreshBox(box) {
-    localStorage[location.href] = boxes.map(box => box.value || ".").join("")
+    let saveGame = boxes.map(box => box.value || UNKNOWN).join("")
+    localStorage[location.href] = saveGame
+    fixGridLink.href = saveGame
 
     box.neighbourhood.concat([box]).forEach(neighbour => {
         searchCandidatesOf(neighbour)

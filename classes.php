@@ -24,7 +24,7 @@
     }
         
     class Box {
-        public $values = array("1", "2", "3", "4", "5", "6", "7", "8", "9");
+        public $values = array('1', '2', '3', '4', '5', '6', '7', '8', '9');
     
         function __construct($rowId, $columnId, $regionId) {
             $this->value = UNKNOWN;
@@ -87,17 +87,15 @@
         function containsDuplicates() {
             foreach(array_merge($this->rows, $this->columns, $this->regions) as $area) {
                 $knownBoxes = array_filter($area, "isKnown");
-                foreach($area as $box1) {
-                    if ($box1->value != UNKNOWN) {
-                        foreach($area as $box2) {
-                            if (($box1 !== $box2) && ($box1->value == $box2->value)) {
-                                return true;
-                            }
+                foreach($knownBoxes as $box1) {
+                    foreach($knownBoxes as $box2) {
+                        if (($box1 != $box2) && ($box1->value == $box2->value)) {
+                            return true;
                         }
                     }
                 }
-                return false;
             }
+            return false;
         }
             
         function generate() {
@@ -143,6 +141,8 @@
         }
         
         function countSolutions($max=2) {
+            if ($this->containsDuplicates())
+                return 0;
             $solutions = $this->solutionsGenerator(false);
             $solutionsWithoutDuplicates = array();
             $nbSolutions = 0;
@@ -151,6 +151,7 @@
                 $nbSolutions = count($solutionsWithoutDuplicates);
                 if ($nbSolutions >= $max) {
                     $solutions->send(true);
+                    break;
                 }
             }
             return $nbSolutions;
@@ -189,20 +190,6 @@
                 }
                 $testBox->value = UNKNOWN;
             } else {
-                foreach(array($this->rows, $this->columns, $this->regions) as $areas) {
-                    foreach ($areas as $area) {
-                        foreach($area as $box1) {
-                            if (($box1->value == UNKNOWN) && (count($box1->candidates) == 0)) {
-                                return;
-                            }
-                            foreach($area as $box2) {
-                                if (($box1 !== $box2) && ($box1->value != UNKNOWN) && ($box1->value == $box2->value)) {
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
                 yield $this->toString();
             }
         }

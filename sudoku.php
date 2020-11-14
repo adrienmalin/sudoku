@@ -120,15 +120,17 @@
         echo("            Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.\n")
 ?>
         </section>
-        <ul id="contextMenu" class="context-menu"></ul>
+        <ul id='contextMenu' class='context-menu'></ul>
         <footer>
             <div id='links'>
                 <a href=''>Lien vers cette grille</a><br/>
+                <a href='.'>Nouvelle grille</a><br/>
                 <a href='.................................................................................'>Grille vierge</a><br/>
-                <a href='.'>Nouvelle grille</a>
+                <a href='' id='fixGridLink'>Figer cette grille</a>
+                
             </div>
             <div class='credits'>
-                Icônes par <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> chez <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+                Icônes par <a href='https://www.flaticon.com/authors/freepik' title='Freepik'>Freepik</a> chez <a href='https://www.flaticon.com/' title='Flaticon'>www.flaticon.com</a>
             </div>
         </footer>
     </body>
