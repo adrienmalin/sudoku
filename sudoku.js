@@ -114,9 +114,8 @@ function onclick() {
     if (this.value == "" && this.candidates.size == 1) {
         valueToInsert = this.candidates.values().next().value
         document.getElementById("insertRadio" + valueToInsert).checked = true
-        this.value = valueToInsert
-        this.oninput()
-    } else if (inkPenRadio.checked) {
+    }
+    if (inkPenRadio.checked) {
         if (valueToInsert) {
             this.value = valueToInsert
             this.oninput()
@@ -216,41 +215,26 @@ function refreshUI() {
 }
 
 function highlight() {
-    if (valueToInsert) {
-        if (highlighterCheckbox.checked) {
-            boxes.forEach(box => {
-                if (box.value == valueToInsert) {
-                    box.classList.add("same-value")
-                    box.tabIndex = -1
-                }
-                else {
-                    box.classList.remove("same-value")
-                    if (box.candidates.has(valueToInsert) && !box.disabled) {
-                        box.classList.remove("forbidden")
-                        box.tabIndex = 0
-                    } else {
-                        box.classList.add("forbidden")
-                        box.tabIndex = -1
-                    }
-                }
-            })
+    boxes.forEach(box => {
+        if (valueToInsert && box.value == valueToInsert) {
+            box.classList.add("same-value")
+            box.tabIndex = -1
         } else {
-            boxes.forEach(box => {
-                box.classList.remove("same-value")
-                if (box.disabled) {
+            box.classList.remove("same-value")
+            if (box.disabled) {
+                box.classList.add("forbidden")
+            } else {
+                if (valueToInsert && highlighterCheckbox.checked && !box.candidates.has(valueToInsert)) {
                     box.classList.add("forbidden")
+                    box.tabIndex = -1
                 } else {
                     box.classList.remove("forbidden")
+                    box.tabIndex = 0
                 }
-                box.tabIndex = 0
-            })
+            }
         }
-    } else {
-        boxes.forEach(box => {
-            box.classList.remove("same-value", "forbidden")
-            box.tabIndex = 0
-        })
-    }
+    })
+    highlighterCheckbox.nextElementSibling.title = "Surligner les lignes, colonnes et régions contenant déjà " + (valueToInsert? "un " + valueToInsert: "le chiffre sélectionné")
 }
 
 function onblur() {

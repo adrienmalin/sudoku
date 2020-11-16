@@ -83,20 +83,6 @@
                     array_unset_value($box->value, $neighbour->candidates);
             }
         }
-
-        function containsDuplicates() {
-            foreach(array_merge($this->rows, $this->columns, $this->regions) as $area) {
-                $knownBoxes = array_filter($area, "isKnown");
-                foreach($knownBoxes as $box1) {
-                    foreach($knownBoxes as $box2) {
-                        if (($box1 != $box2) && ($box1->value == $box2->value)) {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
             
         function generate() {
             // Init with a shuffle row
@@ -139,10 +125,22 @@
                 }
             }
         }
+
+        function containsDuplicates() {
+            foreach(array_merge($this->rows, $this->columns, $this->regions) as $area) {
+                $knownBoxes = array_filter($area, "isKnown");
+                foreach($knownBoxes as $box1) {
+                    foreach($knownBoxes as $box2) {
+                        if (($box1 != $box2) && ($box1->value == $box2->value)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
         
         function countSolutions($max=2) {
-            if ($this->containsDuplicates())
-                return 0;
             $solutions = $this->solutionsGenerator(false);
             $solutionsWithoutDuplicates = array();
             $nbSolutions = 0;
