@@ -90,26 +90,17 @@
             <div id='insertRadioGroup' class='insertRadioGroup'>
 <?php
         for($value=1; $value<=9; $value++) {
-            echo "                <input type='radio' id='insertRadio$value' value='$value' name='insertRadioGroup' onclick='insert(this)' accesskey='$value'/>\n";
-            echo "                <label for='insertRadio$value' title='Insérer un $value'>$value</label>\n";
+            echo "                <input type='radio' id='insertRadio$value' value='$value' name='insertRadioGroup' onclick='insert(this)' accesskey='$value'/><label for='insertRadio$value' title='Insérer un $value'>$value</label>\n";
         }
 ?>
             </div>
             <div>
-                <input id='highlighterCheckbox' type="checkbox" onclick='highlight()'/>
-                <label for='highlighterCheckbox' title='Surligner les lignes, colonnes et régions contenant déjà le chiffre sélectionné'><img src='img/highlighter.svg' alt='Surligneur'></label>
-                <input type='radio' id='inkPenRadio' name='tool' onclick='grid.style.cursor = "url(img/ink-pen.svg) 2 22, auto"' checked/>
-                <label for='inkPenRadio' title='Écrire un chiffre'><img src='img/ink-pen.svg' alt='Stylo indélébile'/></label>
-                <input type='radio' id='pencilRadio' name='tool' onclick='grid.style.cursor = "url(img/pencil.svg) 2 22, auto"'/>
-                <label for='pencilRadio' title='Prendre des notes'><img src='img/pencil.svg' alt='Crayon'/></label>
-                <input type='radio' id='eraserRadio' name='tool' onclick='grid.style.cursor = "url(img/eraser.svg) 2 22, auto"'/>
-                <label for='eraserRadio' title='Effacer une case'><img src='img/eraser.svg' alt='Gomme'/></label>
-                <button type='button' class='warning' onclick='restart()' title='Recommencer'>
-                    <img src='img/restart.svg' alt='Recommencer'/>
-                </button>
-                <button id='undoButton' type='button' onclick='undo()' disabled title='Annuler' accesskey='z'>
-                    <img src='img/undo.svg' alt='Annuler'/>
-                </button>
+                <input id='highlighterCheckbox' type="checkbox" onclick='highlight()'/><label for='highlighterCheckbox' title='Surligner les lignes, colonnes et régions contenant déjà le chiffre sélectionné'><img src='img/highlighter.svg' alt='Surligneur'></label>
+                <input type='radio' id='inkPenRadio' name='tool' onclick='grid.style.cursor = "url(img/ink-pen.svg) 2 22, auto"' checked/><label for='inkPenRadio' title='Écrire un chiffre'><img src='img/ink-pen.svg' alt='Stylo indélébile'/></label>
+                <input type='radio' id='pencilRadio' name='tool' onclick='grid.style.cursor = "url(img/pencil.svg) 2 22, auto"'/><label for='pencilRadio' title='Prendre des notes'><img src='img/pencil.svg' alt='Crayon'/></label>
+                <input type='radio' id='eraserRadio' name='tool' onclick='grid.style.cursor = "url(img/eraser.svg) 2 22, auto"'/><label for='eraserRadio' title='Effacer une case'><img src='img/eraser.svg' alt='Gomme'/></label>
+                <button type='button' class='warning' onclick='restart()' title='Recommencer'><img src='img/restart.svg' alt='Recommencer'/></button>
+                <button id='undoButton' type='button' onclick='undo()' disabled title='Annuler' accesskey='z'><img src='img/undo.svg' alt='Annuler'/></button>
             </div>
         </section>
         <section>

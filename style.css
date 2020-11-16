@@ -110,14 +110,13 @@ input[type="number"]::-webkit-calendar-picker-indicator {
     font-size: 0.9rem !important;
 }
 .grid input:disabled {
-    color: white;
-    background: #6666ff;
+    color: white !important;
+    background: #6666ff !important;
     cursor: not-allowed !important;
 }
-.grid input:disabled,
 .grid input.forbidden:enabled {
-    background: #ffffaa;
-    cursor: not-allowed !important;
+    background: #ffffaa !important;
+    cursor: not-allowed;
 }
 .grid input.same-value:enabled {
     background: #ffff33;
@@ -129,7 +128,7 @@ input[type="number"]::-webkit-calendar-picker-indicator {
 }
 .grid input.same-value:disabled,
 .tools button.same-value:enabled,
-.tools input:enabled:checked+label {
+.tools input:enabled:checked + label {
     color: #ffffaa !important;
     background: #00b359 !important;
 }
@@ -138,7 +137,7 @@ input[type="number"]::-webkit-calendar-picker-indicator {
 }
 
 .tools button,
-.tools input+label {
+.tools input + label {
     color: white;
     text-shadow: -1px -1px #5b6c9e;
     background: #8ca6f2;
@@ -156,22 +155,28 @@ input[type="number"]::-webkit-calendar-picker-indicator {
     height: 24px;
 }
 .tools input {
-    display:none;
+    position: fixed;
+    opacity: 0;
+    width: 0;
+    pointer-events: none;
 }
 .tools button:enabled:hover,
-.tools input:enabled:hover+label {
+.tools button:enabled:focus,
+.tools input:enabled:hover + label,
+.tools input:enabled:focus + label {
     border-width: 1px;
     border-style: outset;
     padding: 5px 5px 5px 6px;
     margin:  1px 1px 1px 2px;
 }
-.tools input:enabled:checked:hover+label {
+.tools input:enabled:checked:hover + label,
+.tools input:enabled:checked:focus + label {
     border-width: 3px;
     border-style: inset;
     padding: 4px 2px 2px 5px;
     margin:  1px 1px 1px 2px;
 }
-.tools input:enabled:checked+label {
+.tools input:enabled:checked + label {
     text-shadow: -1px -1px #005f2f;
     border: 2px inset #00b359;
     background: #00b359;
@@ -179,14 +184,14 @@ input[type="number"]::-webkit-calendar-picker-indicator {
     margin:  1px 1px 0px 2px;
 }
 .tools button:enabled:active,
-.tools input:enabled:active+label {
+.tools input:enabled:active + label {
     border-width: 4px !important;
     border-style: inset !important;
     padding: 4px 0px 0px 5px !important;
     margin:  0px 1px 0px 2px !important;
 }
 .tools button:disabled,
-.tools input:disabled+label {
+.tools input:disabled + label {
     text-shadow: -1px -1px #555;
     color: #ccc;
     background: darkgrey;

@@ -52,6 +52,35 @@ window.onload = function () {
         rowId++
     }
 
+    loadSavedGame()
+
+    boxes.forEach(box => {
+        box.neighbourhood = new Set(rows[box.rowId].concat(columns[box.columnId]).concat(regions[box.regionId]))
+        box.neighbourhood.delete(box)
+        box.neighbourhood = Array.from(box.neighbourhood)
+        searchCandidatesOf(box)
+    })
+
+    for (label of document.getElementsByTagName("label")) {
+        label.control.label = label
+    }
+
+    if (/Win/.test(navigator.platform) || /Linux/.test(navigator.platform)) accessKeyModifiers = "Alt+Maj+"
+    else if (/Mac/.test(navigator.platform)) accessKeyModifiers = "⌃⌥"
+    for (node of document.querySelectorAll("*[accesskey]")) {
+        shortcut = ` [${node.accessKeyLabel||(accessKeyModifiers+node.accessKey)}]`
+        if (node.title) node.title += shortcut
+        else if (node.label) node.label.title += shortcut
+    }
+
+    refreshUI()
+
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register(`service-worker.php?location=${location.pathname}`)
+    }
+}
+
+function loadSavedGame() {
     const savedGame = localStorage[location.pathname]
     if (savedGame) {
         boxes.forEach((box, i) => {
@@ -61,25 +90,6 @@ window.onload = function () {
             }
         })
         fixGridLink.href = savedGame
-    }
-
-    boxes.forEach(box => {
-        box.neighbourhood = new Set(rows[box.rowId].concat(columns[box.columnId]).concat(regions[box.regionId]))
-        box.neighbourhood.delete(box)
-        box.neighbourhood = Array.from(box.neighbourhood)
-        searchCandidatesOf(box)
-    })
-
-    if (/Win/.test(navigator.platform) || /Linux/.test(navigator.platform)) accessKeyModifiers = "Alt+Maj+"
-    else if (/Mac/.test(navigator.platform)) accessKeyModifiers = "⌃⌥"
-    for (node of document.querySelectorAll("*[accesskey]")) {
-        node.title += " [" + (node.accessKeyLabel || accessKeyModifiers + node.accessKey) + "]"
-    }
-
-    refreshUI()
-
-    if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register(`service-worker.php?location=${location.pathname}`)
     }
 }
 
@@ -111,10 +121,6 @@ function onfocus() {
 }
 
 function onclick() {
-    if (this.value == "" && this.candidates.size == 1) {
-        valueToInsert = this.candidates.values().next().value
-        document.getElementById("insertRadio" + valueToInsert).checked = true
-    }
     if (inkPenRadio.checked) {
         if (valueToInsert) {
             this.value = valueToInsert
@@ -145,19 +151,94 @@ function oninput() {
         this.previousPlaceholder = this.placeholder
         refreshBox(this)
     }
+
+    if (suggestionTimer) clearTimeout(suggestionTimer)
+    suggestionTimer = setTimeout(showSuggestion, SUGESTION_DELAY)
 }
 
 function refreshBox(box) {
+    saveGame()
+    checkBox(box)
+    refreshUI()
+}
+
+function saveGame() {
     let saveGame = boxes.map(box => box.value || UNKNOWN).join("")
     localStorage[location.pathname] = saveGame
     fixGridLink.href = saveGame
+}
 
+function refreshUI() {
+    enableRadio()
+    highlight()
+    showEasyBoxes()
+}
+
+function enableRadio() {
+    for (radio of insertRadioGroup.getElementsByTagName("input")) {
+        if (boxes.filter(box => box.value == "").some(box => box.candidates.has(radio.value))) {
+            radio.disabled = false
+            radio.label.title = `Insérer un ${radio.value} [${radio.accessKeyLabel||(accessKeyModifiers+radio.accessKey)}]`
+        } else {
+            radio.disabled = true
+            radio.label.title = `Tous les ${radio.value} sont posés.`
+            if (valueToInsert == radio.value) {
+                let nextRadio = document.querySelector(".insertRadioGroup :checked ~ input:enabled") || document.querySelector(".insertRadioGroup :enabled")
+                if (nextRadio) {
+                    nextRadio.click()
+                    nextRadio.onfocus()
+                } else {
+                    valueToInsert = ""
+                }
+            }
+        }
+    }
+}
+
+function highlight() {
+    boxes.forEach(box => {
+        if (valueToInsert && box.value == valueToInsert) {
+            box.classList.add("same-value")
+            box.tabIndex = -1
+        } else {
+            box.classList.remove("same-value")
+            if (box.disabled) {
+                box.classList.add("forbidden")
+            } else {
+                if (valueToInsert && highlighterCheckbox.checked && !box.candidates.has(valueToInsert)) {
+                    box.classList.add("forbidden")
+                    box.tabIndex = -1
+                } else {
+                    box.classList.remove("forbidden")
+                    box.tabIndex = 0
+                }
+            }
+        }
+    })
+    highlighterCheckbox.label.title = "Surligner les lignes, colonnes et régions contenant déjà " + (valueToInsert? "un " + valueToInsert: "le chiffre sélectionné")
+}
+
+function showEasyBoxes() {
+    boxes.filter(box => !box.disabled).forEach(box => {
+        if (!box.value && box.candidates.size == 1) {
+            box.classList.add("one-candidate")
+            box.onclick = function() {
+                valueToInsert = this.candidates.values().next().value
+                document.getElementById("insertRadio" + valueToInsert).checked = true
+                onclick.apply(box)
+            }
+        } else {
+            box.classList.remove("one-candidate")
+            box.onclick = onclick
+        }
+    })
+}
+
+function checkBox(box) {
     box.neighbourhood.concat([box]).forEach(neighbour => {
         searchCandidatesOf(neighbour)
         neighbour.setCustomValidity("")
     })
-
-    refreshUI()
 
     for (neighbour1 of box.neighbourhood) {
         if (neighbour1.value) {
@@ -185,56 +266,6 @@ function refreshBox(box) {
     } else { // Errors on grid
         box.form.reportValidity()
     }
-}
-
-function refreshUI() {
-    for (radio of insertRadioGroup.getElementsByTagName("input")) {
-        const label = radio.nextElementSibling
-        if (boxes.filter(box => box.value == "").some(box => box.candidates.has(radio.value))) {
-            radio.disabled = false
-            if (radio.previousTitle) {
-                label.title = radio.previousTitle
-                label.previousTitle = null
-            }
-        } else {
-            radio.disabled = true
-            label.previousTitle = label.title
-            label.title = `Tous les ${radio.value} sont posés`
-            if (valueToInsert == radio.value) valueToInsert = ""
-        }
-    }
-
-    highlight()
-
-    boxes.filter(box => !box.disabled).forEach(box => {
-        if (!box.value && box.candidates.size == 1) box.classList.add("one-candidate")
-        else box.classList.remove("one-candidate")
-    })
-    if (suggestionTimer) clearTimeout(suggestionTimer)
-    suggestionTimer = setTimeout(showSuggestion, SUGESTION_DELAY)
-}
-
-function highlight() {
-    boxes.forEach(box => {
-        if (valueToInsert && box.value == valueToInsert) {
-            box.classList.add("same-value")
-            box.tabIndex = -1
-        } else {
-            box.classList.remove("same-value")
-            if (box.disabled) {
-                box.classList.add("forbidden")
-            } else {
-                if (valueToInsert && highlighterCheckbox.checked && !box.candidates.has(valueToInsert)) {
-                    box.classList.add("forbidden")
-                    box.tabIndex = -1
-                } else {
-                    box.classList.remove("forbidden")
-                    box.tabIndex = 0
-                }
-            }
-        }
-    })
-    highlighterCheckbox.nextElementSibling.title = "Surligner les lignes, colonnes et régions contenant déjà " + (valueToInsert? "un " + valueToInsert: "le chiffre sélectionné")
 }
 
 function onblur() {
@@ -289,7 +320,9 @@ function restart() {
 function showSuggestion() {
     const easyBoxes = boxes.filter(box => box.value == "" && box.candidates.size == 1)
     if (easyBoxes.length) {
-        shuffle(easyBoxes)[0].placeholder = "💡"
+        let randomEasyBox = shuffle(easyBoxes)[0]
+        randomEasyBox.placeholder = "💡"
+        randomEasyBox.focus()
     } else {
         clearTimeout(suggestionTimer)
         suggestionTimer = null
@@ -321,16 +354,18 @@ function oncontextmenu(event) {
     }
     contextMenu.style.left = `${event.pageX}px`
     contextMenu.style.top = `${event.pageY}px`
+    console.log(event.target)
     contextMenu.style.display = "block"
     return false
 }
 
 document.onclick = function (event) {
-    contextMenu.style.display = "none"
+    if (contextMenu.style.display == "block")
+        contextMenu.style.display = "none"
 }
 
 document.onkeydown = function(event) {
-    if (event.key == "Escape") {
+    if (event.key == "Escape" && contextMenu.style.display == "block") {
         event.preventDefault()
         contextMenu.style.display = "none"
     }
