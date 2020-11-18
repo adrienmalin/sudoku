@@ -168,6 +168,39 @@ function saveGame() {
     fixGridLink.href = saveGame
 }
 
+function checkBox(box) {
+    box.neighbourhood.concat([box]).forEach(neighbour => {
+        searchCandidatesOf(neighbour)
+        neighbour.setCustomValidity("")
+    })
+
+    for (neighbour1 of box.neighbourhood) {
+        if (neighbour1.value) {
+            for (area of [
+                { name: "région", neighbours: regions[neighbour1.regionId] },
+                { name: "ligne", neighbours: rows[neighbour1.rowId] },
+                { name: "colonne", neighbours: columns[neighbour1.columnId] },
+            ])
+                for (neighbour2 of area.neighbours)
+                    if (neighbour2 != neighbour1 && neighbour2.value == neighbour1.value) {
+                        for (neighbour of [neighbour1, neighbour2]) {
+                            neighbour.setCustomValidity(`Il y a un autre ${neighbour.value} dans cette ${area.name}.`)
+                        }
+                    }
+        } else {
+            if (neighbour1.candidates.size == 0) {
+                neighbour1.setCustomValidity("Aucun chiffre possible !")
+            }
+        }
+    }
+
+    if (box.form.checkValidity()) { // Correct grid
+        if (boxes.filter(box => box.value == "").length == 0)
+            setTimeout(() => alert(`Bravo ! Vous avez résolu la grille.`), 500)
+    } else { // Errors on grid
+        box.form.reportValidity()
+    }
+
 function refreshUI() {
     enableRadio()
     highlight()
@@ -232,40 +265,6 @@ function showEasyBoxes() {
             box.onclick = onclick
         }
     })
-}
-
-function checkBox(box) {
-    box.neighbourhood.concat([box]).forEach(neighbour => {
-        searchCandidatesOf(neighbour)
-        neighbour.setCustomValidity("")
-    })
-
-    for (neighbour1 of box.neighbourhood) {
-        if (neighbour1.value) {
-            for (area of [
-                { name: "région", neighbours: regions[neighbour1.regionId] },
-                { name: "ligne", neighbours: rows[neighbour1.rowId] },
-                { name: "colonne", neighbours: columns[neighbour1.columnId] },
-            ])
-                for (neighbour2 of area.neighbours)
-                    if (neighbour2 != neighbour1 && neighbour2.value == neighbour1.value) {
-                        for (neighbour of [neighbour1, neighbour2]) {
-                            neighbour.setCustomValidity(`Il y a un autre ${neighbour.value} dans cette ${area.name}.`)
-                        }
-                    }
-        } else {
-            if (neighbour1.candidates.size == 0) {
-                neighbour1.setCustomValidity("Aucun chiffre possible !")
-            }
-        }
-    }
-
-    if (box.form.checkValidity()) { // Correct grid
-        if (boxes.filter(box => box.value == "").length == 0)
-            setTimeout(() => alert(`Bravo ! Vous avez résolu la grille.`), 500)
-    } else { // Errors on grid
-        box.form.reportValidity()
-    }
 }
 
 function onblur() {

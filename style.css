@@ -25,6 +25,7 @@ div {
     margin: 0.5rem auto;
 }
 
+
 .grid {
     border-spacing: 0;
     border: 1px solid black;
@@ -32,53 +33,69 @@ div {
     margin: auto;
     cursor: url(img/ink-pen.svg) 2 22, text;
 }
+
 .grid td, tr {
     padding: 0;
 }
+
 .grid tr:first-child td:first-child {
     border-top-left-radius: 5px;
 }
+
 .grid tr:first-child td:first-child input {
     border-top-left-radius: 4px;
 }
+
 .grid tr:first-child td:last-child {
     border-top-right-radius: 5px;
 }
+
 .grid tr:first-child td:last-child input {
     border-top-right-radius: 4px;
 }
+
 .grid tr:last-child td:first-child {
     border-bottom-left-radius: 5px;
 }
+
 .grid tr:last-child td:first-child > input {
     border-bottom-left-radius: 4px;
 }
+
 .grid tr:last-child td:last-child {
     border-bottom-right-radius: 5px;
 }
+
 .grid tr:last-child td:last-child input {
     border-bottom-right-radius: 4px;
 }
+
 .grid tr:nth-child(3n+1) td {
     border-top: 1px solid black;
 }
+
 .grid tr:nth-child(3n+2) td {
     border-top: 1px solid grey;
     border-bottom: 1px solid grey;
 }
+
 .grid tr:nth-child(3n) td {
     border-bottom: 1px solid black;
 }
+
 .grid td:nth-child(3n+1) {
     border-left: 1px solid black;
 }
+
 .grid td:nth-child(3n+2) {
     border-left: 1px solid grey;
     border-right: 1px solid grey;
 }
+
 .grid td:nth-child(3n+3) {
     border-right: 1px solid black;
 }
+
 
 .grid input {
     width: 2.5rem;
@@ -91,50 +108,61 @@ div {
     transition: background 0.5s;
     -moz-appearance: textfield;
 }
+
 input[type="number"]::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
 input[type="number"]::-webkit-calendar-picker-indicator {
     display: none;
 }
+
 .grid input:enabled {
     background: white;
     color: darkblue;
     cursor: inherit;
 }
+
 .grid input.pencil,
 .grid input::placeholder {
     color: #666 !important;
     font-size: 0.9rem !important;
 }
+
 .grid input:disabled {
     color: white !important;
     background: #6666ff !important;
     cursor: not-allowed !important;
 }
+
 .grid input.forbidden:enabled {
     background: #ffffaa !important;
     cursor: not-allowed;
 }
+
 .grid input.same-value:enabled {
     background: #ffff33;
     cursor: not-allowed !important;
 }
+
 .grid input.forbidden:disabled {
     color: #ffffaa;
     background: #6666ff;
 }
+
 .grid input.same-value:disabled,
 .tools button.same-value:enabled,
 .tools input:enabled:checked + label {
     color: #ffffaa !important;
     background: #00b359 !important;
 }
+
 .grid input.one-candidate {
     cursor: help !important;
 }
+
 
 .tools button,
 .tools input + label {
@@ -149,17 +177,20 @@ input[type="number"]::-webkit-calendar-picker-indicator {
     margin:  0px 1px 1px 1px;
     cursor: pointer;
 }
+
 .tools img {
     display: block;
     width: 24px;
     height: 24px;
 }
+
 .tools input {
     position: fixed;
     opacity: 0;
     width: 0;
     pointer-events: none;
 }
+
 .tools button:enabled:hover,
 .tools button:enabled:focus,
 .tools input:enabled:hover + label,
@@ -169,6 +200,7 @@ input[type="number"]::-webkit-calendar-picker-indicator {
     padding: 5px 5px 5px 6px;
     margin:  1px 1px 1px 2px;
 }
+
 .tools input:enabled:checked:hover + label,
 .tools input:enabled:checked:focus + label {
     border-width: 3px;
@@ -176,6 +208,7 @@ input[type="number"]::-webkit-calendar-picker-indicator {
     padding: 4px 2px 2px 5px;
     margin:  1px 1px 1px 2px;
 }
+
 .tools input:enabled:checked + label {
     text-shadow: -1px -1px #005f2f;
     border: 2px inset #00b359;
@@ -183,6 +216,7 @@ input[type="number"]::-webkit-calendar-picker-indicator {
     padding: 4px 4px 4px 5px;
     margin:  1px 1px 0px 2px;
 }
+
 .tools button:enabled:active,
 .tools input:enabled:active + label {
     border-width: 4px !important;
@@ -190,6 +224,7 @@ input[type="number"]::-webkit-calendar-picker-indicator {
     padding: 4px 0px 0px 5px !important;
     margin:  0px 1px 0px 2px !important;
 }
+
 .tools button:disabled,
 .tools input:disabled + label {
     text-shadow: -1px -1px #555;
@@ -200,10 +235,12 @@ input[type="number"]::-webkit-calendar-picker-indicator {
     margin:  0px 1px 1px 1px;
     cursor: not-allowed;
 }
+
 .tools button.warning {
     background: #ff5050;
     border-color: #ff5050;
 }
+
 
 .context-menu {
     display: none;
@@ -221,6 +258,7 @@ input[type="number"]::-webkit-calendar-picker-indicator {
     padding: 0;
     margin: 0;
 }
+
 .context-menu li {
     padding: 6px 10px;
     cursor: default;
@@ -228,21 +266,27 @@ input[type="number"]::-webkit-calendar-picker-indicator {
     transition: all .3s ease;
     font-size: 1rem;
 }
+
 .context-menu li:hover {
     background-color: #DEF;
 }
+
 .context-menu li.error {
     color: #888
 }
+
 .context-menu li.error:hover {
     background-color: #EEE;
 }
+
 
 a {
     text-decoration: none;
 }
 
+
 .credits {
     font-size: 0.8rem;
     margin: 0;
 }
+

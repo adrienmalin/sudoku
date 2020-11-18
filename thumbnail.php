@@ -6,7 +6,10 @@
     else
         $currentGrid = ".528.3....4.9.1...39.562......73.129...1.64.7...42.3656.13.5...28.6.4...4.5287...";
     header ("Content-type: image/png");
-    $size = (int) $_GET['size'];
+    if (isset($_GET['size']))
+        $size = (int) $_GET['size'];
+    else
+        $size = 196;
 
     $thumbnail = imagecreate($size, $size);
     $transparent = imagecolorallocate($thumbnail, 1, 1, 1);
