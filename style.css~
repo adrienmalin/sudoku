@@ -236,7 +236,7 @@ input[type="number"]::-webkit-calendar-picker-indicator {
     cursor: not-allowed;
 }
 
-.tools button.warning:hover {
+.tools button.warning {
     background: #ff5050;
     border-color: #ff5050;
 }

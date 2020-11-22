@@ -10,6 +10,7 @@ let suggestionTimer = null
 let valueToInsert = ""
 let history = []
 let accessKeyModifiers = "AccessKey+"
+let changesToSave = false
 
 function shuffle(iterable) {
     array = Array.from(iterable)
@@ -142,6 +143,7 @@ function onclick() {
 function oninput() {
     history.push({ box: this, value: this.previousValue, placeholder: this.previousPlaceholder })
     undoButton.disabled = false
+    changesToSave = true
     if (pencilRadio.checked) {
         this.value = Array.from(new Set(this.value)).sort().join("")
         this.previousValue = ""
@@ -157,15 +159,8 @@ function oninput() {
 }
 
 function refreshBox(box) {
-    saveGame()
     checkBox(box)
     refreshUI()
-}
-
-function saveGame() {
-    let saveGame = boxes.map(box => box.value || UNKNOWN).join("")
-    localStorage[location.pathname] = saveGame
-    fixGridLink.href = saveGame
 }
 
 function checkBox(box) {
@@ -200,6 +195,7 @@ function checkBox(box) {
     } else { // Errors on grid
         box.form.reportValidity()
     }
+}
 
 function refreshUI() {
     enableRadio()
@@ -313,6 +309,20 @@ function restart() {
         undoButton.disabled = true
         boxes.forEach(searchCandidatesOf)
         refreshUI()
+    }
+}
+
+function save() {
+    let saveGame = boxes.map(box => box.value || UNKNOWN).join("")
+    localStorage[location.pathname] = saveGame
+    fixGridLink.href = saveGame
+    changesToSave = false
+}
+
+window.onbeforeunload = function(event) {
+    if (changesToSave) {
+        event.preventDefault()
+        event.returnValue = ""
     }
 }
 
