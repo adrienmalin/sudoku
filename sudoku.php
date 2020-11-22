@@ -101,6 +101,7 @@
                 <input type='radio' id='eraserRadio' name='tool' onclick='grid.style.cursor = "url(img/eraser.svg) 2 22, auto"'/><label for='eraserRadio' title='Effacer une case'><img src='img/eraser.svg' alt='Gomme'/></label>
                 <button type='button' class='warning' onclick='restart()' title='Recommencer'><img src='img/restart.svg' alt='Recommencer'/></button>
                 <button id='undoButton' type='button' onclick='undo()' disabled title='Annuler' accesskey='z'><img src='img/undo.svg' alt='Annuler'/></button>
+                <button id='undoButton' type='button' onclick='save()' title='Sauvegarder' accesskey='s'><img src='img/save.svg' alt='Disquette'/></button>
             </div>
         </section>
         <section>
