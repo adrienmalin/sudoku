@@ -14,10 +14,10 @@
     $thumbnail = imagecreate($size, $size);
     $transparent = imagecolorallocate($thumbnail, 1, 1, 1);
     imagecolortransparent($thumbnail, $transparent);
-    $black = imagecolorallocate($thumbnail, 0, 0, 0);
-    $grey = imagecolorallocate($thumbnail, 128, 128, 128);
-    $blue = imagecolorallocate($thumbnail, 102, 102, 255);
-    $white = imagecolorallocate($thumbnail, 255, 255, 255);
+    $black = imagecolorallocate($thumbnail, 85, 91, 110);
+    $grey = imagecolorallocate($thumbnail, 85, 91, 110);
+    $blue = imagecolorallocate($thumbnail, 96, 210, 203);
+    $white = imagecolorallocate($thumbnail, 247, 255, 247);
     
     if ($size <= 36) {
         $boxSize = floor(($size-4) / 9);

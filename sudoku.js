@@ -10,7 +10,7 @@ let suggestionTimer = null
 let valueToInsert = ""
 let history = []
 let accessKeyModifiers = "AccessKey+"
-let changesToSave = false
+let easyBoxes = []
 
 function shuffle(iterable) {
     array = Array.from(iterable)
@@ -103,7 +103,7 @@ function searchCandidatesOf(box) {
                 box.title = "Aucune possibilité !"
                 break
             case 1:
-                box.title = "1 possibilité [Clic-droit]"
+                box.title = "Une seule possibilité [Clic-droit]"
                 break
             default:
                 box.title = box.candidates.size + " possibilités [Clic-droit]"
@@ -113,6 +113,7 @@ function searchCandidatesOf(box) {
 
 function onfocus() {
     if (pencilRadio.checked) {
+        //this.type = "text"
         this.value = this.placeholder
         this.classList.add("pencil")
     } else {
@@ -130,9 +131,10 @@ function onclick() {
             this.select()
         }
     } else if (pencilRadio.checked) {
-        if (valueToInsert)
-            this.value += valueToInsert
+        if (valueToInsert) {
+            this.value = Array.from(new Set(this.value + valueToInsert)).join("")
             this.oninput()
+        }
     } else if (eraserRadio.checked) {
         this.value = ""
         this.placeholder = ""
@@ -143,9 +145,8 @@ function onclick() {
 function oninput() {
     history.push({ box: this, value: this.previousValue, placeholder: this.previousPlaceholder })
     undoButton.disabled = false
-    changesToSave = true
+    saveButton.disabled = false
     if (pencilRadio.checked) {
-        this.value = Array.from(new Set(this.value)).sort().join("")
         this.previousValue = ""
         this.previousPlaceholder = this.value
     } else {
@@ -153,9 +154,6 @@ function oninput() {
         this.previousPlaceholder = this.placeholder
         refreshBox(this)
     }
-
-    if (suggestionTimer) clearTimeout(suggestionTimer)
-    suggestionTimer = setTimeout(showSuggestion, SUGESTION_DELAY)
 }
 
 function refreshBox(box) {
@@ -165,33 +163,32 @@ function refreshBox(box) {
 
 function checkBox(box) {
     box.neighbourhood.concat([box]).forEach(neighbour => {
-        searchCandidatesOf(neighbour)
         neighbour.setCustomValidity("")
+        searchCandidatesOf(neighbour)
+        if (neighbour.candidates.size == 0) {
+            neighbour.setCustomValidity("Aucun chiffre possible !")
+        }
     })
 
-    for (neighbour1 of box.neighbourhood) {
-        if (neighbour1.value) {
-            for (area of [
-                { name: "région", neighbours: regions[neighbour1.regionId] },
-                { name: "ligne", neighbours: rows[neighbour1.rowId] },
-                { name: "colonne", neighbours: columns[neighbour1.columnId] },
-            ])
-                for (neighbour2 of area.neighbours)
-                    if (neighbour2 != neighbour1 && neighbour2.value == neighbour1.value) {
-                        for (neighbour of [neighbour1, neighbour2]) {
-                            neighbour.setCustomValidity(`Il y a un autre ${neighbour.value} dans cette ${area.name}.`)
-                        }
-                    }
-        } else {
-            if (neighbour1.candidates.size == 0) {
-                neighbour1.setCustomValidity("Aucun chiffre possible !")
+    if (box.value) {
+        for (area of [
+            { name: "région", neighbours: regions[box.regionId] },
+            { name: "ligne", neighbours: rows[box.rowId] },
+            { name: "colonne", neighbours: columns[box.columnId] },
+        ])
+        for (neighbour of area.neighbours)
+            if (box != neighbour && box.value == neighbour.value) {
+                for (neighbour of [box, neighbour]) {
+                    neighbour.setCustomValidity(`Il y a un autre ${box.value} dans cette ${area.name}.`)
+                }
             }
-        }
     }
 
     if (box.form.checkValidity()) { // Correct grid
-        if (boxes.filter(box => box.value == "").length == 0)
+        if (boxes.filter(box => box.value == "").length == 0) {
             setTimeout(() => alert(`Bravo ! Vous avez résolu la grille.`), 500)
+            saveButton.disabled = true
+        }
     } else { // Errors on grid
         box.form.reportValidity()
     }
@@ -200,7 +197,6 @@ function checkBox(box) {
 function refreshUI() {
     enableRadio()
     highlight()
-    showEasyBoxes()
 }
 
 function enableRadio() {
@@ -211,62 +207,42 @@ function enableRadio() {
         } else {
             radio.disabled = true
             radio.label.title = `Tous les ${radio.value} sont posés.`
-            if (valueToInsert == radio.value) {
-                let nextRadio = document.querySelector(".insertRadioGroup :checked ~ input:enabled") || document.querySelector(".insertRadioGroup :enabled")
-                if (nextRadio) {
-                    nextRadio.click()
-                    nextRadio.onfocus()
-                } else {
-                    valueToInsert = ""
-                }
-            }
+            if (valueToInsert == radio.value)
+                valueToInsert = ""
         }
     }
 }
 
 function highlight() {
+    hintButton.disabled = true
+    easyBoxes = []
     boxes.forEach(box => {
         if (valueToInsert && box.value == valueToInsert) {
             box.classList.add("same-value")
             box.tabIndex = -1
         } else {
             box.classList.remove("same-value")
-            if (box.disabled) {
+            if (valueToInsert && highlighterCheckbox.checked && !box.candidates.has(valueToInsert)) {
                 box.classList.add("forbidden")
+                box.tabIndex = -1
             } else {
-                if (valueToInsert && highlighterCheckbox.checked && !box.candidates.has(valueToInsert)) {
-                    box.classList.add("forbidden")
-                    box.tabIndex = -1
-                } else {
-                    box.classList.remove("forbidden")
-                    box.tabIndex = 0
-                }
+                box.classList.remove("forbidden")
+                box.tabIndex = 0
             }
+        }
+        if (!box.value && box.candidates.size == 1) {
+            hintButton.disabled = false
+            easyBoxes.push(box)
         }
     })
     highlighterCheckbox.label.title = "Surligner les lignes, colonnes et régions contenant déjà " + (valueToInsert? "un " + valueToInsert: "le chiffre sélectionné")
-}
-
-function showEasyBoxes() {
-    boxes.filter(box => !box.disabled).forEach(box => {
-        if (!box.value && box.candidates.size == 1) {
-            box.classList.add("one-candidate")
-            box.onclick = function() {
-                valueToInsert = this.candidates.values().next().value
-                document.getElementById("insertRadio" + valueToInsert).checked = true
-                onclick.apply(box)
-            }
-        } else {
-            box.classList.remove("one-candidate")
-            box.onclick = onclick
-        }
-    })
 }
 
 function onblur() {
     if (this.classList.contains("pencil")) {
         this.placeholder = this.value
         this.value = ""
+        //this.type = "number"
         this.classList.remove("pencil")
     }
 }
@@ -292,7 +268,10 @@ function undo() {
         previousState.box.value = previousState.value
         previousState.box.placeholder = previousState.placeholder
         refreshBox(previousState.box)
-        if (history.length < 1) undoButton.disabled = true
+        if (history.length < 1) {
+            undoButton.disabled = true
+            saveButton.disabled = true
+        }
     }
 }
 
@@ -316,26 +295,30 @@ function save() {
     let saveGame = boxes.map(box => box.value || UNKNOWN).join("")
     localStorage[location.pathname] = saveGame
     fixGridLink.href = saveGame
-    changesToSave = false
+    saveButton.disabled = true
+    alert("Partie sauvegardée")
 }
 
 window.onbeforeunload = function(event) {
-    if (changesToSave) {
+    if (!saveButton.disabled) {
         event.preventDefault()
-        event.returnValue = ""
+        event.returnValue = "La partie n'est pas sauvegardée. Quitter quand même ?"
     }
 }
 
-function showSuggestion() {
-    const easyBoxes = boxes.filter(box => box.value == "" && box.candidates.size == 1)
+function showHint() {
     if (easyBoxes.length) {
-        let randomEasyBox = shuffle(easyBoxes)[0]
-        randomEasyBox.placeholder = "💡"
-        randomEasyBox.focus()
-    } else {
-        clearTimeout(suggestionTimer)
-        suggestionTimer = null
+        shuffle(easyBoxes)
+        let box = easyBoxes.pop()
+        box.placeholder = "💡"
+        box.focus()
+        /*value = Array.from(box.candidates)[0]
+        radio = document.getElementById("insertRadio" + value)
+        radio.checked = true
+        insert(radio)*/
+        return box
     }
+    hintButton.disabled = true
 }
 
 function oncontextmenu(event) {
@@ -348,10 +331,9 @@ function oncontextmenu(event) {
             li.innerText = candidate
             li.onclick = function (event) {
                 contextMenu.style.display = "none"
-                box.onfocus()
-                box.value = event.target.innerText
-                box.oninput()
-                box.onblur()
+                valueToInsert = event.target.innerText
+                document.getElementById("insertRadio" + valueToInsert).checked = true
+                box.onclick()
             }
             contextMenu.appendChild(li)
         })
@@ -363,14 +345,13 @@ function oncontextmenu(event) {
     }
     contextMenu.style.left = `${event.pageX}px`
     contextMenu.style.top = `${event.pageY}px`
-    console.log(event.target)
     contextMenu.style.display = "block"
-    return false
-}
 
-document.onclick = function (event) {
-    if (contextMenu.style.display == "block")
+    document.onclick = function (event) {
         contextMenu.style.display = "none"
+        document.onclick = null
+    }
+    return false
 }
 
 document.onkeydown = function(event) {

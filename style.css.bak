@@ -134,11 +134,11 @@ input[type="number"]::-webkit-calendar-picker-indicator {
 .grid input:disabled {
     color: white !important;
     background: #6666ff !important;
-    cursor: not-allowed !important;
+    cursor: default;
 }
 
 .grid input.forbidden:enabled {
-    background: #ffffaa !important;
+    background: #f9f99f;
     cursor: not-allowed;
 }
 
@@ -148,14 +148,15 @@ input[type="number"]::-webkit-calendar-picker-indicator {
 }
 
 .grid input.forbidden:disabled {
-    color: #ffffaa;
+    color: #f9f99f;
     background: #6666ff;
+    cursor: not-allowed;
 }
 
 .grid input.same-value:disabled,
 .tools button.same-value:enabled,
 .tools input:enabled:checked + label {
-    color: #ffffaa !important;
+    color: #f9f99f !important;
     background: #00b359 !important;
 }
 
@@ -236,7 +237,12 @@ input[type="number"]::-webkit-calendar-picker-indicator {
     cursor: not-allowed;
 }
 
-.tools button.warning {
+.tools button:disabled * {
+    filter: grayscale(100%);
+    opacity: 0.7;
+}
+
+.tools button.warning:hover {
     background: #ff5050;
     border-color: #ff5050;
 }
@@ -290,3 +296,13 @@ a {
     margin: 0;
 }
 
+@media (prefers-color-scheme: dark) {
+    body {
+      color: #eee;
+      background: #121212;
+    }
+  
+    body a {
+      color: #809fff;
+    }
+  }

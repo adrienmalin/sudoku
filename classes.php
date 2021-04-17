@@ -1,6 +1,8 @@
 <?php
     const UNKNOWN = ".";
 
+    $validGrids = array();
+
     function isKnown($box) {
         return $box->value != UNKNOWN;
     }
@@ -84,7 +86,7 @@
             }
         }
             
-        function generate() {
+        function generate_() {
             // Init with a shuffle row
             $values = array("1", "2", "3", "4", "5", "6", "7", "8", "9");
             shuffle($values);
@@ -101,9 +103,9 @@
             $nbClues = count($this->boxes);
             foreach($this->boxes as $testBox) {
                 $testBoxes = array($testBox);
-                if ($nbClues >=30)
+                if ($nbClues >= 30)
                     $testBoxes[] = $this->rows[8-$testBox->rowId][8-$testBox->columnId];
-                if ($nbClues >=61) {
+                if ($nbClues >= 61) {
                     $testBoxes[] = $this->rows[8-$testBox->rowId][$testBox->columnId];
                     $testBoxes[] = $this->rows[$testBox->rowId][8-$testBox->columnId];
                 }
@@ -124,6 +126,60 @@
                     }
                 }
             }
+            $validGrids[] = $this->toString();
+        }
+
+        function generate() {
+            // Init with a shuffle row
+            $values = array("1", "2", "3", "4", "5", "6", "7", "8", "9");
+            shuffle($values);
+            forEach($this->rows[0] as $columnId => $box) {
+                $box->value = $values[$columnId];
+                forEach($box->neighbourhood as $neighbour)
+                    array_unset_value($box->value, $neighbour->candidates);
+            }
+            // Fill grid
+            $this->solutionsGenerator(true)->current();
+            
+            // Group boxes with their groupedSymetricals
+            $groupedSymetricals = array(array($this->rows[4][4]));
+            for ($rowId = 0; $rowId <= 3; $rowId++) {
+                for ($columnId = 0; $columnId <= 3; $columnId++) {
+                    $groupedSymetricals[] = array(
+                        $this->rows[$rowId][$columnId],
+                        $this->rows[8-$rowId][8-$columnId],
+                        $this->rows[8-$rowId][$columnId],
+                        $this->rows[$rowId][8-$columnId]
+                    );
+                }
+                $groupedSymetricals[] = array(
+                    $this->rows[$rowId][4],
+                    $this->rows[8-$rowId][4]
+                );
+            }
+            for ($columnId = 0; $columnId <= 3; $columnId++) {
+                $groupedSymetricals[] = array(
+                    $this->rows[4][$columnId],
+                    $this->rows[4][8-$columnId]
+                );
+            }
+
+            // Remove clues randomly and their groupedSymetricals while there is still a unique solution
+            shuffle($groupedSymetricals);
+            foreach($groupedSymetricals as $symetricals) {
+                shuffle($symetricals);
+                foreach ($symetricals as $testBox) {
+                    $erasedValue = $testBox->value;
+                    $testBox->value = UNKNOWN;
+                    forEach($testBox->neighbourhood as $neighbour)
+                        $neighbour->searchCandidates();
+                    if (!$this->isValid()) {
+                        $testBox->value = $erasedValue;
+                        forEach($testBox->neighbourhood as $neighbour) array_unset_value($testBox->value, $neighbour->candidates);
+                    }
+                }
+            }
+            $validGrids[] = $this->toString();
         }
 
         function containsDuplicates() {
@@ -139,17 +195,19 @@
             }
             return false;
         }
-        
+
         function countSolutions($max=2) {
             $solutions = $this->solutionsGenerator(false);
             $solutionsWithoutDuplicates = array();
             $nbSolutions = 0;
             foreach($solutions as $solution) {
-                $solutionsWithoutDuplicates[$solution] = true;
-                $nbSolutions = count($solutionsWithoutDuplicates);
-                if ($nbSolutions >= $max) {
-                    $solutions->send(true);
-                    break;
+                if (!in_array($solution, $solutionsWithoutDuplicates)) {
+                    $solutionsWithoutDuplicates[] = $solution;
+                    $nbSolutions ++;
+                    if ($nbSolutions >= $max) {
+                        $solutions->send(true);
+                        break;
+                    }
                 }
             }
             return $nbSolutions;
@@ -165,7 +223,6 @@
                 if ($randomized) shuffle($emptyBoxes);
                 usort($emptyBoxes, "easyFirst");
                 $testBox = $emptyBoxes[0];
-                $nbTries = 0;
                 if ($randomized) shuffle($testBox->candidates);
                 $stop = null;
                 foreach($testBox->candidates as $testBox->value) {

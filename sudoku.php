@@ -4,7 +4,7 @@
     $currentGrid = strip_tags($_GET['grid']);
     $_SESSION["currentGrid"] = $currentGrid;
 
-    if (!isset($_SESSION[$currentGrid])) {
+    if (!in_array($currentGrid, $validGrids)) {
         $grid = new Grid();
         $grid->import($currentGrid);
         if ($grid->containsDuplicates()) {
@@ -15,6 +15,7 @@
                     $warning = "Cette grille n'a pas de solution.";
                     break;
                 case 1:
+                    $validGrids[] = $currentGrid;
                     break;
                 default:
                     $warning = "Cette grille a plusieurs solutions.";
@@ -58,6 +59,18 @@
         <header>
             <h1>Sudoku</h1>
         </header>
+        <section class="tools">
+            <div>
+                <input id='highlighterCheckbox' type="checkbox" onclick='highlight()'/><label for='highlighterCheckbox' title='Surligner les lignes, colonnes et régions contenant déjà le chiffre sélectionné'><img src='img/highlighter.svg' alt='Surligneur'></label>
+                <input type='radio' id='inkPenRadio' name='tool' onclick='grid.style.cursor = "url(img/ink-pen.svg) 2 22, auto"' checked/><label for='inkPenRadio' title='Écrire un chiffre'><img src='img/ink-pen.svg' alt='Stylo indélébile'/></label>
+                <input type='radio' id='pencilRadio' name='tool' onclick='grid.style.cursor = "url(img/pencil.svg) 2 22, auto"'/><label for='pencilRadio' title='Prendre des notes'><img src='img/pencil.svg' alt='Crayon'/></label>
+                <input type='radio' id='eraserRadio' name='tool' onclick='grid.style.cursor = "url(img/eraser.svg) 2 22, auto"'/><label for='eraserRadio' title='Effacer une case'><img src='img/eraser.svg' alt='Gomme'/></label>
+                <button type='button' class='warning' onclick='restart()' title='Recommencer'><img src='img/restart.svg' alt='Recommencer'/></button>
+                <button id='undoButton' type='button' onclick='undo()' disabled title='Annuler' accesskey='z'><img src='img/undo.svg' alt='Annuler'/></button>
+                <button id="hintButton" type="button" onclick="showHint()" title="Afficher un indice" accesskey="h" disabled=""><img src='img/light-bulb.svg' alt='Ampoule'/></button>
+                <button id='saveButton' type='button' onclick='save()' disabled title='Sauvegarder' accesskey='s'><img src='img/save.svg' alt='Disquette'/></button>
+            </div>
+        </section>
         <form id='sudokuForm'>
             <table id='grid' class='grid'>
                 <tbody>
@@ -94,15 +107,6 @@
         }
 ?>
             </div>
-            <div>
-                <input id='highlighterCheckbox' type="checkbox" onclick='highlight()'/><label for='highlighterCheckbox' title='Surligner les lignes, colonnes et régions contenant déjà le chiffre sélectionné'><img src='img/highlighter.svg' alt='Surligneur'></label>
-                <input type='radio' id='inkPenRadio' name='tool' onclick='grid.style.cursor = "url(img/ink-pen.svg) 2 22, auto"' checked/><label for='inkPenRadio' title='Écrire un chiffre'><img src='img/ink-pen.svg' alt='Stylo indélébile'/></label>
-                <input type='radio' id='pencilRadio' name='tool' onclick='grid.style.cursor = "url(img/pencil.svg) 2 22, auto"'/><label for='pencilRadio' title='Prendre des notes'><img src='img/pencil.svg' alt='Crayon'/></label>
-                <input type='radio' id='eraserRadio' name='tool' onclick='grid.style.cursor = "url(img/eraser.svg) 2 22, auto"'/><label for='eraserRadio' title='Effacer une case'><img src='img/eraser.svg' alt='Gomme'/></label>
-                <button type='button' class='warning' onclick='restart()' title='Recommencer'><img src='img/restart.svg' alt='Recommencer'/></button>
-                <button id='undoButton' type='button' onclick='undo()' disabled title='Annuler' accesskey='z'><img src='img/undo.svg' alt='Annuler'/></button>
-                <button id='undoButton' type='button' onclick='save()' title='Sauvegarder' accesskey='s'><img src='img/save.svg' alt='Disquette'/></button>
-            </div>
         </section>
         <section>
 <?php
@@ -122,7 +126,7 @@
                 
             </div>
             <div class='credits'>
-                Icônes par <a href='https://www.flaticon.com/authors/freepik' title='Freepik'>Freepik</a> chez <a href='https://www.flaticon.com/' title='Flaticon'>www.flaticon.com</a>
+                Icônes par <a href='https://www.flaticon.com/authors/freepik' title='Freepik' target="_blank">Freepik</a> chez <a href='https://www.flaticon.com/' title='Flaticon' target="_blank">www.flaticon.com</a>
             </div>
         </footer>
     </body>

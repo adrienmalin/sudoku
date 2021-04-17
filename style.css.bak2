@@ -75,7 +75,9 @@ h1 {
     text-shadow: .1rem .1rem var(--shadow);
 }
 
-section, div, footer {
+section,
+div,
+footer {
     align-items: center;
     align-items: center;
     justify-content: center;
@@ -99,7 +101,8 @@ div {
     border-collapse: collapse;
 }
 
-.grid td, tr {
+.grid td,
+tr {
     padding: 0;
 }
 
@@ -202,13 +205,13 @@ input[type="number"]::-webkit-calendar-picker-indicator {
 }
 
 .tools button,
-.tools input + label {
+.tools input+label {
     color: var(--tool-fc);
     background: var(--clue-bc);
     border: 1px outset var(--clue-bc);
     font-size: 1.3rem;
     font-weight: bold;
-    min-width:20px;
+    min-width: 20px;
     padding: 6px;
     margin: .1rem;
     cursor: pointer;
@@ -228,31 +231,31 @@ input[type="number"]::-webkit-calendar-picker-indicator {
 }
 
 .tools button:enabled:checked,
-.tools input:enabled:checked + label {
+.tools input:enabled:checked+label {
     border-style: inset;
 }
 
 .tools button.same-value:enabled,
-.tools input:enabled:checked + label {
+.tools input:enabled:checked+label {
     background: var(--selected-tool-bc);
     color: var(--selected-tool-fc);
     border-color: var(--selected-tool-bc);
 }
 
 .tools button:enabled:hover,
-.tools input:enabled:hover + label {
+.tools input:enabled:hover+label {
     background: var(--tool-hover-bc);
     border-color: var(--tool-hover-bc);
 }
 
 .tools button:enabled:checked:hover,
-.tools input:enabled:checked:hover + label {
+.tools input:enabled:checked:hover+label {
     background: var(--selected-tool-hover-bc);
     border-color: var(--selected-tool-hover-bc);
 }
 
 .tools button:disabled,
-.tools input:disabled + label {
+.tools input:disabled+label {
     color: #ccc;
     background: darkgrey;
     border-style: outset;
