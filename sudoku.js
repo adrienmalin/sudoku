@@ -26,7 +26,7 @@ function shuffle(iterable) {
     return array
 }
 
-window.onload = function () {
+window.onload = function() {
     let rowId = 0
     for (let row of grid.getElementsByTagName('tr')) {
         let columnId = 0
@@ -82,7 +82,7 @@ window.onload = function () {
 }
 
 function loadSavedGame() {
-    const savedGame = localStorage[location.pathname]
+    const savedGame = localStorage[location.search]
     if (savedGame) {
         boxes.forEach((box, i) => {
             if (!box.disabled && savedGame[i] != UNKNOWN) {
@@ -90,7 +90,7 @@ function loadSavedGame() {
                 box.previousValue = savedGame[i]
             }
         })
-        fixGridLink.href = savedGame
+        fixGridLink.href = "?" + savedGame
     }
 }
 
@@ -119,7 +119,7 @@ function onfocus() {
     } else {
         this.select()
     }
-    this.style.caretColor = valueToInsert? "transparent": "auto"
+    this.style.caretColor = valueToInsert ? "transparent" : "auto"
 }
 
 function onclick() {
@@ -143,9 +143,14 @@ function onclick() {
 }
 
 function oninput() {
-    history.push({ box: this, value: this.previousValue, placeholder: this.previousPlaceholder })
+    history.push({
+        box: this,
+        value: this.previousValue,
+        placeholder: this.previousPlaceholder
+    })
     undoButton.disabled = false
     saveButton.disabled = false
+    restartButton.disabled = false
     if (pencilRadio.checked) {
         this.previousValue = ""
         this.previousPlaceholder = this.value
@@ -171,17 +176,22 @@ function checkBox(box) {
     })
 
     if (box.value) {
-        for (area of [
-            { name: "région", neighbours: regions[box.regionId] },
-            { name: "ligne", neighbours: rows[box.rowId] },
-            { name: "colonne", neighbours: columns[box.columnId] },
-        ])
-        for (neighbour of area.neighbours)
-            if (box != neighbour && box.value == neighbour.value) {
-                for (neighbour of [box, neighbour]) {
-                    neighbour.setCustomValidity(`Il y a un autre ${box.value} dans cette ${area.name}.`)
+        for (area of[{
+                name: "région",
+                neighbours: regions[box.regionId]
+            }, {
+                name: "ligne",
+                neighbours: rows[box.rowId]
+            }, {
+                name: "colonne",
+                neighbours: columns[box.columnId]
+            }, ])
+            for (neighbour of area.neighbours)
+                if (box != neighbour && box.value == neighbour.value) {
+                    for (neighbour of[box, neighbour]) {
+                        neighbour.setCustomValidity(`Il y a un autre ${box.value} dans cette ${area.name}.`)
+                    }
                 }
-            }
     }
 
     if (box.form.checkValidity()) { // Correct grid
@@ -235,14 +245,14 @@ function highlight() {
             easyBoxes.push(box)
         }
     })
-    highlighterCheckbox.label.title = "Surligner les lignes, colonnes et régions contenant déjà " + (valueToInsert? "un " + valueToInsert: "le chiffre sélectionné")
+    highlighterCheckbox.label.title = "Surligner les lignes, colonnes et régions contenant déjà " + (valueToInsert ? "un " + valueToInsert : "le chiffre sélectionné")
 }
 
 function onblur() {
     if (this.classList.contains("pencil")) {
         this.placeholder = this.value
         this.value = ""
-        //this.type = "number"
+            //this.type = "number"
         this.classList.remove("pencil")
     }
 }
@@ -254,11 +264,7 @@ function insert(radio) {
     } else {
         valueToInsert = radio.value
     }
-    if (inkPenRadio.checked) customCursor = "url(img/ink-pen.svg) 2 22"
-    if (pencilRadio.checked) customCursor = "url(img/pencil.svg) 2 22"
-    if (eraserRadio.checked) customCursor = "url(img/eraser.svg) 2 22"
-    fallbackCursor = valueToInsert? "copy": "text"
-    grid.style.cursor = `${customCursor}, ${fallbackCursor}`
+    grid.style.cursor = valueToInsert ? "copy" : "text"
     highlight()
 }
 
@@ -286,6 +292,7 @@ function restart() {
         })
         let history = []
         undoButton.disabled = true
+        restartButton.disabled = true
         boxes.forEach(searchCandidatesOf)
         refreshUI()
     }
@@ -293,8 +300,8 @@ function restart() {
 
 function save() {
     let saveGame = boxes.map(box => box.value || UNKNOWN).join("")
-    localStorage[location.pathname] = saveGame
-    fixGridLink.href = saveGame
+    localStorage[location.search] = saveGame
+    fixGridLink.href = "?" + saveGame
     saveButton.disabled = true
     alert("Partie sauvegardée")
 }
@@ -312,10 +319,10 @@ function showHint() {
         let box = easyBoxes.pop()
         box.placeholder = "💡"
         box.focus()
-        /*value = Array.from(box.candidates)[0]
-        radio = document.getElementById("insertRadio" + value)
-        radio.checked = true
-        insert(radio)*/
+            /*value = Array.from(box.candidates)[0]
+            radio = document.getElementById("insertRadio" + value)
+            radio.checked = true
+            insert(radio)*/
         return box
     }
     hintButton.disabled = true
@@ -329,9 +336,10 @@ function oncontextmenu(event) {
         Array.from(box.candidates).sort().forEach(candidate => {
             li = document.createElement("li")
             li.innerText = candidate
-            li.onclick = function (event) {
+            li.onclick = function(event) {
                 contextMenu.style.display = "none"
                 valueToInsert = event.target.innerText
+                grid.style.cursor = "copy"
                 document.getElementById("insertRadio" + valueToInsert).checked = true
                 box.onclick()
             }
@@ -347,7 +355,7 @@ function oncontextmenu(event) {
     contextMenu.style.top = `${event.pageY}px`
     contextMenu.style.display = "block"
 
-    document.onclick = function (event) {
+    document.onclick = function(event) {
         contextMenu.style.display = "none"
         document.onclick = null
     }

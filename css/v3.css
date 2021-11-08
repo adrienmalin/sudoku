@@ -2,22 +2,18 @@
     --body-bc: #e8ffff;
     --body-fc: black;
     --shadow: lightgray;
-
     --border-color: #555b6e;
-
     --box-bc: #F7FFF7;
     --box-fc: black;
     --forbidden-box-bc: #FFEE99;
     --same-value-box-bc: #ffbc25;
     --placeholder-fc: var(--grid-color);
-
     --clue-bc: #60D2CB;
     --forbidden-clue-bc: var(--clue-bc);
     --same-value-clue-bc: #24737F;
     --clue-fc: var(--box-bc);
     --forbidden-clue-fc: var(--forbidden-box-bc);
     --same-value-clue-fc: var(--forbidden-box-bc);
-
     --tool-fc: var(--clue-fc);
     --tool-bc: var(--clue-bc);
     --selected-tool-bc: var(--same-value-clue-bc);
@@ -27,26 +23,22 @@
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
+     :root {
         --body-bc: #1c1c1e;
         --body-fc: #fefefe;
         --shadow: darkgray;
-
         --border-color: #292929;
-
         --box-bc: #0C151D;
         --box-fc: #bfcbce;
         --forbidden-box-bc: #004E52;
         --same-value-box-bc: #09BC8A;
         --placeholder-fc: var(--grid-color);
-
         --clue-bc: #508991;
         --forbidden-clue-bc: var(--clue-bc);
         --same-value-clue-bc: #75DDDD;
         --clue-fc: var(--box-bc);
         --forbidden-clue-fc: var(--forbidden-box-bc);
         --same-value-clue-fc: var(--forbidden-box-bc);
-
         --tool-fc: var(--clue-fc);
         --tool-bc: var(--clue-bc);
         --selected-tool-bc: var(--same-value-clue-bc);
@@ -55,7 +47,6 @@
         --selected-tool-hover-bc: #9DE7E7;
     }
 }
-
 
 body {
     font-family: sans-serif;
@@ -92,7 +83,6 @@ div {
     column-gap: 0.3rem;
     margin: 0.5rem auto;
 }
-
 
 .grid {
     border-spacing: 0;
@@ -131,7 +121,6 @@ tr {
 .grid td:nth-child(3n+3) {
     border-right: 2px solid var(--border-color);
 }
-
 
 .grid input {
     width: 2.5rem;
@@ -273,7 +262,6 @@ input[type="number"]::-webkit-calendar-picker-indicator {
     border-color: #ff5050;
 }
 
-
 .context-menu {
     display: none;
     z-index: 1000;
@@ -311,7 +299,6 @@ input[type="number"]::-webkit-calendar-picker-indicator {
     background-color: #EEE;
 }
 
-
 a {
     text-decoration: none;
     color: var(--forbidden-clue-bc);
@@ -320,7 +307,6 @@ a {
 a:visited {
     color: var(--same-value-clue-bc);
 }
-
 
 .credits {
     font-size: 0.8rem;

@@ -14,10 +14,11 @@
     $thumbnail = imagecreate($size, $size);
     $transparent = imagecolorallocate($thumbnail, 1, 1, 1);
     imagecolortransparent($thumbnail, $transparent);
-    $black = imagecolorallocate($thumbnail, 85, 91, 110);
-    $grey = imagecolorallocate($thumbnail, 85, 91, 110);
-    $blue = imagecolorallocate($thumbnail, 96, 210, 203);
-    $white = imagecolorallocate($thumbnail, 247, 255, 247);
+    $darkerBorder = imagecolorallocate($thumbnail, 150, 155, 160);
+    $lighterBorder = imagecolorallocate($thumbnail, 210, 225, 230);
+    $emptyBoxBC = imagecolorallocate($thumbnail, 255, 255, 255);
+    $clueBC = imagecolorallocate($thumbnail, 255, 255, 255);
+    $clueFC = imagecolorallocate($thumbnail, 150, 155, 160);
     
     if ($size <= 36) {
         $boxSize = floor(($size-4) / 9);
@@ -27,8 +28,8 @@
         $lineStart = $start + 1;
         $lineEnd = $end - 2;
         for ($i = $start; $i < $end; $i += 3*$boxSize + 1) {
-            ImageLine($thumbnail,  $lineStart,  $i, $lineEnd,  $i, $black);
-            ImageLine($thumbnail,  $i,  $lineStart,  $i, $lineEnd, $black);
+            ImageLine($thumbnail,  $lineStart,  $i, $lineEnd,  $i, $darkerBorder);
+            ImageLine($thumbnail,  $i,  $lineStart,  $i, $lineEnd, $darkerBorder);
         }
         $x = $start;
         $y = $start;
@@ -37,9 +38,9 @@
             if ($i % 3 == 0) $x++;
             if ($i % 27 == 0) $y++;
             if ($value == UNKNOWN) {
-                $bgColor = $white;
+                $bgColor = $emptyBoxBC;
             } else {
-                $bgColor = $blue;
+                $bgColor = $clueFC;
             }
             imagefilledrectangle($thumbnail, $x, $y, $x+$boxSizeMinusOne, $y+$boxSizeMinusOne, $bgColor);
             $x += $boxSize;
@@ -56,21 +57,21 @@
         $lineStart = $start + 1;
         $lineEnd = $end - 2;
         for ($i = $start + $boxSize; $i < $end - $boxSize; $i += $boxSize) {
-            ImageLine($thumbnail,  $lineStart,  $i, $lineEnd,  $i, $grey);
-            ImageLine($thumbnail,  $i,  $lineStart,  $i, $lineEnd, $grey);
+            ImageLine($thumbnail,  $lineStart,  $i, $lineEnd,  $i, $lighterBorder);
+            ImageLine($thumbnail,  $i,  $lineStart,  $i, $lineEnd, $lighterBorder);
         }
         for ($i = $start; $i < $end; $i += 3*$boxSize) {
-            ImageLine($thumbnail,  $lineStart,  $i, $lineEnd,  $i, $black);
-            ImageLine($thumbnail,  $i,  $lineStart,  $i, $lineEnd, $black);
+            ImageLine($thumbnail,  $lineStart,  $i, $lineEnd,  $i, $darkerBorder);
+            ImageLine($thumbnail,  $i,  $lineStart,  $i, $lineEnd, $darkerBorder);
         }
         $x = $start + 1;
         $y = $start + 1;
         $boxSizeMinusTwo = $boxSize - 2;
         foreach(str_split($currentGrid) as $i => $value) {
             if ($value == UNKNOWN) {
-                $bgColor = $white;
+                $bgColor = $emptyBoxBC;
             } else {
-                $bgColor = $blue;
+                $bgColor = $clueFC;
             }
             imagefilledrectangle($thumbnail, $x, $y, $x+$boxSizeMinusTwo, $y+$boxSizeMinusTwo, $bgColor);
             $x += $boxSize;
@@ -89,26 +90,26 @@
         $fontSize = floor($boxSize/2) - 4;
         $fdx = floor(($boxSize - imagefontwidth($fontSize)) / 2);
         $fdy = ceil(($boxSize - imagefontheight($fontSize)) / 2) - 1;
-        $fontColor = $white;
+        $fontColor = $emptyBoxBC;
         for ($i = $start + $boxSize; $i < $end - $boxSize; $i += $boxSize) {
-            ImageLine($thumbnail,  $lineStart,  $i, $lineEnd,  $i, $grey);
-            ImageLine($thumbnail,  $i,  $lineStart,  $i, $lineEnd, $grey);
+            ImageLine($thumbnail,  $lineStart,  $i, $lineEnd,  $i, $lighterBorder);
+            ImageLine($thumbnail,  $i,  $lineStart,  $i, $lineEnd, $lighterBorder);
         }
         for ($i = $start; $i < $end; $i += 3*$boxSize) {
-            ImageLine($thumbnail,  $lineStart,  $i, $lineEnd,  $i, $black);
-            ImageLine($thumbnail,  $i,  $lineStart,  $i, $lineEnd, $black);
+            ImageLine($thumbnail,  $lineStart,  $i, $lineEnd,  $i, $darkerBorder);
+            ImageLine($thumbnail,  $i,  $lineStart,  $i, $lineEnd, $darkerBorder);
         }
         $x = $start + 1;
         $y = $start + 1;
         $boxSizeMinusTwo = $boxSize - 2;
         foreach(str_split($currentGrid) as $i => $value) {
             if ($value == UNKNOWN) {
-                $bgColor = $white;
+                $bgColor = $emptyBoxBC;
             } else {
-                $bgColor = $blue;
+                $bgColor = $clueBC;
             }
             imagefilledrectangle($thumbnail, $x, $y, $x+$boxSizeMinusTwo, $y+$boxSizeMinusTwo, $bgColor);
-            if ($value != UNKNOWN) imagestring($thumbnail, $fontSize, $x + $fdx, $y + $fdy, $value, $fontColor);
+            if ($value != UNKNOWN) imagestring($thumbnail, $fontSize, $x + $fdx, $y + $fdy, $value, $clueFC);
             $x += $boxSize;
             if ($i % 9 == 8) {
                 $y += $boxSize;

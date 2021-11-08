@@ -1,133 +1,91 @@
-<?php
-    require("classes.php");
-    session_start();
-    $currentGrid = strip_tags($_GET['grid']);
-    $_SESSION["currentGrid"] = $currentGrid;
-
-    if (!in_array($currentGrid, $validGrids)) {
-        $grid = new Grid();
-        $grid->import($currentGrid);
-        if ($grid->containsDuplicates()) {
-            $warning = "Cette grille contient des doublons.";
-        } else {
-            switch($grid->countSolutions(2)) {
-                case 0:
-                    $warning = "Cette grille n'a pas de solution.";
-                    break;
-                case 1:
-                    $validGrids[] = $currentGrid;
-                    break;
-                default:
-                    $warning = "Cette grille a plusieurs solutions.";
-            }
-        }
-    }
-?>
 <!DOCTYPE html>
 <html lang='fr' prefix="og: https://ogp.me/ns#">
+
     <head>
-        <meta charset='utf-8' />
-        <meta name='viewport' content='width=device-width' />
-        <title>Sudoku</title>
-        <link rel='stylesheet' type='text/css' href='style.css' />
-        <script src='sudoku.js'></script>
-        <link rel="apple-touch-icon" href="thumbnail.php?size=57"  sizes="57x57">
-        <link rel="apple-touch-icon" href="thumbnail.php?size=114" sizes="114x114">
-        <link rel="apple-touch-icon" href="thumbnail.php?size=72"  sizes="72x72">
-        <link rel="apple-touch-icon" href="thumbnail.php?size=144" sizes="144x144">
-        <link rel="apple-touch-icon" href="thumbnail.php?size=60"  sizes="60x60">
-        <link rel="apple-touch-icon" href="thumbnail.php?size=120" sizes="120x120">
-        <link rel="apple-touch-icon" href="thumbnail.php?size=76"  sizes="76x76">
-        <link rel="apple-touch-icon" href="thumbnail.php?size=152" sizes="152x152">
-        <link rel="icon" type="image/png" href="thumbnail.php?size=196" sizes="196x196">
-        <link rel="icon" type="image/png" href="thumbnail.php?size=160" sizes="160x160">
-        <link rel="icon" type="image/png" href="thumbnail.php?size=96"  sizes="96x96">
-        <link rel="icon" type="image/png" href="thumbnail.php?size=16"  sizes="16x16">
-        <link rel="icon" type="image/png" href="thumbnail.php?size=32"  sizes="32x32">
-        <link rel="manifest" href="manifest.php">
-        <meta property="og:title" content="Sudoku"/>
-        <meta property="og:type" content="website"/>
-        <meta property="og:url" content="<?=$_SERVER["REQUEST_SCHEME"]."://".$_SERVER["HTTP_HOST"].$_SERVER["DOCUMENT_URI"]?>"/>
-        <meta property="og:image" content="<?=$_SERVER["REQUEST_SCHEME"]."://".$_SERVER["HTTP_HOST"].dirname($_SERVER["DOCUMENT_URI"])?>/thumbnail.php?size=200"/>
-        <meta property="og:image:width" content="200"/>
-        <meta property="og:image:height" content="200"/>
-        <meta property="og:description" content="Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9."/>
-        <meta property="og:locale" content="fr_FR"/>
-		<meta property="og:site_name" content="<?=$_SERVER["HTTP_HOST"]?>"/>
+        <?php require_once("head.php") ?>
     </head>
+
     <body>
         <header>
             <h1>Sudoku</h1>
         </header>
-        <section class="tools">
-            <div>
-                <input id='highlighterCheckbox' type="checkbox" onclick='highlight()'/><label for='highlighterCheckbox' title='Surligner les lignes, colonnes et régions contenant déjà le chiffre sélectionné'><img src='img/highlighter.svg' alt='Surligneur'></label>
-                <input type='radio' id='inkPenRadio' name='tool' onclick='grid.style.cursor = "url(img/ink-pen.svg) 2 22, auto"' checked/><label for='inkPenRadio' title='Écrire un chiffre'><img src='img/ink-pen.svg' alt='Stylo indélébile'/></label>
-                <input type='radio' id='pencilRadio' name='tool' onclick='grid.style.cursor = "url(img/pencil.svg) 2 22, auto"'/><label for='pencilRadio' title='Prendre des notes'><img src='img/pencil.svg' alt='Crayon'/></label>
-                <input type='radio' id='eraserRadio' name='tool' onclick='grid.style.cursor = "url(img/eraser.svg) 2 22, auto"'/><label for='eraserRadio' title='Effacer une case'><img src='img/eraser.svg' alt='Gomme'/></label>
-                <button type='button' class='warning' onclick='restart()' title='Recommencer'><img src='img/restart.svg' alt='Recommencer'/></button>
-                <button id='undoButton' type='button' onclick='undo()' disabled title='Annuler' accesskey='z'><img src='img/undo.svg' alt='Annuler'/></button>
-                <button id="hintButton" type="button" onclick="showHint()" title="Afficher un indice" accesskey="h" disabled=""><img src='img/light-bulb.svg' alt='Ampoule'/></button>
-                <button id='saveButton' type='button' onclick='save()' disabled title='Sauvegarder' accesskey='s'><img src='img/save.svg' alt='Disquette'/></button>
+        <div class='toolBar'>
+            <div class='radioGroup'>
+                <input type='radio' id='inkPenRadio' name='tool' checked /><label for='inkPenRadio'
+                    title='Écrire un chiffre'><i class="ri-ball-pen-fill"></i></label>
+                <input type='radio' id='pencilRadio' name='tool' /><label for='pencilRadio' title='Prendre des notes'><i
+                        class="ri-pencil-fill"></i></label>
+                <input type='radio' id='eraserRadio' name='tool' '/><label for='eraserRadio'
+                    title='Effacer une case'><i class="ri-eraser-fill"></i></label>
             </div>
-        </section>
+            <input id='highlighterCheckbox' type="checkbox" onclick='highlight()' /><label for='highlighterCheckbox'
+                title='Surligner les lignes, colonnes et régions contenant déjà le chiffre sélectionné'><i
+                    class="ri-mark-pen-fill"></i></label>
+            <button id="hintButton" type="button" onclick="showHint()" title="Afficher un indice" accesskey="H"
+                disabled=""><i class="ri-lightbulb-flash-fill"></i></button>
+            <button id='restartButton' type='button' class='warning' onclick='restart()' disabled title='Recommencer'><i
+                    class="ri-restart-fill"></i></button>
+            <button id='undoButton' type='button' onclick='undo()' disabled title='Annuler' accesskey='Z'><i
+                    class="ri-arrow-go-back-fill"></i></button>
+            <button id='saveButton' type='button' onclick='save()' disabled title='Sauvegarder' accesskey='S'><i
+                    class="ri-save-3-fill"></i></button>
+        </div>
         <form id='sudokuForm'>
             <table id='grid' class='grid'>
                 <tbody>
-<?php
-        for ($row = 0; $row < 9; $row++) {
+                    <?php
+        for ($row = 0; $row < 81; $row += 9) {
 ?>
                     <tr>
-<?php
+                        <?php
         for ($column = 0; $column < 9; $column++) {
-            $value = $currentGrid[9*$row+$column];
+            $value = $currentGrid[$row+$column];
             if ($value == UNKNOWN) {
 ?>
-                        <td><input type='number' min='1' max='9' step='1' value='' title='Valeurs possibles [Clic-droit]'/></td>
-<?php
+                        <td><input type='number' min='1' max='9' step='1' value=''
+                                title='Valeurs possibles [Clic-droit]' /></td>
+                        <?php
                 } else {
 ?>
-                        <td><input type='number' min='1' max='9' step='1' value='<?=$value?>' disabled/></td>
-<?php
+                        <td><input type='number' min='1' max='9' step='1' value='<?=$value?>' disabled /></td>
+                        <?php
             }                                                            
         }
 ?>
                     </tr>
-<?php
+                    <?php
    }
 ?>
                 </tbody>
             </table>
         </form>
-        <section class='tools'>
-            <div id='insertRadioGroup' class='insertRadioGroup'>
-<?php
+        <div class='toolBar'>
+            <div id='insertRadioGroup' class='radioGroup'>
+                <?php
         for($value=1; $value<=9; $value++) {
             echo "                <input type='radio' id='insertRadio$value' value='$value' name='insertRadioGroup' onclick='insert(this)' accesskey='$value'/><label for='insertRadio$value' title='Insérer un $value'>$value</label>\n";
         }
 ?>
             </div>
-        </section>
-        <section>
-<?php
+        </div>
+        <div>
+            <?php
     if (isset($warning))
         echo("            <strong>⚠️ $warning ⚠️</strong><br/>\n");
     else
         echo("            Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.\n")
 ?>
-        </section>
+        </div>
         <ul id='contextMenu' class='context-menu'></ul>
         <footer>
             <div id='links'>
-                <a href=''>Lien vers cette grille</a><br/>
-                <a href='.'>Nouvelle grille</a><br/>
-                <a href='.................................................................................'>Grille vierge</a><br/>
-                <a href='' id='fixGridLink'>Figer cette grille</a>
-                
-            </div>
-            <div class='credits'>
-                Icônes par <a href='https://www.flaticon.com/authors/freepik' title='Freepik' target="_blank">Freepik</a> chez <a href='https://www.flaticon.com/' title='Flaticon' target="_blank">www.flaticon.com</a>
+                <a href='.'>Nouvelle grille</a>
+                <a href=''>Lien vers cette grille</a>
+                <a href='?.................................................................................'>Grille
+                    vierge</a>
+                <a href='' id='fixGridLink'>Figer la grille enregistrée</a>
             </div>
         </footer>
     </body>
+
 </html>
