@@ -74,7 +74,7 @@
             <div id='insertRadioGroup' class='radioGroup btn-group flex-fill'>
                 <?php
         for($value=1; $value<=9; $value++) {
-            echo "                <input type='radio'class='btn-check' id='insertRadio$value' value='$value' name='insertRadioGroup' onclick='insert(this)' accesskey='$value'/><label for='insertRadio$value' class='btn btn-primary' title='Insérer un $value'>$value</label>\n";
+            echo "                <input type='radio'class='btn-check' id='insertRadio$value' value='$value' name='insertRadioGroup' onclick='insert(this)' accesskey='$value' disabled /><label for='insertRadio$value' class='btn btn-primary' title='Insérer un $value'>$value</label>\n";
         }
 ?>
             </div>

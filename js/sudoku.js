@@ -232,7 +232,6 @@ function enableRadio() {
                 valueToInsert = ""
         }
     }
-    insertRadios = insertRadios.filter(radio => !radio.disabled)
 }
 
 function highlight() {
