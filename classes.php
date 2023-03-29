@@ -85,49 +85,6 @@
                     array_unset_value($box->value, $neighbour->candidates);
             }
         }
-            
-        function generate_() {
-            // Init with a shuffle row
-            $values = array("1", "2", "3", "4", "5", "6", "7", "8", "9");
-            shuffle($values);
-            forEach($this->rows[0] as $columnId => $box) {
-                $box->value = $values[$columnId];
-                forEach($box->neighbourhood as $neighbour)
-                    array_unset_value($box->value, $neighbour->candidates);
-            }
-            // Fill grid
-            $this->solutionsGenerator(true)->current();
-            
-            // Remove clues while there is still a unique solution
-            shuffle($this->boxes);
-            $nbClues = count($this->boxes);
-            foreach($this->boxes as $testBox) {
-                $testBoxes = array($testBox);
-                if ($nbClues >= 30)
-                    $testBoxes[] = $this->rows[8-$testBox->rowId][8-$testBox->columnId];
-                if ($nbClues >= 61) {
-                    $testBoxes[] = $this->rows[8-$testBox->rowId][$testBox->columnId];
-                    $testBoxes[] = $this->rows[$testBox->rowId][8-$testBox->columnId];
-                }
-                $testBoxes = array_filter($testBoxes, "isKnown");
-                $erasedValues = array();
-                forEach($testBoxes as $testBox) {
-                    $erasedValues[] = $testBox->value;
-                    $testBox->value = UNKNOWN;
-                    forEach($testBox->neighbourhood as $neighbour)
-                        $neighbour->searchCandidates();
-                }
-                if ($this->isValid()) {
-                    $nbClues -= count($testBoxes);
-                } else {
-                    forEach($testBoxes as $i => $testBox) {
-                        $testBox->value = $erasedValues[$i];
-                        forEach($testBox->neighbourhood as $neighbour) array_unset_value($testBox->value, $neighbour->candidates);
-                    }
-                }
-            }
-            $validGrids[] = $this->toString();
-        }
 
         function generate() {
             // Init with a shuffle row

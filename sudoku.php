@@ -5,49 +5,60 @@
         <?php require_once("head.php") ?>
     </head>
 
-    <body>
+    <body class="text-center">
         <header>
-            <h1>Sudoku</h1>
+            <h1 class="display-4 mb-3">Sudoku</h1>
         </header>
-        <div class='toolBar'>
-            <div class='radioGroup'>
-                <input type='radio' id='inkPenRadio' name='tool' checked /><label for='inkPenRadio'
-                    title='Écrire un chiffre'><i class="ri-ball-pen-fill"></i></label>
-                <input type='radio' id='pencilRadio' name='tool' /><label for='pencilRadio' title='Prendre des notes'><i
-                        class="ri-pencil-fill"></i></label>
-                <input type='radio' id='eraserRadio' name='tool' '/><label for='eraserRadio'
-                    title='Effacer une case'><i class="ri-eraser-fill"></i></label>
+        <div class='d-flex justify-content-between mb-2'>
+            <div class='radioGroup btn-group'>
+                <input type='radio' id='inkPenRadio' class='btn-check' name='tool' checked />
+                <label for='inkPenRadio' class='btn btn-primary' title='Écrire un chiffre'>
+                    <i class="bi bi-pen-fill"></i>
+                </label>
+                <input type='radio' id='pencilRadio' class='btn-check' name='tool' />
+                <label for='pencilRadio' class='btn btn-primary' title='Prendre des notes'>
+                    <i class="bi bi-pencil-fill"></i>
+                </label>
+                <input type='radio' id='eraserRadio' class='btn-check' name='tool' '/>
+                <label for='eraserRadio' class='btn btn-primary' title='Effacer une case'>
+                    <i class="bi bi-eraser-fill"></i>
+                </label>
             </div>
-            <input id='highlighterCheckbox' type="checkbox" onclick='highlight()' /><label for='highlighterCheckbox'
-                title='Surligner les lignes, colonnes et régions contenant déjà le chiffre sélectionné'><i
-                    class="ri-mark-pen-fill"></i></label>
-            <button id="hintButton" type="button" onclick="showHint()" title="Afficher un indice" accesskey="H"
-                disabled=""><i class="ri-lightbulb-flash-fill"></i></button>
-            <button id='restartButton' type='button' class='warning' onclick='restart()' disabled title='Recommencer'><i
-                    class="ri-restart-fill"></i></button>
-            <button id='undoButton' type='button' onclick='undo()' disabled title='Annuler' accesskey='Z'><i
-                    class="ri-arrow-go-back-fill"></i></button>
-            <button id='saveButton' type='button' onclick='save()' disabled title='Sauvegarder' accesskey='S'><i
-                    class="ri-save-3-fill"></i></button>
+            <input id='highlighterCheckbox' type="checkbox" class='btn-check' onclick='highlight()' />
+            <label for='highlighterCheckbox' class='btn btn-primary' title='Surligner les lignes, colonnes et régions contenant déjà le chiffre sélectionné'>
+                <i class="bi bi-magic"></i>
+            </label>
+            <button id="hintButton" type="button" class='btn btn-primary' onclick="showHint()" title="Montrer une case avec une seule possibilité" accesskey="H" disabled="">
+                <i class="bi bi-lightbulb-fill"></i>
+            </button>
+            <button id='restartButton' type='button' class='btn btn-primary' onclick='restart()' disabled title='Recommencer'>
+                <i class="bi bi-x-circle-fill"></i></i>
+            </button>
+            <button id='undoButton' type='button' class='btn btn-primary' onclick='undo()' disabled title='Annuler' accesskey='Z'>
+                <i class="bi bi-arrow-counterclockwise"></i>
+            </button>
+            <button id='saveButton' type='button' class='btn btn-primary' onclick='save()' disabled title='Sauvegarder' accesskey='S'>
+                <i class="bi bi-save-fill"></i>
+            </button>
         </div>
-        <form id='sudokuForm'>
-            <table id='grid' class='grid'>
+        <form id='sudokuForm' class='needs-validation' novalidate>
+            <table id='grid' class='table mb-2'>
                 <tbody>
                     <?php
         for ($row = 0; $row < 81; $row += 9) {
 ?>
-                    <tr>
+                    <tr class="input-group d-inline-block">
                         <?php
         for ($column = 0; $column < 9; $column++) {
             $value = $currentGrid[$row+$column];
             if ($value == UNKNOWN) {
 ?>
-                        <td><input type='number' min='1' max='9' step='1' value=''
+                        <td><input type='number' min='1' max='9' step='1' value='' class='form-control'
                                 title='Valeurs possibles [Clic-droit]' /></td>
                         <?php
                 } else {
 ?>
-                        <td><input type='number' min='1' max='9' step='1' value='<?=$value?>' disabled /></td>
+                        <td><input type='number' min='1' max='9' step='1' value='<?=$value?>' class='form-control' disabled /></td>
                         <?php
             }                                                            
         }
@@ -59,16 +70,16 @@
                 </tbody>
             </table>
         </form>
-        <div class='toolBar'>
-            <div id='insertRadioGroup' class='radioGroup'>
+        <div class='d-flex mb-2'>
+            <div id='insertRadioGroup' class='radioGroup btn-group flex-fill'>
                 <?php
         for($value=1; $value<=9; $value++) {
-            echo "                <input type='radio' id='insertRadio$value' value='$value' name='insertRadioGroup' onclick='insert(this)' accesskey='$value'/><label for='insertRadio$value' title='Insérer un $value'>$value</label>\n";
+            echo "                <input type='radio'class='btn-check' id='insertRadio$value' value='$value' name='insertRadioGroup' onclick='insert(this)' accesskey='$value'/><label for='insertRadio$value' class='btn btn-primary' title='Insérer un $value'>$value</label>\n";
         }
 ?>
             </div>
         </div>
-        <div>
+        <div class='mb-3'>
             <?php
     if (isset($warning))
         echo("            <strong>⚠️ $warning ⚠️</strong><br/>\n");
@@ -76,14 +87,14 @@
         echo("            Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.\n")
 ?>
         </div>
-        <ul id='contextMenu' class='context-menu'></ul>
+        <ul id='contextMenu' class='context-menu modal-content shadow list-group w-auto position-absolute'></ul>
         <footer>
-            <div id='links'>
-                <a href='.'>Nouvelle grille</a>
-                <a href=''>Lien vers cette grille</a>
-                <a href='?.................................................................................'>Grille
+            <div id='links' class='list-group mb-2'>
+                <a href='.' class='list-group-item list-group-item-action'>Nouvelle grille</a>
+                <a href='' class='list-group-item list-group-item-action'>Lien vers cette grille</a>
+                <a href='?.................................................................................' class='list-group-item list-group-item-action'>Grille
                     vierge</a>
-                <a href='' id='fixGridLink'>Figer la grille enregistrée</a>
+                <a href='' id='fixGridLink' class='list-group-item list-group-item-action'>Figer la grille enregistrée</a>
             </div>
         </footer>
     </body>

@@ -6,7 +6,6 @@ let boxes = []
 let rows = Array.from(Array(9), x => [])
 let columns = Array.from(Array(9), x => [])
 let regions = Array.from(Array(9), x => [])
-let suggestionTimer = null
 let valueToInsert = ""
 let history = []
 let accessKeyModifiers = "AccessKey+"
@@ -53,6 +52,9 @@ window.onload = function() {
         rowId++
     }
 
+    if (localStorage["highlighterCheckbox.checked"]) {
+        highlighterCheckbox.checked = true
+    }
     loadSavedGame()
 
     boxes.forEach(box => {
@@ -169,6 +171,7 @@ function refreshBox(box) {
 function checkBox(box) {
     box.neighbourhood.concat([box]).forEach(neighbour => {
         neighbour.setCustomValidity("")
+        neighbour.classList.remove("is-invalid")
         searchCandidatesOf(neighbour)
         if (neighbour.candidates.size == 0) {
             neighbour.setCustomValidity("Aucun chiffre possible !")
@@ -190,14 +193,18 @@ function checkBox(box) {
                 if (box != neighbour && box.value == neighbour.value) {
                     for (neighbour of[box, neighbour]) {
                         neighbour.setCustomValidity(`Il y a un autre ${box.value} dans cette ${area.name}.`)
+                        neighbour.classList.add("is-invalid")
                     }
                 }
     }
 
     if (box.form.checkValidity()) { // Correct grid
         if (boxes.filter(box => box.value == "").length == 0) {
-            setTimeout(() => alert(`Bravo ! Vous avez résolu la grille.`), 500)
             saveButton.disabled = true
+            setTimeout(() => {
+                if (confirm(`Bravo ! Vous avez résolu la grille. En voulez-vous une autre ?`))
+                    location = "."
+            }, 400)
         }
     } else { // Errors on grid
         box.form.reportValidity()
@@ -228,18 +235,20 @@ function highlight() {
     easyBoxes = []
     boxes.forEach(box => {
         if (valueToInsert && box.value == valueToInsert) {
-            box.classList.add("same-value")
+            box.parentElement.classList.add("table-primary")
             box.tabIndex = -1
         } else {
-            box.classList.remove("same-value")
-            if (valueToInsert && highlighterCheckbox.checked && !box.candidates.has(valueToInsert)) {
-                box.classList.add("forbidden")
-                box.tabIndex = -1
-            } else {
-                box.classList.remove("forbidden")
-                box.tabIndex = 0
-            }
+            box.parentElement.classList.remove("table-primary")
+            box.tabIndex = 0
         }
+        if (valueToInsert && highlighterCheckbox.checked && !box.candidates.has(valueToInsert)) {
+            box.parentElement.classList.add("table-active")
+            box.tabIndex = -1
+        } else {
+            box.parentElement.classList.remove("table-active")
+            box.tabIndex = 0
+        }
+        
         if (!box.value && box.candidates.size == 1) {
             hintButton.disabled = false
             easyBoxes.push(box)
@@ -307,6 +316,7 @@ function save() {
 }
 
 window.onbeforeunload = function(event) {
+    localStorage["highlighterCheckbox.checked"] = highlighterCheckbox.checked
     if (!saveButton.disabled) {
         event.preventDefault()
         event.returnValue = "La partie n'est pas sauvegardée. Quitter quand même ?"
@@ -319,10 +329,6 @@ function showHint() {
         let box = easyBoxes.pop()
         box.placeholder = "💡"
         box.focus()
-            /*value = Array.from(box.candidates)[0]
-            radio = document.getElementById("insertRadio" + value)
-            radio.checked = true
-            insert(radio)*/
         return box
     }
     hintButton.disabled = true
@@ -336,12 +342,17 @@ function oncontextmenu(event) {
         Array.from(box.candidates).sort().forEach(candidate => {
             li = document.createElement("li")
             li.innerText = candidate
-            li.onclick = function(event) {
+            li.classList = "list-group-item list-group-item-action"
+            li.onclick = function(e) {
                 contextMenu.style.display = "none"
-                valueToInsert = event.target.innerText
+                valueToInsert = e.target.innerText
                 grid.style.cursor = "copy"
                 document.getElementById("insertRadio" + valueToInsert).checked = true
                 box.onclick()
+            }
+            li.oncontextmenu = function(e) {
+				e.preventDefault()
+				li.onclick(e)
             }
             contextMenu.appendChild(li)
         })

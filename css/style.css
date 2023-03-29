@@ -1,0 +1,135 @@
+body {
+    width: min-content;
+    margin: auto;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+}
+
+input[type="number"]::-webkit-calendar-picker-indicator {
+    display: none !important;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+table input {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    font-size: 1.3rem !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: center;
+    -moz-appearance: textfield !important;
+    border-radius: 0 !important;
+}
+
+table td.table-primary input,
+table td.table-active input,
+table input:not([disabled]) {
+    background: transparent !important;
+}
+
+tr:nth-child(3n+1) td input {
+    border-top-width: 3px !important;
+}
+
+tr:last-child td input {
+    border-bottom-width: 3px !important;
+}
+
+td:nth-child(3n+1) input {
+    border-left-width: 3px !important;
+}
+
+td:last-child input {
+    border-right-width: 3px !important;
+}
+
+tr:first-child td:first-child {
+    border-top-left-radius: .7rem !important;
+}
+
+tr:first-child td:first-child input {
+    border-top-left-radius: .5rem !important;
+}
+
+tr:first-child td:last-child {
+    border-top-right-radius: .7rem !important;
+}
+
+tr:first-child td:last-child input {
+    border-top-right-radius: .5rem !important;
+}
+
+tr:last-child td:first-child {
+    border-bottom-left-radius: .7rem !important;
+}
+
+tr:last-child td:first-child input {
+    border-bottom-left-radius: .5rem !important;
+}
+
+tr:last-child td:last-child {
+    border-bottom-right-radius: .7rem !important;
+}
+
+tr:last-child td:last-child input {
+    border-bottom-right-radius: .5rem !important;
+}
+
+td {
+    padding: 0 !important;
+    margin: 0 !important;
+    transition: background-color .4s, box-shadow .4s !important;
+    border: 0 !important;
+}
+
+.context-menu li {
+    cursor: default;
+}
+
+.table-active {
+    cursor: not-allowed !important;
+}
+
+table {
+    cursor: text;
+}
+
+button,
+label {
+    cursor: pointer;
+}
+
+button:disabled,
+:disabled+label {
+    cursor: not-allowed !important;
+}
+
+table input:enabled {
+    cursor: inherit;
+}
+
+.modal-content {
+    z-index: 1000;
+}
+
+.bi::before {
+  vertical-align: 0;
+}
+
+.pencil {
+    color: var(--bs-secondary-color) !important;
+}
+
+@media (prefers-color-scheme:dark) {
+    .pencil {
+        color: #5a5a5a !important;
+    }
+}

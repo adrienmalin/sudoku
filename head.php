@@ -1,11 +1,11 @@
 <meta charset="utf-8" />
 <title>Sudoku</title>
-<meta name="viewport" content="width=device-width" />
-<link rel="stylesheet" type="text/css" href="css/v4.css" title="Par défaut" />
-<link href="css/v1.css" rel="alternate stylesheet" type="text/css" title="v1">
-<link href="css/v2.css" rel="alternate stylesheet" type="text/css" title="v2">
-<link href="css/v3.css" rel="alternate stylesheet" type="text/css" title="v3">
-<link rel="stylesheet" type="text/css" href="fonts/remixicon.css">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="css/bootstrap-dark.min.css" rel="stylesheet" type="text/css" title="Automatique" />
+<link href="css/bootstrap.min.css" rel="alternate stylesheet" type="text/css" title="Clair">
+<link href="css/bootstrap-night.min.css" rel="alternate stylesheet" type="text/css" title="Sombre">
+<link rel="stylesheet" type="text/css" href="css/bootstrap-icons.css" />
+<link rel="stylesheet" type="text/css" href="css/style.css" />
 <link rel="apple-touch-icon" href="thumbnail.php?size=57" sizes="57x57">
 <link rel="apple-touch-icon" href="thumbnail.php?size=114" sizes="114x114">
 <link rel="apple-touch-icon" href="thumbnail.php?size=72" sizes="72x72">
@@ -32,4 +32,5 @@
     content="Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9." />
 <meta property="og:locale" content="fr_FR" />
 <meta property="og:site_name" content="<?=$_SERVER["HTTP_HOST"]?>" />
-<script src='sudoku.js'></script>
+<script src='js/sudoku.js'></script>
+<script src="js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
