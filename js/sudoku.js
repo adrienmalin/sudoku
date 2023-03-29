@@ -10,6 +10,7 @@ let valueToInsert = ""
 let history = []
 let accessKeyModifiers = "AccessKey+"
 let easyBoxes = []
+let insertRadios = []
 
 function shuffle(iterable) {
     array = Array.from(iterable)
@@ -59,10 +60,13 @@ window.onload = function() {
 
     boxes.forEach(box => {
         box.neighbourhood = new Set(rows[box.rowId].concat(columns[box.columnId]).concat(regions[box.regionId]))
+        box.andNeighbourhood = Array.from(box.neighbourhood)
         box.neighbourhood.delete(box)
         box.neighbourhood = Array.from(box.neighbourhood)
         searchCandidatesOf(box)
     })
+
+    insertRadios = Array.from(insertRadioGroup.getElementsByTagName("input"))
 
     for (label of document.getElementsByTagName("label")) {
         label.control.label = label
@@ -169,7 +173,7 @@ function refreshBox(box) {
 }
 
 function checkBox(box) {
-    box.neighbourhood.concat([box]).forEach(neighbour => {
+    box.andNeighbourhood.forEach(neighbour => {
         neighbour.setCustomValidity("")
         neighbour.classList.remove("is-invalid")
         searchCandidatesOf(neighbour)
@@ -217,7 +221,7 @@ function refreshUI() {
 }
 
 function enableRadio() {
-    for (radio of insertRadioGroup.getElementsByTagName("input")) {
+    for (radio of insertRadios) {
         if (boxes.filter(box => box.value == "").some(box => box.candidates.has(radio.value))) {
             radio.disabled = false
             radio.label.title = `Insérer un ${radio.value} [${radio.accessKeyLabel||(accessKeyModifiers+radio.accessKey)}]`
@@ -228,6 +232,7 @@ function enableRadio() {
                 valueToInsert = ""
         }
     }
+    insertRadios = insertRadios.filter(radio => !radio.disabled)
 }
 
 function highlight() {
@@ -241,6 +246,7 @@ function highlight() {
             box.parentElement.classList.remove("table-primary")
             box.tabIndex = 0
         }
+        
         if (valueToInsert && highlighterCheckbox.checked && !box.candidates.has(valueToInsert)) {
             box.parentElement.classList.add("table-active")
             box.tabIndex = -1
@@ -261,7 +267,7 @@ function onblur() {
     if (this.classList.contains("pencil")) {
         this.placeholder = this.value
         this.value = ""
-            //this.type = "number"
+        //this.type = "number"
         this.classList.remove("pencil")
     }
 }
