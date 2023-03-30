@@ -90,7 +90,7 @@ window.onload = function() {
 }
 
 function loadSavedGame() {
-    const savedGame = localStorage[location.search]
+    const savedGame = location.hash.slice(1)
     if (savedGame) {
         boxes.forEach((box, i) => {
             if (!box.disabled && savedGame[i] != UNKNOWN) {
@@ -98,6 +98,7 @@ function loadSavedGame() {
                 box.previousValue = savedGame[i]
             }
         })
+        restartButton.disabled = false
         fixGridLink.href = "?" + savedGame
     }
 }
@@ -335,6 +336,7 @@ function restart() {
         let history = []
         undoButton.disabled = true
         restartButton.disabled = true
+        location.hash = ""
         boxes.forEach(searchCandidatesOf)
         refreshUI()
     }
@@ -342,7 +344,7 @@ function restart() {
 
 function save() {
     let saveGame = boxes.map(box => box.value || UNKNOWN).join("")
-    localStorage[location.search] = saveGame
+    location.hash = saveGame
     fixGridLink.href = "?" + saveGame
     saveButton.disabled = true
     alert("Partie sauvegardée")
