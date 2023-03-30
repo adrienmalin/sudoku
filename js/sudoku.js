@@ -103,6 +103,12 @@ function loadSavedGame() {
     }
 }
 
+onhashchange = function(event) {
+    loadSavedGame()
+    boxes.forEach(box => searchCandidatesOf(box))
+    refreshUI()
+}
+
 function searchCandidatesOf(box) {
     box.candidates = new Set(VALUES)
     box.neighbourhood.forEach(neighbour => box.candidates.delete(neighbour.value))
