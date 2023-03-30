@@ -35,7 +35,7 @@
                 </label>
             </div>
             <button id="hintButton" type="button" class='btn btn-info' onclick="showHint()" title="Montrer une case avec une seule possibilité" accesskey="H" disabled="">
-                <i class="bi bi-lightbulb-fill"></i>
+                <i class="bi bi-lightbulb"></i>
             </button>
             <button id='restartButton' type='button' class='btn btn-primary' onclick='restart()' disabled title='Recommencer'>
                 <i class="bi bi-skip-start-fill"></i>

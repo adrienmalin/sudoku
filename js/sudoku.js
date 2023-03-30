@@ -206,6 +206,7 @@ function checkBox(box) {
 
     if (box.form.checkValidity()) { // Correct grid
         if (boxes.filter(box => box.value == "").length == 0) {
+            grid.classList.add("table-success")
             saveButton.disabled = true
             setTimeout(() => {
                 if (confirm(`Bravo ! Vous avez résolu la grille. En voulez-vous une autre ?`))
