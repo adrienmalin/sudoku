@@ -26,22 +26,22 @@
             </div>
             <div class='btn-group'>
                 <input type='checkbox' id='sightCheckbox' class='btn-check' onclick='highlighterCheckbox.checked = false; refreshUI()' />
-                <label for='sightCheckbox' class='btn btn-primary' title='Surligner la ligne, la colonne et la région de la case survolée'>
-                    <i class="bi bi-plus-circle-fill"></i>
+                <label for='sightCheckbox' class='btn btn-info' title='Surligner la ligne, la colonne et la région de la case survolée'>
+                    <i class="bi bi-plus-square-fill"></i>
                 </label>
                 <input type='checkbox' id='highlighterCheckbox' class='btn-check' onclick='sightCheckbox.checked = false; refreshUI()' />
-                <label for='highlighterCheckbox' class='btn btn-primary' title='Surligner les lignes, colonnes et régions contenant déjà le chiffre sélectionné'>
-                    <i class="bi bi-magic"></i>
+                <label for='highlighterCheckbox' class='btn btn-info' title='Surligner les lignes, colonnes et régions contenant déjà le chiffre sélectionné'>
+                    <i class="bi bi-ui-checks-grid"></i>
                 </label>
             </div>
-            <button id="hintButton" type="button" class='btn btn-primary' onclick="showHint()" title="Montrer une case avec une seule possibilité" accesskey="H" disabled="">
+            <button id="hintButton" type="button" class='btn btn-info' onclick="showHint()" title="Montrer une case avec une seule possibilité" accesskey="H" disabled="">
                 <i class="bi bi-lightbulb-fill"></i>
             </button>
             <button id='restartButton' type='button' class='btn btn-primary' onclick='restart()' disabled title='Recommencer'>
-                <i class="bi bi-x-circle-fill"></i></i>
+                <i class="bi bi-skip-start-fill"></i>
             </button>
             <button id='undoButton' type='button' class='btn btn-primary' onclick='undo()' disabled title='Annuler' accesskey='Z'>
-                <i class="bi bi-arrow-counterclockwise"></i>
+                <i class="bi bi-arrow-left"></i>
             </button>
             <button id='saveButton' type='button' class='btn btn-primary' onclick='save()' disabled title='Sauvegarder' accesskey='S'>
                 <i class="bi bi-save-fill"></i>
