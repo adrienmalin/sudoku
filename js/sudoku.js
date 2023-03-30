@@ -231,8 +231,11 @@ function enableRadio() {
         } else {
             radio.disabled = true
             radio.label.title = `Tous les ${radio.value} sont posés.`
-            if (valueToInsert == radio.value)
+            if (valueToInsert == radio.value) {
+                insertRadio0.checked = true
                 valueToInsert = ""
+                grid.style.cursor = "text"
+            }
         }
     }
 }
