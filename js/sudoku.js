@@ -67,7 +67,8 @@ window.onload = function() {
         searchCandidatesOf(box)
     })
 
-    insertRadios = Array.from(insertRadioGroup.getElementsByTagName("input")).slice(1)
+    insertRadios = Array.from(insertRadioGroup.getElementsByTagName("input"))
+    insertRadios.pop()
 
     for (label of document.getElementsByTagName("label")) {
         label.control.label = label
