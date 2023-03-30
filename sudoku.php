@@ -10,24 +10,30 @@
             <h1 class="display-4 mb-3">Sudoku</h1>
         </header>
         <div class='d-flex justify-content-between mb-2'>
-            <div class='radioGroup btn-group'>
-                <input type='radio' id='inkPenRadio' class='btn-check' name='tool' checked />
+            <div class='btn-group'>
+                <input type='radio' id='inkPenRadio' class='btn-check' name='penRadioGroup' checked />
                 <label for='inkPenRadio' class='btn btn-primary' title='Écrire un chiffre'>
                     <i class="bi bi-pen-fill"></i>
                 </label>
-                <input type='radio' id='pencilRadio' class='btn-check' name='tool' />
+                <input type='radio' id='pencilRadio' class='btn-check' name='penRadioGroup' />
                 <label for='pencilRadio' class='btn btn-primary' title='Prendre des notes'>
                     <i class="bi bi-pencil-fill"></i>
                 </label>
-                <input type='radio' id='eraserRadio' class='btn-check' name='tool' '/>
+                <input type='radio' id='eraserRadio' class='btn-check' name='penRadioGroup' />
                 <label for='eraserRadio' class='btn btn-primary' title='Effacer une case'>
                     <i class="bi bi-eraser-fill"></i>
                 </label>
             </div>
-            <input id='highlighterCheckbox' type="checkbox" class='btn-check' onclick='highlight()' />
-            <label for='highlighterCheckbox' class='btn btn-primary' title='Surligner les lignes, colonnes et régions contenant déjà le chiffre sélectionné'>
-                <i class="bi bi-magic"></i>
-            </label>
+            <div class='btn-group'>
+                <input type='checkbox' id='sightCheckbox' class='btn-check' onclick='highlighterCheckbox.checked = false; refreshUI()' />
+                <label for='sightCheckbox' class='btn btn-primary' title='Surligner la ligne, la colonne et la région de la case survolée'>
+                    <i class="bi bi-plus-circle-fill"></i>
+                </label>
+                <input type='checkbox' id='highlighterCheckbox' class='btn-check' onclick='sightCheckbox.checked = false; refreshUI()' />
+                <label for='highlighterCheckbox' class='btn btn-primary' title='Surligner les lignes, colonnes et régions contenant déjà le chiffre sélectionné'>
+                    <i class="bi bi-magic"></i>
+                </label>
+            </div>
             <button id="hintButton" type="button" class='btn btn-primary' onclick="showHint()" title="Montrer une case avec une seule possibilité" accesskey="H" disabled="">
                 <i class="bi bi-lightbulb-fill"></i>
             </button>

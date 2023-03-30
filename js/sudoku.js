@@ -10,6 +10,7 @@ let valueToInsert = ""
 let history = []
 let accessKeyModifiers = "AccessKey+"
 let easyBoxes = []
+let insertRadios = []
 
 function shuffle(iterable) {
     array = Array.from(iterable)
@@ -36,6 +37,8 @@ window.onload = function() {
                 box.oninput = oninput
                 box.onblur = onblur
                 box.onclick = onclick
+                box.onmouseenter = onmouseenter
+                box.onmouseleave = onmouseleave
                 box.previousValue = ""
                 box.previousPlaceholder = ""
             }
@@ -52,17 +55,19 @@ window.onload = function() {
         rowId++
     }
 
-    if (localStorage["highlighterCheckbox.checked"]) {
-        highlighterCheckbox.checked = true
-    }
+    if (localStorage["sightCheckbox.checked"] == "true") sightCheckbox.checked = true
+    if (localStorage["highlighterCheckbox.checked"] == "true") highlighterCheckbox.checked = true
     loadSavedGame()
 
     boxes.forEach(box => {
         box.neighbourhood = new Set(rows[box.rowId].concat(columns[box.columnId]).concat(regions[box.regionId]))
+        box.andNeighbourhood = Array.from(box.neighbourhood)
         box.neighbourhood.delete(box)
         box.neighbourhood = Array.from(box.neighbourhood)
         searchCandidatesOf(box)
     })
+
+    insertRadios = Array.from(insertRadioGroup.getElementsByTagName("input"))
 
     for (label of document.getElementsByTagName("label")) {
         label.control.label = label
@@ -169,7 +174,7 @@ function refreshBox(box) {
 }
 
 function checkBox(box) {
-    box.neighbourhood.concat([box]).forEach(neighbour => {
+    box.andNeighbourhood.forEach(neighbour => {
         neighbour.setCustomValidity("")
         neighbour.classList.remove("is-invalid")
         searchCandidatesOf(neighbour)
@@ -217,7 +222,7 @@ function refreshUI() {
 }
 
 function enableRadio() {
-    for (radio of insertRadioGroup.getElementsByTagName("input")) {
+    for (radio of insertRadios) {
         if (boxes.filter(box => box.value == "").some(box => box.candidates.has(radio.value))) {
             radio.disabled = false
             radio.label.title = `Insérer un ${radio.value} [${radio.accessKeyLabel||(accessKeyModifiers+radio.accessKey)}]`
@@ -241,6 +246,7 @@ function highlight() {
             box.parentElement.classList.remove("table-primary")
             box.tabIndex = 0
         }
+        
         if (valueToInsert && highlighterCheckbox.checked && !box.candidates.has(valueToInsert)) {
             box.parentElement.classList.add("table-active")
             box.tabIndex = -1
@@ -261,8 +267,35 @@ function onblur() {
     if (this.classList.contains("pencil")) {
         this.placeholder = this.value
         this.value = ""
-            //this.type = "number"
+        //this.type = "number"
         this.classList.remove("pencil")
+    }
+}
+
+function onmouseenter(event) {
+    if (sightCheckbox.checked){
+        box = event.target
+        box.neighbourhood.concat([box]).forEach(neighbour => {
+            neighbour.parentElement.classList.add("table-active")
+        })
+
+        box.neighbourhood.forEach(neighbour => {
+            if (valueToInsert && neighbour.value == valueToInsert) {
+                for (neighbour of[box, neighbour]) {
+                    neighbour.parentElement.classList.add("table-danger")
+                }
+            }
+        })
+}
+}
+
+function onmouseleave(event) {
+    if (sightCheckbox.checked){
+        box = event.target
+        box.neighbourhood.concat([box]).forEach(neighbour => {
+            neighbour.parentElement.classList.remove("table-active")
+            neighbour.parentElement.classList.remove("table-danger")
+        })
     }
 }
 
@@ -316,6 +349,7 @@ function save() {
 }
 
 window.onbeforeunload = function(event) {
+    localStorage["sightCheckbox.checked"] = sightCheckbox.checked
     localStorage["highlighterCheckbox.checked"] = highlighterCheckbox.checked
     if (!saveButton.disabled) {
         event.preventDefault()

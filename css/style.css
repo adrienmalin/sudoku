@@ -95,6 +95,10 @@ td {
 }
 
 .table-active {
+    cursor: inherit !important;
+}
+
+.table-danger {
     cursor: not-allowed !important;
 }
 
@@ -104,6 +108,7 @@ table {
 
 button,
 label {
+    padding: .375rem .6rem !important;
     cursor: pointer;
 }
 
