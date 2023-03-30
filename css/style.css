@@ -125,10 +125,6 @@ table input:enabled {
     z-index: 1000;
 }
 
-.bi::before {
-  vertical-align: 0;
-}
-
 .pencil {
     color: var(--bs-secondary-color) !important;
 }

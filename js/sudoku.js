@@ -67,7 +67,7 @@ window.onload = function() {
         searchCandidatesOf(box)
     })
 
-    insertRadios = Array.from(insertRadioGroup.getElementsByTagName("input"))
+    insertRadios = Array.from(insertRadioGroup.getElementsByTagName("input")).slice(1)
 
     for (label of document.getElementsByTagName("label")) {
         label.control.label = label
@@ -300,12 +300,7 @@ function onmouseleave(event) {
 }
 
 function insert(radio) {
-    if (radio.value == valueToInsert) {
-        valueToInsert = ""
-        radio.checked = false
-    } else {
-        valueToInsert = radio.value
-    }
+    valueToInsert = radio.value
     grid.style.cursor = valueToInsert ? "copy" : "text"
     highlight()
 }
