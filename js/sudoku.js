@@ -80,14 +80,14 @@ window.onload = function() {
         else if (node.label) node.label.title += shortcut
     }
 
-    onhashchange()
+    loadSavedGame()
 
     if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register(`service-worker.php?location=${location.pathname}`)
     }
 }
 
-onhashchange = function(event) {
+function loadSavedGame() {
     const savedGame = location.hash.slice(1)
     if (savedGame.match(/[1-9.]{81}/)) {
         boxes.forEach((box, i) => {
@@ -101,6 +101,11 @@ onhashchange = function(event) {
     }
     boxes.forEach(searchCandidatesOf)
     refreshUI()
+}
+
+onhashchange = function(event) {
+    if (location.hash.slice(1)) loadSavedGame()
+    else restart()
 }
 
 function searchCandidatesOf(box) {
