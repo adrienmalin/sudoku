@@ -57,14 +57,12 @@ window.onload = function() {
 
     if (localStorage["sightCheckbox.checked"] == "true") sightCheckbox.checked = true
     if (localStorage["highlighterCheckbox.checked"] == "true") highlighterCheckbox.checked = true
-    loadSavedGame()
 
     boxes.forEach(box => {
         box.neighbourhood = new Set(rows[box.rowId].concat(columns[box.columnId]).concat(regions[box.regionId]))
         box.andNeighbourhood = Array.from(box.neighbourhood)
         box.neighbourhood.delete(box)
         box.neighbourhood = Array.from(box.neighbourhood)
-        searchCandidatesOf(box)
     })
 
     insertRadios = Array.from(insertRadioGroup.getElementsByTagName("input"))
@@ -82,16 +80,16 @@ window.onload = function() {
         else if (node.label) node.label.title += shortcut
     }
 
-    refreshUI()
+    onhashchange()
 
     if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register(`service-worker.php?location=${location.pathname}`)
     }
 }
 
-function loadSavedGame() {
+onhashchange = function(event) {
     const savedGame = location.hash.slice(1)
-    if (savedGame) {
+    if (savedGame.match(/[1-9.]{81}/)) {
         boxes.forEach((box, i) => {
             if (!box.disabled && savedGame[i] != UNKNOWN) {
                 box.value = savedGame[i]
@@ -101,11 +99,7 @@ function loadSavedGame() {
         restartButton.disabled = false
         fixGridLink.href = "?" + savedGame
     }
-}
-
-onhashchange = function(event) {
-    loadSavedGame()
-    boxes.forEach(box => searchCandidatesOf(box))
+    boxes.forEach(searchCandidatesOf)
     refreshUI()
 }
 
