@@ -105,6 +105,7 @@
                 <a href='?.................................................................................' class='list-group-item list-group-item-action'>Grille
                     vierge</a>
                 <a href='' id='fixGridLink' class='list-group-item list-group-item-action'>Figer la grille enregistrée</a>
+                <a href='https://git.malingrey.fr/adrien/Sudoku' target="_blank" class='list-group-item list-group-item-action'>Code source</a>
             </div>
         </footer>
     </body>
