@@ -87,8 +87,12 @@ tr:last-child td:last-child input {
 td {
     padding: 0 !important;
     margin: 0 !important;
-    transition: background-color .4s, box-shadow .4s !important;
     border: 0 !important;
+}
+
+td,
+table input {
+    transition: background-color .4s, box-shadow .4s !important;
 }
 
 .context-menu li {

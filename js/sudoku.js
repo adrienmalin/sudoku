@@ -56,7 +56,7 @@ window.onload = function() {
     }
 
     if (localStorage["sightCheckbox.checked"] == "true") sightCheckbox.checked = true
-    if (localStorage["highlighterCheckbox.checked"] == "true") highlighterCheckbox.checked = true
+    else if (localStorage["highlighterCheckbox.checked"] == "true") highlighterCheckbox.checked = true
 
     boxes.forEach(box => {
         box.neighbourhood = new Set(rows[box.rowId].concat(columns[box.columnId]).concat(regions[box.regionId]))
