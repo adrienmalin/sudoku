@@ -27,7 +27,7 @@
             <div class='btn-group'>
                 <input type='checkbox' id='sightCheckbox' class='btn-check' onclick='highlighterCheckbox.checked = false; refreshUI()' />
                 <label for='sightCheckbox' class='btn btn-info' title='Surligner la ligne, la colonne et la région de la case survolée'>
-                    <i class="ri-focus-3-fill"></i>
+                    <i class="ri-focus-3-line"></i>
                 </label>
                 <input type='checkbox' id='highlighterCheckbox' class='btn-check' onclick='sightCheckbox.checked = false; refreshUI()' />
                 <label for='highlighterCheckbox' class='btn btn-info' title='Surligner les lignes, colonnes et régions contenant déjà le chiffre sélectionné'>
