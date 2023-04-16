@@ -78,15 +78,15 @@
         </form>
         <div class='d-flex mb-2'>
             <div id='insertRadioGroup' class='radioGroup btn-group flex-fill'>
+                <input type='radio'class='btn-check' id='insertRadio0' value='' name='insertRadioGroup' onclick='insert(this)' accesskey='0' checked />
+                <label for='insertRadio0' class='btn btn-primary' title='Clavier'>
+                    <i class="ri-input-cursor-move"></i>
+                </label>
                 <?php
         for($value=1; $value<=9; $value++) {
             echo "                <input type='radio'class='btn-check' id='insertRadio$value' value='$value' name='insertRadioGroup' onclick='insert(this)' accesskey='$value' disabled /><label for='insertRadio$value' class='btn btn-primary' title='Insérer un $value'>$value</label>\n";
         }
 ?>
-                <input type='radio'class='btn-check' id='insertRadio0' value='' name='insertRadioGroup' onclick='insert(this)' accesskey='0' checked />
-                <label for='insertRadio0' class='btn btn-primary' title='Clavier'>
-                    <i class="ri-input-cursor-move"></i>
-                </label>
             </div>
         </div>
         <div class='mb-3'>

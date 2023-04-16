@@ -65,8 +65,7 @@ window.onload = function() {
         box.neighbourhood = Array.from(box.neighbourhood)
     })
 
-    insertRadios = Array.from(insertRadioGroup.getElementsByTagName("input"))
-    insertRadios.pop()
+    insertRadios = Array.from(insertRadioGroup.getElementsByTagName("input")).slice(1)
 
     for (label of document.getElementsByTagName("label")) {
         label.control.label = label
