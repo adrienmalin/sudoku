@@ -4,7 +4,7 @@
 <link href="css/bootstrap-dark.min.css" rel="stylesheet" type="text/css" title="Automatique" />
 <link href="css/bootstrap.min.css" rel="alternate stylesheet" type="text/css" title="Clair">
 <link href="css/bootstrap-night.min.css" rel="alternate stylesheet" type="text/css" title="Sombre">
-<link rel="stylesheet" type="text/css" href="css/bootstrap-icons.css" />
+<link rel="stylesheet" type="text/css" href="fonts/remixicon.css" />
 <link rel="stylesheet" type="text/css" href="css/style.css" />
 <link rel="apple-touch-icon" href="thumbnail.php?size=57" sizes="57x57">
 <link rel="apple-touch-icon" href="thumbnail.php?size=114" sizes="114x114">

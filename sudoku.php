@@ -13,38 +13,38 @@
             <div class='btn-group'>
                 <input type='radio' id='inkPenRadio' class='btn-check' name='penRadioGroup' checked />
                 <label for='inkPenRadio' class='btn btn-primary' title='Écrire un chiffre'>
-                    <i class="bi bi-pen-fill"></i>
+                    <i class="ri-ball-pen-fill"></i>
                 </label>
                 <input type='radio' id='pencilRadio' class='btn-check' name='penRadioGroup' />
                 <label for='pencilRadio' class='btn btn-primary' title='Prendre des notes'>
-                    <i class="bi bi-pencil-fill"></i>
+                    <i class="ri-pencil-fill"></i>
                 </label>
                 <input type='radio' id='eraserRadio' class='btn-check' name='penRadioGroup' />
                 <label for='eraserRadio' class='btn btn-primary' title='Effacer une case'>
-                    <i class="bi bi-eraser-fill"></i>
+                    <i class="ri-eraser-fill"></i>
                 </label>
             </div>
             <div class='btn-group'>
                 <input type='checkbox' id='sightCheckbox' class='btn-check' onclick='highlighterCheckbox.checked = false; refreshUI()' />
                 <label for='sightCheckbox' class='btn btn-info' title='Surligner la ligne, la colonne et la région de la case survolée'>
-                    <i class="bi bi-plus-square-fill"></i>
+                    <i class="ri-focus-3-fill"></i>
                 </label>
                 <input type='checkbox' id='highlighterCheckbox' class='btn-check' onclick='sightCheckbox.checked = false; refreshUI()' />
                 <label for='highlighterCheckbox' class='btn btn-info' title='Surligner les lignes, colonnes et régions contenant déjà le chiffre sélectionné'>
-                    <i class="bi bi-ui-checks-grid"></i>
+                    <i class="ri-mark-pen-fill"></i>
                 </label>
             </div>
             <button id="hintButton" type="button" class='btn btn-info' onclick="showHint()" title="Montrer une case avec une seule possibilité" accesskey="H" disabled="">
-                <i class="bi bi-lightbulb"></i>
+                <i class="ri-lightbulb-line"></i>
             </button>
             <button id='restartButton' type='button' class='btn btn-primary' onclick='restart()' disabled title='Recommencer'>
-                <i class="bi bi-skip-start-fill"></i>
+                <i class="ri-restart-line"></i>
             </button>
             <button id='undoButton' type='button' class='btn btn-primary' onclick='undo()' disabled title='Annuler' accesskey='Z'>
-                <i class="bi bi-arrow-left"></i>
+                <i class="ri-arrow-go-back-fill"></i>
             </button>
             <button id='saveButton' type='button' class='btn btn-primary' onclick='save()' disabled title='Sauvegarder' accesskey='S'>
-                <i class="bi bi-save-fill"></i>
+                <i class="ri-save-2-fill"></i>
             </button>
         </div>
         <form id='sudokuForm' class='needs-validation' novalidate>
