@@ -85,7 +85,7 @@
 ?>
                 <input type='radio'class='btn-check' id='insertRadio0' value='' name='insertRadioGroup' onclick='insert(this)' accesskey='0' checked />
                 <label for='insertRadio0' class='btn btn-primary' title='Clavier'>
-                    <i class="bi bi-cursor-text"></i>
+                    <i class="ri-input-cursor-move"></i>
                 </label>
             </div>
         </div>
