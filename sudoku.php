@@ -53,7 +53,7 @@
                     <?php
         for ($row = 0; $row < 81; $row += 9) {
 ?>
-                    <tr class="input-group d-inline-block">
+                    <tr class="input-group d-inline-block w-auto">
                         <?php
         for ($column = 0; $column < 9; $column++) {
             $value = $currentGrid[$row+$column];
