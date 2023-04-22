@@ -1,9 +1,10 @@
 <meta charset="utf-8" />
 <title>Sudoku</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="css/bootstrap-dark.min.css" rel="stylesheet" type="text/css" title="Automatique" />
-<link href="css/bootstrap.min.css" rel="alternate stylesheet" type="text/css" title="Clair">
-<link href="css/bootstrap-night.min.css" rel="alternate stylesheet" type="text/css" title="Sombre">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/css/bootstrap-dark.min.css" rel="stylesheet" type="text/css" title="Automatique" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="alternate stylesheet" type="text/css" title="Clair" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/css/bootstrap-night.min.css" rel="alternate stylesheet" type="text/css" title="Sombre" />
 <link rel="stylesheet" type="text/css" href="fonts/remixicon.css" />
 <link rel="stylesheet" type="text/css" href="css/style.css" />
 <link rel="apple-touch-icon" href="thumbnail.php?size=57" sizes="57x57">
