@@ -7,26 +7,26 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/css/bootstrap-night.min.css" rel="alternate stylesheet" type="text/css" title="Sombre" />
 <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="css/style.css" />
-<link rel="apple-touch-icon" href="thumbnail.php?size=57" sizes="57x57">
-<link rel="apple-touch-icon" href="thumbnail.php?size=114" sizes="114x114">
-<link rel="apple-touch-icon" href="thumbnail.php?size=72" sizes="72x72">
-<link rel="apple-touch-icon" href="thumbnail.php?size=144" sizes="144x144">
-<link rel="apple-touch-icon" href="thumbnail.php?size=60" sizes="60x60">
-<link rel="apple-touch-icon" href="thumbnail.php?size=120" sizes="120x120">
-<link rel="apple-touch-icon" href="thumbnail.php?size=76" sizes="76x76">
-<link rel="apple-touch-icon" href="thumbnail.php?size=152" sizes="152x152">
-<link rel="icon" type="image/png" href="thumbnail.php?size=196" sizes="196x196">
-<link rel="icon" type="image/png" href="thumbnail.php?size=160" sizes="160x160">
-<link rel="icon" type="image/png" href="thumbnail.php?size=96" sizes="96x96">
-<link rel="icon" type="image/png" href="thumbnail.php?size=16" sizes="16x16">
-<link rel="icon" type="image/png" href="thumbnail.php?size=32" sizes="32x32">
-<link rel="manifest" href="manifest.php">
+<link rel="apple-touch-icon" href="thumbnail.php?size=57&grid=<?=$currentGrid?>" sizes="57x57">
+<link rel="apple-touch-icon" href="thumbnail.php?size=114&grid=<?=$currentGrid?>" sizes="114x114">
+<link rel="apple-touch-icon" href="thumbnail.php?size=72&grid=<?=$currentGrid?>" sizes="72x72">
+<link rel="apple-touch-icon" href="thumbnail.php?size=144&grid=<?=$currentGrid?>" sizes="144x144">
+<link rel="apple-touch-icon" href="thumbnail.php?size=60&grid=<?=$currentGrid?>" sizes="60x60">
+<link rel="apple-touch-icon" href="thumbnail.php?size=120&grid=<?=$currentGrid?>" sizes="120x120">
+<link rel="apple-touch-icon" href="thumbnail.php?size=76&grid=<?=$currentGrid?>" sizes="76x76">
+<link rel="apple-touch-icon" href="thumbnail.php?size=152&grid=<?=$currentGrid?>" sizes="152x152">
+<link rel="icon" type="image/png" href="thumbnail.php?size=196&grid=<?=$currentGrid?>" sizes="196x196">
+<link rel="icon" type="image/png" href="thumbnail.php?size=160&grid=<?=$currentGrid?>" sizes="160x160">
+<link rel="icon" type="image/png" href="thumbnail.php?size=96&grid=<?=$currentGrid?>" sizes="96x96">
+<link rel="icon" type="image/png" href="thumbnail.php?size=16&grid=<?=$currentGrid?>" sizes="16x16">
+<link rel="icon" type="image/png" href="thumbnail.php?size=32&grid=<?=$currentGrid?>" sizes="32x32">
+<link rel="manifest" href="manifest.php?grid=<?=$currentGrid?>">
 <meta property="og:title" content="Sudoku" />
 <meta property="og:type" content="website" />
 <meta property="og:url"
     content="<?=$_SERVER["REQUEST_SCHEME"]."://".$_SERVER["HTTP_HOST"].$_SERVER["DOCUMENT_URI"]?>" />
 <meta property="og:image"
-    content="<?=$_SERVER["REQUEST_SCHEME"]."://".$_SERVER["HTTP_HOST"].dirname($_SERVER["DOCUMENT_URI"])?>/thumbnail.php?size=200" />
+    content="<?=$_SERVER["REQUEST_SCHEME"]."://".$_SERVER["HTTP_HOST"].dirname($_SERVER["DOCUMENT_URI"])?>/thumbnail.php?size=200&grid=<?=$currentGrid?>" />
 <meta property="og:image:width" content="200" />
 <meta property="og:image:height" content="200" />
 <meta property="og:description"
