@@ -77,27 +77,27 @@
             "description": "Grille de sudoku vierge",
             "url": ".................................................................................",
             "icons": [{
-                    "src": "thumbnail.php?size=48&grid=<?=$currentGrid?>",
+                    "src": "thumbnail.php?size=48&grid=.................................................................................",
                     "sizes": "48x48",
                     "type": "image/png"
                 }, {
-                    "src": "thumbnail.php?size=72&grid=<?=$currentGrid?>",
+                    "src": "thumbnail.php?size=72&grid=.................................................................................",
                     "sizes": "72x72",
                     "type": "image/png"
                 }, {
-                    "src": "thumbnail.php?size=96&grid=<?=$currentGrid?>",
+                    "src": "thumbnail.php?size=96&grid=.................................................................................",
                     "sizes": "96x96",
                     "type": "image/png"
                 }, {
-                    "src": "thumbnail.php?size=144&grid=<?=$currentGrid?>",
+                    "src": "thumbnail.php?size=144&grid=.................................................................................",
                     "sizes": "144x144",
                     "type": "image/png"
                 }, {
-                    "src": "thumbnail.php?size=168&grid=<?=$currentGrid?>",
+                    "src": "thumbnail.php?size=168&grid=.................................................................................",
                     "sizes": "168x168",
                     "type": "image/png"
                 }, {
-                    "src": "thumbnail.php?size=192&grid=<?=$currentGrid?>",
+                    "src": "thumbnail.php?size=192&grid=.................................................................................",
                     "sizes": "192x192",
                     "type": "image/png"
             }]
@@ -108,27 +108,27 @@
             "description": "Nouvelle grille de sudoku",
             "url": ".",
             "icons": [{
-                    "src": "thumbnail.php?size=48&grid=<?=$currentGrid?>",
+                    "src": "thumbnail.php?size=48&grid=.528.3....4.9.1...39.562......73.129...1.64.7...42.3656.13.5...28.6.4...4.5287...",
                     "sizes": "48x48",
                     "type": "image/png"
                 }, {
-                    "src": "thumbnail.php?size=72&grid=<?=$currentGrid?>",
+                    "src": "thumbnail.php?size=72&grid=.528.3....4.9.1...39.562......73.129...1.64.7...42.3656.13.5...28.6.4...4.5287...",
                     "sizes": "72x72",
                     "type": "image/png"
                 }, {
-                    "src": "thumbnail.php?size=96&grid=<?=$currentGrid?>",
+                    "src": "thumbnail.php?size=96&grid=.528.3....4.9.1...39.562......73.129...1.64.7...42.3656.13.5...28.6.4...4.5287...",
                     "sizes": "96x96",
                     "type": "image/png"
                 }, {
-                    "src": "thumbnail.php?size=144&grid=<?=$currentGrid?>",
+                    "src": "thumbnail.php?size=144&grid=.528.3....4.9.1...39.562......73.129...1.64.7...42.3656.13.5...28.6.4...4.5287...",
                     "sizes": "144x144",
                     "type": "image/png"
                 }, {
-                    "src": "thumbnail.php?size=168&grid=<?=$currentGrid?>",
+                    "src": "thumbnail.php?size=168&grid=.528.3....4.9.1...39.562......73.129...1.64.7...42.3656.13.5...28.6.4...4.5287...",
                     "sizes": "168x168",
                     "type": "image/png"
                 }, {
-                    "src": "thumbnail.php?size=192&grid=<?=$currentGrid?>",
+                    "src": "thumbnail.php?size=192&grid=.528.3....4.9.1...39.562......73.129...1.64.7...42.3656.13.5...28.6.4...4.5287...",
                     "sizes": "192x192",
                     "type": "image/png"
             }]
