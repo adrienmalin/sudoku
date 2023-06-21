@@ -113,8 +113,13 @@ table {
 
 button,
 label {
-    padding: .375rem .65rem !important;
+    /*! padding: .375rem .65rem !important; */
     cursor: pointer;
+}
+
+button i,
+label i {
+   margin: 0 -.15rem;
 }
 
 button:disabled,
