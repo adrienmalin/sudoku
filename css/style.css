@@ -119,7 +119,7 @@ label {
 
 button i,
 label i {
-   margin: 0 -.15rem;
+   margin: 0 -.125rem;
 }
 
 button:disabled,
