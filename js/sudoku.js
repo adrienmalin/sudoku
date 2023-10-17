@@ -310,9 +310,15 @@ function onmouseleave(event) {
 }
 
 function insert(radio) {
-    valueToInsert = radio.value
-    grid.style.cursor = valueToInsert ? "copy" : "text"
-    highlight()
+    if (radio.value && valueToInsert == radio.value) {
+        radio.blur()
+        insertRadio0.checked = true
+        insert(0)
+    } else {
+        valueToInsert = radio.value
+        grid.style.cursor = valueToInsert ? "copy" : "text"
+        highlight()
+    }
 }
 
 function undo() {
