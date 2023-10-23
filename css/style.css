@@ -141,6 +141,7 @@ table input:enabled {
 
 #colorPicker{
     width: 2.5rem;
+    height: auto;
 }
 
 @media (prefers-color-scheme:dark) {
