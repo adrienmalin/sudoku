@@ -3,6 +3,10 @@ body {
     margin: auto;
 }
 
+.btn {
+    padding: .275rem .625rem;   
+}
+
 input[type="number"]::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none !important;
@@ -139,9 +143,10 @@ table input:enabled {
     color: var(--bs-secondary-color) !important;
 }
 
-#colorPicker{
-    width: 2.5rem;
+#colorPickerInput{
+    width: 2.3rem;
     height: auto;
+    padding: .375rem;
 }
 
 @media (prefers-color-scheme:dark) {

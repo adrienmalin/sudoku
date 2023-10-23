@@ -11,7 +11,6 @@ let history = []
 let accessKeyModifiers = "AccessKey+"
 let easyBoxes = []
 let insertRadios = []
-let defautColor = ""
 
 function shuffle(iterable) {
     array = Array.from(iterable)
@@ -81,9 +80,6 @@ window.onload = function() {
     }
 
     loadSavedGame()
-
-    defautColor = getComputedStyle(grid).getPropertyValue("--bs-body-color")
-    colorPicker.value = defautColor
 
     if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register(`service-worker.php?location=${location.pathname}`)
@@ -176,8 +172,8 @@ function oninput() {
         this.previousPlaceholder = this.placeholder
         refreshBox(this)
     }
-    if (colorPicker.value && colorPicker.value != defautColor) {
-        this.style.setProperty("color", colorPicker.value)
+    if (penColor) {
+        this.style.setProperty("color", penColor)
     }
 }
 
@@ -326,6 +322,13 @@ function insert(radio) {
         grid.style.cursor = valueToInsert ? "copy" : "text"
         highlight()
     }
+}
+
+let penColor
+
+function changeColor() {
+    penColor = colorPickerInput.value
+    colorPickerLabel.style.color = colorPickerInput.value
 }
 
 function undo() {

@@ -24,7 +24,10 @@
                     <i class="ri-eraser-fill"></i>
                 </label>
             </div>
-            <input type="color" class="btn btn-primary form-control form-control-sm form-control-color" id="colorPicker" title="Changer la couleur"/>
+            <input type="color" class="btn-check" id="colorPickerInput" title="Changer la couleur" oninput="changeColor()"/>
+            <label id="colorPickerLabel" for="colorPickerInput" class="btn btn-primary" title="Changer de couleur">
+                <i class="ri-palette-fill"></i>
+            </label>
             <div class='btn-group'>
                 <input type='checkbox' id='sightCheckbox' class='btn-check' onclick='highlighterCheckbox.checked = false; refreshUI()' />
                 <label for='sightCheckbox' class='btn btn-info' title='Surligner la ligne, la colonne et la région de la case survolée'>
