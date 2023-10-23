@@ -80,6 +80,8 @@ window.onload = function() {
     }
 
     loadSavedGame()
+    
+    colorPicker.value = getComputedStyle(document.body).getPropertyValue("--bs-body-color")
 
     if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register(`service-worker.php?location=${location.pathname}`)
@@ -172,8 +174,8 @@ function oninput() {
         this.previousPlaceholder = this.placeholder
         refreshBox(this)
     }
-    if (penColor) {
-        this.style.setProperty("color", penColor)
+    if (colorPicker.value) {
+        this.style.setProperty("color", colorPicker.value)
     }
 }
 
@@ -322,12 +324,6 @@ function insert(radio) {
         grid.style.cursor = valueToInsert ? "copy" : "text"
         highlight()
     }
-}
-
-let penColor
-
-function changeColor() {
-    penColor = colorPicker.value
 }
 
 function undo() {

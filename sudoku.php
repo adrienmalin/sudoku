@@ -24,7 +24,7 @@
                     <i class="ri-eraser-fill"></i>
                 </label>
             </div>
-            <input type="color" class="btn btn-primary form-control form-control-sm form-control-color" id="colorPicker" title="Couleur" oninput="changeColor()" value="var(--bs-body-color)"/>
+            <input type="color" class="btn btn-primary form-control form-control-sm form-control-color" id="colorPicker" title="Couleur"/>
             <div class='btn-group'>
                 <input type='checkbox' id='sightCheckbox' class='btn-check' onclick='highlighterCheckbox.checked = false; refreshUI()' />
                 <label for='sightCheckbox' class='btn btn-info' title='Surligner la ligne, la colonne et la région de la case survolée'>
@@ -109,6 +109,8 @@
                 <a href='https://git.malingrey.fr/adrien/Sudoku' target="_blank" class='list-group-item list-group-item-action'>Code source</a>
             </div>
         </footer>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+        <script src='js/sudoku.js' defer></script>
     </body>
 
 </html>

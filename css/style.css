@@ -139,6 +139,10 @@ table input:enabled {
     color: var(--bs-secondary-color) !important;
 }
 
+#colorPicker{
+    width: 2.5rem;
+}
+
 @media (prefers-color-scheme:dark) {
     .pencil {
         color: #5a5a5a !important;
