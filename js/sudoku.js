@@ -172,6 +172,9 @@ function oninput() {
         this.previousPlaceholder = this.placeholder
         refreshBox(this)
     }
+    if (penColor) {
+        this.style.setProperty("color", penColor)
+    }
 }
 
 function refreshBox(box) {
@@ -319,6 +322,12 @@ function insert(radio) {
         grid.style.cursor = valueToInsert ? "copy" : "text"
         highlight()
     }
+}
+
+let penColor
+
+function changeColor() {
+    penColor = colorPicker.value
 }
 
 function undo() {
