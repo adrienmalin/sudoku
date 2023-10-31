@@ -1,16 +1,15 @@
-const VALUES = "123456789"
+const VALUES  = "123456789"
 const UNKNOWN = '.'
-const SUGESTION_DELAY = 60000 //ms
 
-let boxes = []
-let rows = Array.from(Array(9), x => [])
-let columns = Array.from(Array(9), x => [])
-let regions = Array.from(Array(9), x => [])
-let valueToInsert = ""
-let history = []
+let boxes              = []
+let rows               = Array.from(Array(9), x => [])
+let columns            = Array.from(Array(9), x => [])
+let regions            = Array.from(Array(9), x => [])
+let valueToInsert      = ""
+let history            = []
 let accessKeyModifiers = "AccessKey+"
-let easyBoxes = []
-let insertRadios = []
+let easyBoxes          = []
+let insertRadios       = []
 
 function shuffle(iterable) {
     array = Array.from(iterable)
@@ -33,19 +32,19 @@ window.onload = function() {
         for (let box of row.getElementsByTagName('input')) {
             let regionId = rowId - rowId % 3 + Math.floor(columnId / 3)
             if (!box.disabled) {
-                box.onfocus = onfocus
-                box.oninput = oninput
-                box.onblur = onblur
-                box.onclick = onclick
-                box.onmouseenter = onmouseenter
-                box.onmouseleave = onmouseleave
-                box.previousValue = ""
+                box.onfocus             = onfocus
+                box.oninput             = oninput
+                box.onblur              = onblur
+                box.onclick             = onclick
+                box.onmouseenter        = onmouseenter
+                box.onmouseleave        = onmouseleave
+                box.previousValue       = ""
                 box.previousPlaceholder = ""
             }
             box.oncontextmenu = oncontextmenu
-            box.rowId = rowId
-            box.columnId = columnId
-            box.regionId = regionId
+            box.rowId         = rowId
+            box.columnId      = columnId
+            box.regionId      = regionId
             boxes.push(box)
             rows[rowId].push(box)
             columns[columnId].push(box)
@@ -81,6 +80,8 @@ window.onload = function() {
 
     loadSavedGame()
 
+    colorPickerInput.value = window.getComputedStyle(grid).getPropertyValue("--bs-body-color")
+
     if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register(`service-worker.php?location=${location.pathname}`)
     }
@@ -114,10 +115,10 @@ function searchCandidatesOf(box) {
         switch (box.candidates.size) {
             case 0:
                 box.title = "Aucune possibilité !"
-                break
+            break
             case 1:
                 box.title = "Une seule possibilité [Clic-droit]"
-                break
+            break
             default:
                 box.title = box.candidates.size + " possibilités [Clic-droit]"
         }

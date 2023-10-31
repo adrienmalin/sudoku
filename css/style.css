@@ -149,6 +149,10 @@ table input:enabled {
     padding: .375rem;
 }
 
+#colorPickerLabel {
+    color: var(--bs-body-color);
+}
+
 @media (prefers-color-scheme:dark) {
     .pencil {
         color: #5a5a5a !important;
