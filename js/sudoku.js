@@ -70,8 +70,8 @@ window.onload = function() {
         label.control.label = label
     }
 
-    if (/Win/.test(navigator.platform) || /Linux/.test(navigator.platform)) accessKeyModifiers = "Alt+Maj+"
-    else if (/Mac/.test(navigator.platform)) accessKeyModifiers = "⌃⌥"
+    if (/Win/.test(navigator.userAgent) || /Linux/.test(navigator.userAgent)) accessKeyModifiers = "Alt+Maj+"
+    else if (/Mac/.test(navigator.userAgent)) accessKeyModifiers = "⌃⌥"
     for (node of document.querySelectorAll("*[accesskey]")) {
         shortcut = ` [${node.accessKeyLabel||(accessKeyModifiers+node.accessKey)}]`
         if (node.title) node.title += shortcut
@@ -83,7 +83,7 @@ window.onload = function() {
     colorPickerInput.value = window.getComputedStyle(grid).getPropertyValue("--bs-body-color")
 
     if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register(`service-worker.php?location=${location.pathname}`)
+        navigator.serviceWorker.register(`service-worker.js`)
     }
 }
 
