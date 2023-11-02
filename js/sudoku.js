@@ -295,12 +295,12 @@ function onmouseenter(event) {
 
         box.neighbourhood.forEach(neighbour => {
             if (valueToInsert && neighbour.value == valueToInsert) {
-                for (neighbour of[box, neighbour]) {
+                for (neighbour of [box, neighbour]) {
                     neighbour.parentElement.classList.add("table-danger")
                 }
             }
         })
-}
+    }
 }
 
 function onmouseleave(event) {
