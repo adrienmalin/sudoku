@@ -1,15 +1,14 @@
 const VALUES  = "123456789"
 const UNKNOWN = '.'
 
-let boxes              = []
-let rows               = Array.from(Array(9), x => [])
-let columns            = Array.from(Array(9), x => [])
-let regions            = Array.from(Array(9), x => [])
-let valueToInsert      = ""
-let history            = []
-let accessKeyModifiers = "AccessKey+"
-let easyBoxes          = []
-let insertRadios       = []
+let boxes         = []
+let rows          = Array.from(Array(9), x => [])
+let columns       = Array.from(Array(9), x => [])
+let regions       = Array.from(Array(9), x => [])
+let valueToInsert = ""
+let history       = []
+let easyBoxes     = []
+let insertRadios  = []
 
 function shuffle(iterable) {
     array = Array.from(iterable)
@@ -70,8 +69,9 @@ window.onload = function() {
         label.control.label = label
     }
 
-    if (/Win/.test(navigator.userAgent) || /Linux/.test(navigator.userAgent)) accessKeyModifiers = "Alt+Maj+"
-    else if (/Mac/.test(navigator.userAgent)) accessKeyModifiers = "⌃⌥"
+    let accessKeyModifiers = (/Win/.test(navigator.userAgent) || /Linux/.test(navigator.userAgent)) ? "Alt+Maj+"
+                           : (/Mac/.test(navigator.userAgent)) ? "⌃⌥"
+                           : "AccessKey+"
     for (node of document.querySelectorAll("*[accesskey]")) {
         shortcut = ` [${node.accessKeyLabel||(accessKeyModifiers+node.accessKey)}]`
         if (node.title) node.title += shortcut
