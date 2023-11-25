@@ -105,10 +105,10 @@ function loadGame(state) {
         undoButton.disabled = true
         fixGridLink.href = ""
     }
-    boxes.forEach(searchCandidatesOf)
-    boxes.forEach(checkBox)
-    checkSuccess()
-    refreshUI()
+
+    checkBoxes()
+    enableRadio()
+    highlight()
 }
 
 window.onpopstate = (event) => loadGame(event.state)
@@ -138,6 +138,9 @@ function onfocus() {
     } else {
         this.select()
     }
+    if (penColor && inkPenRadio.checked) {
+        this.style.setProperty("color", penColor)
+    }
     this.style.caretColor = valueToInsert ? "transparent" : "auto"
 }
 
@@ -162,16 +165,13 @@ function onclick() {
 }
 
 function oninput() {
-    if (penColor) {
-        this.style.setProperty("color", penColor)
-    }
     if (inkPenRadio.checked) {
         checkBox(this)
-        checkSuccess()
-        refreshUI()
-        saveGame()
+        enableRadio()
+        highlight()
         fixGridLink.href = "?" + boxes.map(box => box.value || UNKNOWN).join("")
     }
+    saveGame()
     restartLink.classList.remove("disabled")
     undoButton.disabled = false
 }
@@ -188,24 +188,50 @@ function checkBox(box) {
     })
 
     if (box.value) {
-        for (area of[{
-                name: "région",
-                neighbours: regions[box.regionId]
-            }, {
-                name: "ligne",
-                neighbours: rows[box.rowId]
-            }, {
-                name: "colonne",
-                neighbours: columns[box.columnId]
-            }, ])
-            for (neighbour of area.neighbours)
+        for (let [area, neighbours] of Object.entries({
+                région:  regions[box.regionId],
+                ligne:   rows[box.rowId],
+                colonne: columns[box.columnId],
+            }))
+            for (neighbour of neighbours)
                 if (box != neighbour && box.value == neighbour.value) {
                     for (neighbour of [box, neighbour]) {
-                        neighbour.setCustomValidity(`Il y a un autre ${box.value} dans cette ${area.name}.`)
+                        neighbour.setCustomValidity(`Il y a un autre ${box.value} dans cette ${area}.`)
                         neighbour.classList.add("is-invalid")
                     }
                 }
     }
+
+    checkSuccess()
+}
+
+function checkBoxes() {
+    boxes.forEach(box => {
+        box.setCustomValidity("")
+        box.classList.remove("is-invalid")
+        searchCandidatesOf(box)
+        if (box.candidates.size == 0) {
+            box.setCustomValidity("Aucun chiffre possible !")
+            box.classList.add("is-invalid")
+        }
+    })
+
+    for (let [areaName, areas] of Object.entries({
+            région:  regions,
+            ligne:   rows,
+            colonne: columns,
+        }))
+        for (area of areas)
+            for (box1 of area)
+                for (box2 of area)
+                    if (box1 != box2 && box1.value && box1.value == box2.value) {
+                        for (box of [box1, box2]) {
+                            box.setCustomValidity(`Il y a un autre ${box.value} dans cette ${areaName}.`)
+                            box.classList.add("is-invalid")
+                        }
+                    }
+
+    checkSuccess()
 }
 
 function checkSuccess() {
@@ -223,11 +249,6 @@ function checkSuccess() {
         grid.classList.remove("table-success")
         sudokuForm.reportValidity()
     }
-}
-
-function refreshUI() {
-    enableRadio()
-    highlight()
 }
 
 function enableRadio() {
@@ -281,7 +302,6 @@ function onblur() {
         this.value = ""
         //this.type = "number"
         this.classList.remove("pencil")
-        saveGame()
     }
 }
 
@@ -403,6 +423,7 @@ document.onkeydown = function(event) {
 }
 
 window.onbeforeunload = function(event) {
+    saveGame()
     if (sightCheckbox.checked) localStorage["tool"] = "sight"
     else if (highlighterCheckbox.checked) localStorage["tool"] = "highlighter"
 }
