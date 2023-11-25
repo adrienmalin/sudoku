@@ -6,7 +6,6 @@ let rows          = Array.from(Array(9), x => [])
 let columns       = Array.from(Array(9), x => [])
 let regions       = Array.from(Array(9), x => [])
 let valueToInsert = ""
-let history       = []
 let easyBoxes     = []
 let insertRadios  = []
 
@@ -53,8 +52,10 @@ window.onload = function() {
         rowId++
     }
 
-    if (localStorage["sightCheckbox.checked"] == "true") sightCheckbox.checked = true
-    else if (localStorage["highlighterCheckbox.checked"] == "true") highlighterCheckbox.checked = true
+    if (localStorage["tool"] == "sight") sightCheckbox.checked = true
+    else if (localStorage["tool"] == "highlighter") highlighterCheckbox.checked = true
+
+    colorPickerInput.value = window.getComputedStyle(grid).getPropertyValue("--bs-body-color")
 
     boxes.forEach(box => {
         box.neighbourhood = new Set(rows[box.rowId].concat(columns[box.columnId]).concat(regions[box.regionId]))
@@ -68,7 +69,6 @@ window.onload = function() {
     for (label of document.getElementsByTagName("label")) {
         label.control.label = label
     }
-
     let accessKeyModifiers = (/Win/.test(navigator.userAgent) || /Linux/.test(navigator.userAgent)) ? "Alt+Maj+"
                            : (/Mac/.test(navigator.userAgent)) ? "⌃⌥"
                            : "AccessKey+"
@@ -78,35 +78,36 @@ window.onload = function() {
         else if (node.label) node.label.title += shortcut
     }
 
-    loadSavedGame()
-
-    colorPickerInput.value = window.getComputedStyle(grid).getPropertyValue("--bs-body-color")
+    loadGame(history.state)
 
     if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register(`service-worker.js`)
     }
 }
 
-function loadSavedGame() {
-    const savedGame = location.hash.slice(1)
-    if (savedGame.match(/[1-9.]{81}/)) {
+function loadGame(state) {
+    if (state) {
         boxes.forEach((box, i) => {
-            if (!box.disabled && savedGame[i] != UNKNOWN) {
-                box.value = savedGame[i]
-                box.previousValue = savedGame[i]
+            if (!box.disabled) {
+                box.value = state.boxesValues[i]
+                box.placeholder = state.boxesPlaceholders[i]
             }
         })
-        restartButton.disabled = false
-        fixGridLink.href = "?" + savedGame
+        fixGridLink.href = "?" + state.boxesValues.map(value => value || UNKNOWN).join("")
+    } else {
+        boxes.filter(box => !box.disabled).forEach(box => {
+            box.value = ""
+            box.placeholder = ""
+        })
+        fixGridLink.href = ""
     }
     boxes.forEach(searchCandidatesOf)
+    boxes.forEach(checkBox)
+    checkSuccess()
     refreshUI()
 }
 
-onhashchange = function(event) {
-    if (location.hash.slice(1)) loadSavedGame()
-    else restart()
-}
+window.onpopstate = (event) => loadGame(event.state)
 
 function searchCandidatesOf(box) {
     box.candidates = new Set(VALUES)
@@ -157,30 +158,16 @@ function onclick() {
 }
 
 function oninput() {
-    history.push({
-        box: this,
-        value: this.previousValue,
-        placeholder: this.previousPlaceholder
-    })
-    undoButton.disabled = false
-    saveButton.disabled = false
-    restartButton.disabled = false
-    if (pencilRadio.checked) {
-        this.previousValue = ""
-        this.previousPlaceholder = this.value
-    } else {
-        this.previousValue = this.value
-        this.previousPlaceholder = this.placeholder
-        refreshBox(this)
-    }
     if (penColor) {
         this.style.setProperty("color", penColor)
     }
-}
-
-function refreshBox(box) {
-    checkBox(box)
-    refreshUI()
+    if (inkPenRadio.checked) {
+        checkBox(this)
+        checkSuccess()
+        refreshUI()
+        saveGame()
+        fixGridLink.href = "?" + boxes.map(box => box.value || UNKNOWN).join("")
+    }
 }
 
 function checkBox(box) {
@@ -190,6 +177,7 @@ function checkBox(box) {
         searchCandidatesOf(neighbour)
         if (neighbour.candidates.size == 0) {
             neighbour.setCustomValidity("Aucun chiffre possible !")
+            neighbour.classList.add("is-invalid")
         }
     })
 
@@ -206,24 +194,28 @@ function checkBox(box) {
             }, ])
             for (neighbour of area.neighbours)
                 if (box != neighbour && box.value == neighbour.value) {
-                    for (neighbour of[box, neighbour]) {
+                    for (neighbour of [box, neighbour]) {
                         neighbour.setCustomValidity(`Il y a un autre ${box.value} dans cette ${area.name}.`)
                         neighbour.classList.add("is-invalid")
                     }
                 }
     }
+}
 
-    if (box.form.checkValidity()) { // Correct grid
+function checkSuccess() {
+    if (sudokuForm.checkValidity()) { // Correct grid
         if (boxes.filter(box => box.value == "").length == 0) {
             grid.classList.add("table-success")
-            saveButton.disabled = true
             setTimeout(() => {
                 if (confirm(`Bravo ! Vous avez résolu la grille. En voulez-vous une autre ?`))
                     location = "."
             }, 400)
+        } else {
+            grid.classList.remove("table-success")
         }
     } else { // Errors on grid
-        box.form.reportValidity()
+        grid.classList.remove("table-success")
+        sudokuForm.reportValidity()
     }
 }
 
@@ -283,13 +275,21 @@ function onblur() {
         this.value = ""
         //this.type = "number"
         this.classList.remove("pencil")
+        saveGame()
     }
+}
+
+function saveGame() {
+    history.pushState({
+        boxesValues: boxes.map(box => box.value),
+        boxesPlaceholders: boxes.map(box => box.placeholder)
+    }, "")
 }
 
 function onmouseenter(event) {
     if (sightCheckbox.checked){
         box = event.target
-        box.neighbourhood.concat([box]).forEach(neighbour => {
+        box.andNeighbourhood.forEach(neighbour => {
             neighbour.parentElement.classList.add("table-active")
         })
 
@@ -306,7 +306,7 @@ function onmouseenter(event) {
 function onmouseleave(event) {
     if (sightCheckbox.checked){
         box = event.target
-        box.neighbourhood.concat([box]).forEach(neighbour => {
+        box.andNeighbourhood.forEach(neighbour => {
             neighbour.parentElement.classList.remove("table-active")
             neighbour.parentElement.classList.remove("table-danger")
         })
@@ -332,51 +332,10 @@ function changeColor() {
     colorPickerLabel.style.color = colorPickerInput.value
 }
 
-function undo() {
-    if (history.length) {
-        const previousState = history.pop()
-        previousState.box.value = previousState.value
-        previousState.box.placeholder = previousState.placeholder
-        refreshBox(previousState.box)
-        if (history.length < 1) {
-            undoButton.disabled = true
-            saveButton.disabled = true
-        }
-    }
-}
-
 function restart() {
     if (confirm("Effacer toutes les cases ?")) {
-        boxes.filter(box => !box.disabled).forEach(box => {
-            box.value = ""
-            box.previousValue = ""
-            box.placeholder = ""
-            box.previousPlaceholder = ""
-            box.setCustomValidity("")
-        })
-        let history = []
-        undoButton.disabled = true
         restartButton.disabled = true
         location.hash = ""
-        boxes.forEach(searchCandidatesOf)
-        refreshUI()
-    }
-}
-
-function save() {
-    let saveGame = boxes.map(box => box.value || UNKNOWN).join("")
-    location.hash = saveGame
-    fixGridLink.href = "?" + saveGame
-    saveButton.disabled = true
-    alert("Partie sauvegardée")
-}
-
-window.onbeforeunload = function(event) {
-    localStorage["sightCheckbox.checked"] = sightCheckbox.checked
-    localStorage["highlighterCheckbox.checked"] = highlighterCheckbox.checked
-    if (!saveButton.disabled) {
-        event.preventDefault()
-        event.returnValue = "La partie n'est pas sauvegardée. Quitter quand même ?"
     }
 }
 
@@ -416,7 +375,7 @@ function oncontextmenu(event) {
     } else {
         li = document.createElement("li")
         li.innerText = "Aucune possibilité !"
-        li.classList.add("error")
+        li.classList = "list-group-item list-group-item-action disabled"
         contextMenu.appendChild(li)
     }
     contextMenu.style.left = `${event.pageX}px`
@@ -435,4 +394,9 @@ document.onkeydown = function(event) {
         event.preventDefault()
         contextMenu.style.display = "none"
     }
+}
+
+window.onbeforeunload = function(event) {
+    if (sightCheckbox.checked) localStorage["tool"] = "sight"
+    else if (highlighterCheckbox.checked) localStorage["tool"] = "highlighter"
 }

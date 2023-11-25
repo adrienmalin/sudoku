@@ -27,9 +27,7 @@
                 <label for='highlighterCheckbox' class='btn btn-info' title='Surligner les lignes, colonnes et régions contenant déjà le chiffre sélectionné'><i class="ri-mark-pen-fill"></i></label>
             </div>
             <button id="hintButton" type="button" class='btn btn-info' onclick="showHint()" title="Montrer une case avec une seule possibilité" accesskey="H" disabled=""><i class="ri-lightbulb-line"></i></button>
-            <button id='restartButton' type='button' class='btn btn-primary' onclick='restart()' disabled title='Recommencer'><i class="ri-restart-line"></i></button>
-            <button id='undoButton' type='button' class='btn btn-primary' onclick='undo()' disabled title='Annuler' accesskey='Z'><i class="ri-arrow-go-back-fill"></i></button>
-            <button id='saveButton' type='button' class='btn btn-primary' onclick='save()' disabled title='Sauvegarder' accesskey='S'><i class="ri-save-2-fill"></i></button>
+            <a class='btn btn-primary' href="" title='Recommencer'><i class="ri-restart-line"></i></a>
         </div>
         <form id='sudokuForm' class='needs-validation' novalidate>
             <table id='grid' class='table mb-2'>
@@ -73,7 +71,7 @@
     if (isset($warning))
         echo("<strong>⚠️ $warning ⚠️</strong><br/>");
     else
-        echo("Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.")
+        echo("<p>Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.</p>\n<p>Vous pouvez annuler une action en revenant à la page précédente.</p>")
 ?></div>
         <ul id='contextMenu' class='context-menu modal-content shadow list-group w-auto position-absolute'></ul>
         <footer>
@@ -81,12 +79,12 @@
                 <a href='.' class='list-group-item list-group-item-action'>Nouvelle grille</a>
                 <a href='' class='list-group-item list-group-item-action'>Lien vers cette grille</a>
                 <a href='?.................................................................................' class='list-group-item list-group-item-action'>Grille vierge</a>
-                <a href='' id='fixGridLink' class='list-group-item list-group-item-action'>Figer la grille enregistrée</a>
+                <a href='' id='fixGridLink' class='list-group-item list-group-item-action'>Figer la grille</a>
                 <a href='https://git.malingrey.fr/adrien/Sudoku' target="_blank" class='list-group-item list-group-item-action'>Code source</a>
             </div>
         </footer>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
-        <script src='js/sudoku.js' defer></script>
+        <script src='sudoku.js' defer></script>
     </body>
 
 </html>

@@ -6,7 +6,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="alternate stylesheet" type="text/css" title="Clair" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/css/bootstrap-night.min.css" rel="alternate stylesheet" type="text/css" title="Sombre" />
         <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
-        <link href="css/style.css" rel="stylesheet" type="text/css" />
+        <link href="style.css" rel="stylesheet" type="text/css" />
 
         <link href="thumbnail.php?grid=<?=$currentGrid?>&size=196" sizes="196x196" rel="icon" type="image/png">
         <link href="thumbnail.php?grid=<?=$currentGrid?>&size=160" sizes="160x160" rel="icon" type="image/png">
