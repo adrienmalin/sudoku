@@ -32,11 +32,12 @@ table input {
 table td.table-primary input,
 table td.table-active input,
 table.table-success input,
+td.table-danger input:disabled,
 table input:not([disabled]) {
     background: transparent !important;
 }
 
-table input[disabled] {
+table input:disabled {
     background-position: center !important;
 }
 

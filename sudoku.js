@@ -178,18 +178,14 @@ function checkBox(box) {
     checkCandidates(box.andNeighbourhood)
     
     if (box.value) {
-        for (let [areaName, neighbours] of Object.entries({
+        for (let [areaName, area] of Object.entries({
                 région:  regions[box.regionId],
                 ligne:   rows[box.rowId],
                 colonne: columns[box.columnId],
             }))
-            for (neighbour of neighbours)
-                if (box != neighbour && box.value == neighbour.value) {
-                    for (neighbour of [box, neighbour]) {
-                        neighbour.setCustomValidity(`Il y a un autre ${box.value} dans cette ${areaName}.`)
-                        neighbour.classList.add("is-invalid")
-                    }
-                }
+            for (neighbour of area)
+                if (box != neighbour)
+                    showDuplicates(areaName, box, neighbour)
     }
 
     checkSuccess()
@@ -204,14 +200,7 @@ function checkBoxes() {
         colonne: columns,
     }))
         for (area of areas)
-            area.sort((box, neighbour) => {
-                if (box.value && box.value == neighbour.value) {
-                    for (neighbour of [box, neighbour]) {
-                        neighbour.setCustomValidity(`Il y a un autre ${box.value} dans cette ${areaName}.`)
-                        neighbour.classList.add("is-invalid")
-                    }
-                }
-            })
+            area.filter(box => box.value).sort(showDuplicates.bind(null, areaName))
 
     checkSuccess()
 }
@@ -220,12 +209,23 @@ function checkCandidates(area) {
     area.forEach(box => {
         box.setCustomValidity("")
         box.classList.remove("is-invalid")
+        box.parentElement.classList.remove("table-danger")
         searchCandidatesOf(box)
         if (box.candidates.size == 0) {
             box.setCustomValidity("Aucun chiffre possible !")
             box.classList.add("is-invalid")
         }
     })
+}
+
+function showDuplicates(areaName, box, neighbour) {
+    if(box.value == neighbour.value) {
+        area.forEach(neighbour => neighbour.parentElement.classList.add("table-danger"))
+        for (neighbour of [box, neighbour]) {
+            neighbour.setCustomValidity(`Il y a un autre ${box.value} dans cette ${areaName}.`)
+            neighbour.classList.add("is-invalid")
+        }
+    }
 }
 
 function checkSuccess() {
