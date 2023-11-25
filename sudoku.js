@@ -36,8 +36,6 @@ window.onload = function() {
                 box.onclick             = onclick
                 box.onmouseenter        = onmouseenter
                 box.onmouseleave        = onmouseleave
-                box.previousValue       = ""
-                box.previousPlaceholder = ""
             }
             box.oncontextmenu = oncontextmenu
             box.rowId         = rowId
@@ -85,6 +83,8 @@ window.onload = function() {
     }
 }
 
+window.onpopstate = (event) => loadGame(event.state)
+
 function loadGame(state) {
     if (state) {
         boxes.forEach((box, i) => {
@@ -110,8 +110,6 @@ function loadGame(state) {
     enableRadio()
     highlight()
 }
-
-window.onpopstate = (event) => loadGame(event.state)
 
 function searchCandidatesOf(box) {
     box.candidates = new Set(VALUES)
@@ -177,16 +175,30 @@ function oninput() {
 }
 
 function checkBox(box) {
-    box.andNeighbourhood.forEach(neighbour => {
-        neighbour.setCustomValidity("")
-        neighbour.classList.remove("is-invalid")
-        searchCandidatesOf(neighbour)
-        if (neighbour.candidates.size == 0) {
-            neighbour.setCustomValidity("Aucun chiffre possible !")
-            neighbour.classList.add("is-invalid")
+    checkCandidates(box.andNeighbourhood)
+    checkDuplicates(box)
+    checkSuccess()
+}
+
+function checkBoxes() {
+    checkCandidates(boxes)
+    boxes.forEach(checkDuplicates)
+    checkSuccess()
+}
+
+function checkCandidates(area) {
+    area.forEach(box => {
+        box.setCustomValidity("")
+        box.classList.remove("is-invalid")
+        searchCandidatesOf(box)
+        if (box.candidates.size == 0) {
+            box.setCustomValidity("Aucun chiffre possible !")
+            box.classList.add("is-invalid")
         }
     })
+}
 
+function checkDuplicates(box) {
     if (box.value) {
         for (let [area, neighbours] of Object.entries({
                 région:  regions[box.regionId],
@@ -201,37 +213,6 @@ function checkBox(box) {
                     }
                 }
     }
-
-    checkSuccess()
-}
-
-function checkBoxes() {
-    boxes.forEach(box => {
-        box.setCustomValidity("")
-        box.classList.remove("is-invalid")
-        searchCandidatesOf(box)
-        if (box.candidates.size == 0) {
-            box.setCustomValidity("Aucun chiffre possible !")
-            box.classList.add("is-invalid")
-        }
-    })
-
-    for (let [areaName, areas] of Object.entries({
-            région:  regions,
-            ligne:   rows,
-            colonne: columns,
-        }))
-        for (area of areas)
-            for (box1 of area)
-                for (box2 of area)
-                    if (box1 != box2 && box1.value && box1.value == box2.value) {
-                        for (box of [box1, box2]) {
-                            box.setCustomValidity(`Il y a un autre ${box.value} dans cette ${areaName}.`)
-                            box.classList.add("is-invalid")
-                        }
-                    }
-
-    checkSuccess()
 }
 
 function checkSuccess() {
