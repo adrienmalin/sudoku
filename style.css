@@ -36,6 +36,10 @@ table input:not([disabled]) {
     background: transparent !important;
 }
 
+table input[disabled] {
+    background-position: center !important;
+}
+
 tr:nth-child(3n+1) td input {
     border-top-width: 3px !important;
 }

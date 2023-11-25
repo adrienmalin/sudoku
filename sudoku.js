@@ -176,13 +176,43 @@ function oninput() {
 
 function checkBox(box) {
     checkCandidates(box.andNeighbourhood)
-    checkDuplicates(box)
+    
+    if (box.value) {
+        for (let [areaName, neighbours] of Object.entries({
+                région:  regions[box.regionId],
+                ligne:   rows[box.rowId],
+                colonne: columns[box.columnId],
+            }))
+            for (neighbour of neighbours)
+                if (box != neighbour && box.value == neighbour.value) {
+                    for (neighbour of [box, neighbour]) {
+                        neighbour.setCustomValidity(`Il y a un autre ${box.value} dans cette ${areaName}.`)
+                        neighbour.classList.add("is-invalid")
+                    }
+                }
+    }
+
     checkSuccess()
 }
 
 function checkBoxes() {
     checkCandidates(boxes)
-    boxes.forEach(checkDuplicates)
+
+    for (let [areaName, areas] of Object.entries({
+        région:  regions,
+        ligne:   rows,
+        colonne: columns,
+    }))
+        for (area of areas)
+            area.sort((box, neighbour) => {
+                if (box.value && box.value == neighbour.value) {
+                    for (neighbour of [box, neighbour]) {
+                        neighbour.setCustomValidity(`Il y a un autre ${box.value} dans cette ${areaName}.`)
+                        neighbour.classList.add("is-invalid")
+                    }
+                }
+            })
+
     checkSuccess()
 }
 
@@ -196,23 +226,6 @@ function checkCandidates(area) {
             box.classList.add("is-invalid")
         }
     })
-}
-
-function checkDuplicates(box) {
-    if (box.value) {
-        for (let [area, neighbours] of Object.entries({
-                région:  regions[box.regionId],
-                ligne:   rows[box.rowId],
-                colonne: columns[box.columnId],
-            }))
-            for (neighbour of neighbours)
-                if (box != neighbour && box.value == neighbour.value) {
-                    for (neighbour of [box, neighbour]) {
-                        neighbour.setCustomValidity(`Il y a un autre ${box.value} dans cette ${area}.`)
-                        neighbour.classList.add("is-invalid")
-                    }
-                }
-    }
 }
 
 function checkSuccess() {
