@@ -303,8 +303,7 @@ function onmouseleave(event) {
     if (sightCheckbox.checked){
         box = event.target
         box.andNeighbourhood.forEach(neighbour => {
-            neighbour.parentElement.classList.remove("table-active")
-            neighbour.parentElement.classList.remove("table-danger", "not-allowed")
+            neighbour.parentElement.classList.remove("table-active", "table-danger", "not-allowed")
         })
     }
 }
