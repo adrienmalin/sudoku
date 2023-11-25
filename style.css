@@ -108,7 +108,7 @@ table input {
     cursor: inherit !important;
 }
 
-.table-danger {
+.not-allowed {
     cursor: not-allowed !important;
 }
 

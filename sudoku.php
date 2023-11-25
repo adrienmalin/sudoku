@@ -21,9 +21,9 @@
             <input type="color" class="btn-check" id="colorPickerInput" title="Changer la couleur" oninput="changeColor()"/>
             <label id="colorPickerLabel" for="colorPickerInput" class="btn btn-primary" title="Changer de couleur"><i class="ri-palette-fill"></i></label>
             <div class='btn-group'>
-                <input type='checkbox' id='sightCheckbox' class='btn-check' onclick='highlighterCheckbox.checked = false; refreshUI()' />
+                <input type='checkbox' id='sightCheckbox' class='btn-check' onclick='highlighterCheckbox.checked = false; highlight()' />
                 <label for='sightCheckbox' class='btn btn-info' title='Surligner la ligne, la colonne et la région de la case survolée'><i class="ri-focus-3-line"></i></label>
-                <input type='checkbox' id='highlighterCheckbox' class='btn-check' onclick='sightCheckbox.checked = false; refreshUI()' />
+                <input type='checkbox' id='highlighterCheckbox' class='btn-check' onclick='sightCheckbox.checked = false; highlight()' />
                 <label for='highlighterCheckbox' class='btn btn-info' title='Surligner les lignes, colonnes et régions contenant déjà le chiffre sélectionné'><i class="ri-mark-pen-fill"></i></label>
             </div>
             <button id="hintButton" type="button" class='btn btn-info' onclick="showHint()" title="Montrer une case avec une seule possibilité" accesskey="H" disabled=""><i class="ri-lightbulb-line"></i></button>

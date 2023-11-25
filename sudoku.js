@@ -5,6 +5,11 @@ let boxes         = []
 let rows          = Array.from(Array(9), x => [])
 let columns       = Array.from(Array(9), x => [])
 let regions       = Array.from(Array(9), x => [])
+let areaNames     = {
+    ligne:   rows,
+    colonne: columns,
+    région:  regions,
+}
 let valueToInsert = ""
 let easyBoxes     = []
 let insertRadios  = []
@@ -165,7 +170,7 @@ function onclick() {
 
 function oninput() {
     if (inkPenRadio.checked) {
-        checkBox(this)
+        checkBoxes()
         enableRadio()
         highlight()
         fixGridLink.href = "?" + boxes.map(box => box.value || UNKNOWN).join("")
@@ -175,39 +180,8 @@ function oninput() {
     undoButton.disabled = false
 }
 
-function checkBox(box) {
-    checkCandidates(box.andNeighbourhood)
-    
-    if (box.value) {
-        for (let [areaName, area] of Object.entries({
-                région:  regions[box.regionId],
-                ligne:   rows[box.rowId],
-                colonne: columns[box.columnId],
-            }))
-            for (neighbour of area)
-                if (box != neighbour)
-                    showDuplicates(area, areaName, box, neighbour)
-    }
-
-    checkSuccess()
-}
-
 function checkBoxes() {
-    checkCandidates(boxes)
-
-    for (let [areaName, areas] of Object.entries({
-        région:  regions,
-        ligne:   rows,
-        colonne: columns,
-    }))
-        for (area of areas)
-            area.filter(box => box.value).sort(showDuplicates.bind(null, area, areaName))
-
-    checkSuccess()
-}
-
-function checkCandidates(area) {
-    area.forEach(box => {
+    boxes.forEach(box => {
         box.setCustomValidity("")
         box.classList.remove("is-invalid")
         box.parentElement.classList.remove("table-danger")
@@ -217,19 +191,20 @@ function checkCandidates(area) {
             box.classList.add("is-invalid")
         }
     })
-}
 
-function showDuplicates(area, areaName, box, neighbour) {
-    if(box.value == neighbour.value) {
-        area.forEach(neighbour => neighbour.parentElement.classList.add("table-danger"))
-        for (neighbour of [box, neighbour]) {
-            neighbour.setCustomValidity(`Il y a un autre ${box.value} dans cette ${areaName}.`)
-            neighbour.classList.add("is-invalid")
-        }
-    }
-}
+    for (let [areaName, areas] of Object.entries(areaNames))
+        for (area of areas)
+            area.filter(box => box.value).sort((box, neighbour) => {
+                if(box.value == neighbour.value) {
+                    area.forEach(neighbour => neighbour.parentElement.classList.add("table-danger"))
+                    for (neighbour of [box, neighbour]) {
+                        neighbour.setCustomValidity(`Il y a un autre ${box.value} dans cette ${areaName}.`)
+                        neighbour.classList.add("is-invalid")
+                    }
+                }
+                return box.value - neighbour.value
+            })
 
-function checkSuccess() {
     if (sudokuForm.checkValidity()) { // Correct grid
         if (boxes.filter(box => box.value == "").length == 0) {
             grid.classList.add("table-success")
@@ -317,7 +292,7 @@ function onmouseenter(event) {
         box.neighbourhood.forEach(neighbour => {
             if (valueToInsert && neighbour.value == valueToInsert) {
                 for (neighbour of [box, neighbour]) {
-                    neighbour.parentElement.classList.add("table-danger")
+                    neighbour.parentElement.classList.add("table-danger", "not-allowed")
                 }
             }
         })
@@ -329,7 +304,7 @@ function onmouseleave(event) {
         box = event.target
         box.andNeighbourhood.forEach(neighbour => {
             neighbour.parentElement.classList.remove("table-active")
-            neighbour.parentElement.classList.remove("table-danger")
+            neighbour.parentElement.classList.remove("table-danger", "not-allowed")
         })
     }
 }
