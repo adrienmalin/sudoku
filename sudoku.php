@@ -27,7 +27,8 @@
                 <label for='highlighterCheckbox' class='btn btn-info' title='Surligner les lignes, colonnes et régions contenant déjà le chiffre sélectionné'><i class="ri-mark-pen-fill"></i></label>
             </div>
             <button id="hintButton" type="button" class='btn btn-info' onclick="showHint()" title="Montrer une case avec une seule possibilité" accesskey="H" disabled=""><i class="ri-lightbulb-line"></i></button>
-            <a class='btn btn-primary' href="" title='Recommencer'><i class="ri-restart-line"></i></a>
+            <a id='restartLink' class='btn btn-primary disabled' href="" title='Recommencer'><i class="ri-restart-line"></i></a>
+            <button id='undoButton' type='button' class='btn btn-primary' onclick='window.history.back()' disabled title='Annuler' accesskey='Z'><i class="ri-arrow-go-back-fill"></i></button>
         </div>
         <form id='sudokuForm' class='needs-validation' novalidate>
             <table id='grid' class='table mb-2'>
@@ -71,7 +72,7 @@
     if (isset($warning))
         echo("<strong>⚠️ $warning ⚠️</strong><br/>");
     else
-        echo("<p>Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.</p>\n<p>Vous pouvez annuler une action en revenant à la page précédente.</p>")
+        echo("Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.")
 ?></div>
         <ul id='contextMenu' class='context-menu modal-content shadow list-group w-auto position-absolute'></ul>
         <footer>

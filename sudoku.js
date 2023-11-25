@@ -93,12 +93,16 @@ function loadGame(state) {
                 box.placeholder = state.boxesPlaceholders[i]
             }
         })
+        restartLink.classList.remove("disabled")
+        undoButton.disabled = false
         fixGridLink.href = "?" + state.boxesValues.map(value => value || UNKNOWN).join("")
     } else {
         boxes.filter(box => !box.disabled).forEach(box => {
             box.value = ""
             box.placeholder = ""
         })
+        restartLink.classList.add("disabled")
+        undoButton.disabled = true
         fixGridLink.href = ""
     }
     boxes.forEach(searchCandidatesOf)
@@ -168,6 +172,8 @@ function oninput() {
         saveGame()
         fixGridLink.href = "?" + boxes.map(box => box.value || UNKNOWN).join("")
     }
+    restartLink.classList.remove("disabled")
+    undoButton.disabled = false
 }
 
 function checkBox(box) {
