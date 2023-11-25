@@ -130,8 +130,9 @@ function searchCandidatesOf(box) {
 
 function onfocus() {
     if (pencilRadio.checked) {
-        //this.type = "text"
-        this.value = this.placeholder
+        this.type        = "text"
+        this.value       = this.placeholder
+        this.placeholder = ""
         this.classList.add("pencil")
     } else {
         this.select()
@@ -185,7 +186,7 @@ function checkBox(box) {
             }))
             for (neighbour of area)
                 if (box != neighbour)
-                    showDuplicates(areaName, box, neighbour)
+                    showDuplicates(area, areaName, box, neighbour)
     }
 
     checkSuccess()
@@ -200,7 +201,7 @@ function checkBoxes() {
         colonne: columns,
     }))
         for (area of areas)
-            area.filter(box => box.value).sort(showDuplicates.bind(null, areaName))
+            area.filter(box => box.value).sort(showDuplicates.bind(null, area, areaName))
 
     checkSuccess()
 }
@@ -218,7 +219,7 @@ function checkCandidates(area) {
     })
 }
 
-function showDuplicates(areaName, box, neighbour) {
+function showDuplicates(area, areaName, box, neighbour) {
     if(box.value == neighbour.value) {
         area.forEach(neighbour => neighbour.parentElement.classList.add("table-danger"))
         for (neighbour of [box, neighbour]) {
@@ -294,7 +295,7 @@ function onblur() {
     if (this.classList.contains("pencil")) {
         this.placeholder = this.value
         this.value = ""
-        //this.type = "number"
+        this.type = "number"
         this.classList.remove("pencil")
     }
 }
