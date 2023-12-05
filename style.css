@@ -1,8 +1,3 @@
-body {
-    width: min-content;
-    margin: auto;
-}
-
 input[type="number"]::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none !important;
@@ -134,10 +129,6 @@ button:disabled,
 
 table input:enabled {
     cursor: inherit;
-}
-
-.modal-content {
-    z-index: 1000;
 }
 
 .pencil {

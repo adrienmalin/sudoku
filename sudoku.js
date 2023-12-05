@@ -176,8 +176,6 @@ function oninput() {
         fixGridLink.href = "?" + boxes.map(box => box.value || UNKNOWN).join("")
     }
     saveGame()
-    restartLink.classList.remove("disabled")
-    undoButton.disabled = false
 }
 
 function checkBoxes() {
@@ -280,6 +278,8 @@ function saveGame() {
         boxesValues: boxes.map(box => box.value),
         boxesPlaceholders: boxes.map(box => box.placeholder)
     }, "")
+    restartLink.classList.remove("disabled")
+    undoButton.disabled = false
 }
 
 function onmouseenter(event) {
@@ -315,7 +315,7 @@ function insert(radio) {
         insert(0)
     } else {
         valueToInsert = radio.value
-        grid.style.cursor = valueToInsert ? "copy" : "text"
+        grid.style.cursor = valueToInsert ? "pointer" : "text"
         highlight()
     }
 }
@@ -357,7 +357,7 @@ function oncontextmenu(event) {
             li.onclick = function(e) {
                 contextMenu.style.display = "none"
                 valueToInsert = e.target.innerText
-                grid.style.cursor = "copy"
+                grid.style.cursor = "pointer"
                 document.getElementById("insertRadio" + valueToInsert).checked = true
                 box.onclick()
             }
