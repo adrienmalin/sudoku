@@ -10,7 +10,7 @@
             <h1 class="display-4 text-center m-auto">Sudoku</h1>
         </nav>
         <div class="row g-0">
-            <main class="col-sm-4 order-sm-1">
+            <main class="col-md-6 order-md-1">
                 <div class="text-center m-auto" style="width: min-content;">
                     <div class='d-flex justify-content-between mb-2'>
                         <div class='btn-group'>
@@ -78,7 +78,7 @@
         echo("Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.")
 ?></div>
             </main>
-            <aside class="col-sm-4 text-center text-sm-start">
+            <aside class="col-md-3 text-center text-md-start">
                 <div class="d-flex flex-column flex-shrink-0 p-3">
                     <ul class="nav nav-pills flex-column">
                         <li><a href="." class="nav-link link-body-emphasis">Nouvelle grille</a></li>
