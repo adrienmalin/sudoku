@@ -30,6 +30,7 @@ table.table-success input,
 td.table-danger input:disabled,
 table input:not([disabled]) {
     background: transparent !important;
+    color: var(--bs-table-color-state,var(--bs-table-color-type,var(--bs-table-color)));
 }
 
 table input:disabled {
