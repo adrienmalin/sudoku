@@ -150,3 +150,7 @@ table input:enabled {
         color: #5a5a5a !important;
     }
 }
+
+.context-menu {
+    z-index: 100;
+}

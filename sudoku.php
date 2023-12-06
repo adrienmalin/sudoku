@@ -61,7 +61,7 @@
                         </tbody>
                     </table>
                 </form>
-                <div class='d-flex mb-3'>
+                <div class='d-flex mb-4'>
                     <div id='insertRadioGroup' class='radioGroup btn-group flex-fill'>
                         <input type='radio' class='btn-check' id='insertRadio0' value=''  name='insertRadioGroup' onclick='insert(this)' accesskey='0' checked  /><label for='insertRadio0' class='btn btn-primary' title='Clavier'><i class="ri-input-cursor-move"></i></label>
 <?php
@@ -91,7 +91,7 @@
                 </div>
             </aside>
         </div>
-        <ul id='contextMenu' class='context-menu modal-content z-1 shadow list-group w-auto position-absolute'></ul>
+        <ul id='contextMenu' class='context-menu modal-content shadow list-group w-auto position-absolute'></ul>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
         <script src='sudoku.js' defer></script>
     </body>
