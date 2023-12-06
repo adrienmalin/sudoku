@@ -1,28 +1,31 @@
 <?php 
     require("classes.php");
     session_start();
+    if (!array_key_exists("nbSolutions", $_SESSION)) {
+        $_SESSION["nbSolutions"] = array();
+    }
+
     $fullUrl = $_SERVER["REQUEST_SCHEME"]."://".$_SERVER["HTTP_HOST"].$_SERVER["DOCUMENT_URI"];
     $dirUrl = dirname($fullUrl);
     $currentGrid = strip_tags($_SERVER['QUERY_STRING']);
 
     if (preg_match("/^[1-9.]{81}$/", $currentGrid)) {
-        if (!isset($_SESSION[$currentGrid]) || $_SESSION[$currentGrid] != "checked") {
+        if (!array_key_exists($currentGrid, $_SESSION["nbSolutions"])) {
             $grid = new Grid();
             $grid->import($currentGrid);
-            if ($grid->containsDuplicates()) {
+            $_SESSION["nbSolutions"][$currentGrid] = $grid->containsDuplicates() ? -1 : $grid->countSolutions(2);
+        }
+        switch($_SESSION["nbSolutions"][$currentGrid]) {
+            case -1:
                 $warning = "Cette grille contient des doublons.";
-            } else {
-                switch($grid->countSolutions(2)) {
-                    case 0:
-                        $warning = "Cette grille n'a pas de solution.";
-                        break;
-                    case 1:
-                        $validGrids[] = $currentGrid;
-                        break;
-                    default:
-                        $warning = "Cette grille a plusieurs solutions.";
-                }
-            }
+                break;
+            case 0:
+                $warning = "Cette grille n'a pas de solution.";
+                break;
+            case 1:
+                break;
+            default:
+                $warning = "Cette grille a plusieurs solutions.";
         }
         require("sudoku.php");
     } else {
@@ -30,11 +33,11 @@
         $grid->generate();
         $gridAsString = $grid->toString();
         $newGridUrl = "$dirUrl/?$gridAsString";
-        $_SESSION[$gridAsString] = "checked";
-        if (!$currentGrid) {
-            header("Location: $newGridUrl");
-        } else {
+        $_SESSION["nbSolutions"][$gridAsString] = 1;
+        if ($currentGrid) {
             require("400.php");
+        } else {
+            header("Location: $newGridUrl");
         }
     }
 ?>
