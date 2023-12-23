@@ -6,6 +6,9 @@
         <title>Requête incorrecte</title>
     </head>
     <body>
+        <nav class="navbar mb-4">
+            <h1 class="display-4 text-center m-auto">Sudoku</h1>
+        </nav>
         <main class="container my-4">
             <header>
                 <h1 class="mb-4">Requête incorrecte</h1>
