@@ -1,18 +1,19 @@
 <?php 
     require("classes.php");
-    session_start();
+
+    global $sudokuGridSolutions;
+    if (!isset($sudokuGridSolutions)) $sudokuGridSolutions = array();
 
     $fullUrl = $_SERVER["REQUEST_SCHEME"]."://".$_SERVER["HTTP_HOST"].$_SERVER["DOCUMENT_URI"];
     $dirUrl = dirname($fullUrl);
     $currentGrid = strip_tags($_SERVER['QUERY_STRING']);
 
     if (preg_match("/^[1-9.]{81}$/", $currentGrid)) {
-        if (!array_key_exists($currentGrid, $_SESSION)) {
-            $grid = new Grid();
-            $grid->import($currentGrid);
-            $_SESSION[$currentGrid] = $grid->containsDuplicates() ? -1 : $grid->countSolutions(2);
+        if (!array_key_exists($currentGrid, $sudokuGridSolutions)) {
+            $grid = new Grid($currentGrid);
+            $sudokuGridSolutions[$currentGrid] = $grid->containsDuplicates() ? -1 : $grid->countSolutions(2);
         }
-        switch($_SESSION[$currentGrid]) {
+        switch($sudokuGridSolutions[$currentGrid]) {
             case -1:
                 $warning = "Cette grille contient des doublons.";
                 break;
@@ -27,10 +28,9 @@
         require("sudoku.php");
     } else {
         $grid = new Grid();
-        $grid->generate();
         $gridAsString = $grid->toString();
         $newGridUrl = "$dirUrl/?$gridAsString";
-        $_SESSION[$gridAsString] = 1;
+        $sudokuGridSolutions[$gridAsString] = 1;
         if ($currentGrid) {
             require("400.php");
         } else {
