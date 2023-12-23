@@ -48,7 +48,7 @@
     }
     
     class Grid {
-        function __construct() {
+        function __construct($gridStr="") {
             $this->boxes = array();
             $this->rows = array_fill(0, 9, array());
             $this->columns = array_fill(0, 9, array());
@@ -73,6 +73,12 @@
                 foreach(array_merge($this->rows[$box->rowId], $this->columns[$box->columnId], $this->regions[$box->regionId]) as $neighbour)
                     if ($box != $neighbour && !in_array($neighbour, $box->neighbourhood))
                         $box->neighbourhood[] = $neighbour;
+            }
+
+            if ($gridStr) {
+                $this->import($gridStr);
+            } else {
+                $this->generate();
             }
         }
 
