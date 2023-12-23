@@ -35,12 +35,12 @@ window.onload = function() {
         for (let box of row.getElementsByTagName('input')) {
             let regionId = rowId - rowId % 3 + Math.floor(columnId / 3)
             if (!box.disabled) {
-                box.onfocus             = onfocus
-                box.oninput             = oninput
-                box.onblur              = onblur
-                box.onclick             = onclick
-                box.onmouseenter        = onmouseenter
-                box.onmouseleave        = onmouseleave
+                box.onfocus      = onfocus
+                box.oninput      = oninput
+                box.onblur       = onblur
+                box.onclick      = onclick
+                box.onmouseenter = onmouseenter
+                box.onmouseleave = onmouseleave
             }
             box.oncontextmenu = oncontextmenu
             box.rowId         = rowId
