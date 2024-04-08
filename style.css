@@ -20,7 +20,7 @@ table input {
     padding: 0 !important;
     margin: 0 !important;
     text-align: center;
-    -moz-appearance: textfield !important;
+    appearance: textfield !important;
     border-radius: 0 !important;
 }
 
@@ -31,6 +31,10 @@ td.table-danger input:disabled,
 table input:not([disabled]) {
     background: transparent !important;
     color: inherit !important;
+}
+
+table input:not([disabled]):hover {
+    background: #9fb9b945 !important;
 }
 
 table input:disabled {
