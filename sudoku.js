@@ -82,10 +82,6 @@ window.onload = function() {
     }
 
     loadGame(history.state)
-
-    if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register(`service-worker.js`)
-    }
 }
 
 window.onpopstate = (event) => loadGame(event.state)
