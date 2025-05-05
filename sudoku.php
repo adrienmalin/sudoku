@@ -36,47 +36,37 @@
                     <form id='sudokuForm' class='needs-validation' novalidate>
                         <table id='grid' class='table mb-2'>
                             <tbody>
-<?php
-        for ($row = 0; $row < 81; $row += 9) {
-?>
+<?php for ($row = 0; $row < 81; $row += 9): ?>
                                 <tr class="input-group d-inline-block w-auto">
-<?php
-        for ($column = 0; $column < 9; $column++) {
-            $value = $currentGrid[$row+$column];
-            if ($value == UNKNOWN) {
-?>
+    <?php for ($column = 0; $column < 9; $column++): $value = $currentGrid[$row+$column]; ?>
+        <?php if ($value == UNKNOWN): ?>
                                     <td><input type='number' min='1' max='9' step='1' value=''  class='form-control' /></td>
-<?php
-                } else {
-?>
+        <?php else: ?>
                                     <td><input type='number' min='1' max='9' step='1' value='<?=$value?>' class='form-control' disabled /></td>
-<?php
-            }                                                            
-        }
-?>
-                            </tr>
-<?php
-   }
-?>
-                        </tbody>
-                    </table>
-                </form>
-                <div class='d-flex mb-4'>
-                    <div id='insertRadioGroup' class='radioGroup btn-group flex-fill'>
-                        <input type='radio' class='btn-check' id='insertRadio0' value=''  name='insertRadioGroup' onclick='insert(this)' accesskey='0' checked  /><label for='insertRadio0' class='btn btn-primary' title='Clavier'><i class="ri-input-cursor-move"></i></label>
-<?php
-        for($value=1; $value<=9; $value++) {
-            echo "                        <input type='radio' class='btn-check' id='insertRadio$value' value='$value' name='insertRadioGroup' onclick='insert(this)' accesskey='$value' disabled /><label for='insertRadio$value' class='btn btn-primary' title='Insérer un $value'>$value</label>\n";
-        }
-?>
+        <?php endif ?>
+    <?php endfor?>
+                                </tr>
+<?php endfor?>
+                            </tbody>
+                        </table>
+                    </form>
+                    <div class='d-flex mb-4'>
+                        <div id='insertRadioGroup' class='radioGroup btn-group flex-fill'>
+                            <input type='radio' class='btn-check' id='insertRadio0' value=''  name='insertRadioGroup' onclick='insert(this)' accesskey='0' checked  /><label for='insertRadio0' class='btn btn-primary' title='Clavier'><i class="ri-input-cursor-move"></i></label>
+<?php for($value=1; $value<=9; $value++): ?>
+                            <input type='radio' class='btn-check' id='insertRadio<?=$value?>' value='<?=$value?>' name='insertRadioGroup' onclick='insert(this)' accesskey='<?=$value?>' disabled />
+                            <label for='insertRadio<?=$value?>' class='btn btn-primary' title='Insérer un <?=$value?>'><?=$value?></label>
+<?php endfor ?>
+                        </div>
+                    </div>
+                    <div class='mb-3'>
+<?php if (isset($warning)): ?>
+                        <strong>⚠️ <?=$warning?> ⚠️</strong><br/>
+<?php else: ?>
+                    Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.
+<?php endif?>
                     </div>
                 </div>
-                <div class='mb-3'><?php
-    if (isset($warning))
-        echo("<strong>⚠️ $warning ⚠️</strong><br/>");
-    else
-        echo("Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9.")
-?></div>
             </main>
             <aside class="col-md-3 text-center text-md-start">
                 <div class="d-flex flex-column flex-shrink-0 p-3">
