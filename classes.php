@@ -1,5 +1,5 @@
 <?php
-    const UNKNOWN = ".";
+    const UNKNOWN = "-";
 
     $validGrids = array();
 
@@ -27,15 +27,19 @@
         
     class Box {
         public $values = array('1', '2', '3', '4', '5', '6', '7', '8', '9');
-    
+        public $value = UNKNOWN; 
+        public $rowId;
+        public $columnId;
+        public $regionId;
+        public $candidates;
+        public $candidateRemoved = array();
+        public $neighbourhood = array();
+
         function __construct($rowId, $columnId, $regionId) {
-            $this->value = UNKNOWN;
             $this->rowId = $rowId;
             $this->columnId = $columnId;
             $this->regionId = $regionId;
             $this->candidates = $this->values;
-            $this->candidateRemoved = array();
-            $this->neighbourhood = array();
         }
         
         function searchCandidates() {
@@ -48,8 +52,13 @@
     }
     
     class Grid {
+
+        private $boxes = array();
+        private $rows;
+        private $columns;
+        private $regions;
+
         function __construct($gridStr="") {
-            $this->boxes = array();
             $this->rows = array_fill(0, 9, array());
             $this->columns = array_fill(0, 9, array());
             $this->regions = array_fill(0, 9, array());
