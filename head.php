@@ -1,5 +1,15 @@
         <meta charset="utf-8" />
-        <title>Sudoku</title>
+        <title>Sudoku</title><meta property="og:title" content="Sudoku" />
+        <meta property="og:type" content="game" />
+        <meta name="description" property="og:description" content="Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9." />
+        <link rel="canonical" href="<?=$_SERVER["REQUEST_SCHEME"]."://".$_SERVER["HTTP_HOST"].dirname($_SERVER["DOCUMENT_URI"])?>" />
+        <meta property="og:url" content="<?=$_SERVER["REQUEST_SCHEME"]."://".$_SERVER["HTTP_HOST"].$_SERVER["DOCUMENT_URI"]?>" />
+        <meta property="og:image" content="<?=$_SERVER["REQUEST_SCHEME"]."://".$_SERVER["HTTP_HOST"].dirname($_SERVER["DOCUMENT_URI"])?>/thumbnail.php?size=200&grid=<?=$currentGrid?>" />
+        <meta property="og:image:width" content="200" />
+        <meta property="og:image:height" content="200" />
+        <meta name="Language" CONTENT="fr" /><meta property="og:locale" content="fr_FR" />
+        <meta property="og:site_name" content="<?=$_SERVER["HTTP_HOST"]?>" />
+        
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/css/bootstrap-dark.min.css" rel="stylesheet">
@@ -20,13 +30,3 @@
         <link href="thumbnail.php?grid=<?=$currentGrid?>&size=60"  sizes="60x60"   rel="apple-touch-icon">
         <link href="thumbnail.php?grid=<?=$currentGrid?>&size=76"  sizes="76x76"   rel="apple-touch-icon">
         <link href="manifest.php?grid=<?=$currentGrid?>" rel="manifest">
-
-        <meta property="og:title" content="Sudoku" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="<?=$_SERVER["REQUEST_SCHEME"]."://".$_SERVER["HTTP_HOST"].$_SERVER["DOCUMENT_URI"]?>" />
-        <meta property="og:image" content="<?=$_SERVER["REQUEST_SCHEME"]."://".$_SERVER["HTTP_HOST"].dirname($_SERVER["DOCUMENT_URI"])?>/thumbnail.php?size=200&grid=<?=$currentGrid?>" />
-        <meta property="og:image:width" content="200" />
-        <meta property="og:image:height" content="200" />
-        <meta property="og:description" content="Remplissez la grille de sorte que chaque ligne, colonne et région (carré de 3×3 cases) contienne tous les chiffres de 1 à 9." />
-        <meta property="og:locale" content="fr_FR" />
-        <meta property="og:site_name" content="<?=$_SERVER["HTTP_HOST"]?>" />
