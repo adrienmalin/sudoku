@@ -73,7 +73,7 @@
                     <ul class="nav nav-pills flex-column">
                         <li><a href="." class="nav-link link-body-emphasis">Nouvelle grille</a></li>
                         <li><a href="" class="nav-link link-body-emphasis">Lien vers cette grille</a></li>
-                        <li><a href="?................................................................................." class="nav-link link-body-emphasis">Grille vierge</a></li>
+                        <li><a href="?---------------------------------------------------------------------------------" class="nav-link link-body-emphasis">Grille vierge</a></li>
                         <li><a id="fixGridLink" href="" class="nav-link link-body-emphasis">Figer la grille</a></li>
                         <li><a href="https://git.malingrey.fr/adrien/Sudoku" class="nav-link link-body-emphasis">Code source</a></li>
                         <li><a href=".." class="nav-link link-body-emphasis">Autres jeux</a></li>
